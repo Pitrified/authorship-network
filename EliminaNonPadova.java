@@ -11,7 +11,7 @@ import java.util.*;
 
 //import org.apache.commons.io.*;
 
-public class EliminaNonDEI
+public class EliminaNonPadova
 {
   public static void main(String[] args)
   {
@@ -21,7 +21,7 @@ public class EliminaNonDEI
     
     String affiliation = "PadovaPadua.txt";
     String paperList = "PaperAutAffDEI.txt";
-    String output = "PaperRealiDEI.txt";
+    String output = "PaperDEIPadovani.txt";
    
     //Carico gli id delle affiliation in una HashSet
     
