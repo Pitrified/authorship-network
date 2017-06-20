@@ -2,8 +2,6 @@
 //try con resources
 //parse.next() è pericoloso
 
-
-
 //import java.util.Scanner;
 //import java.io.FileReader;
 //import java.io.FileNotFoundException;
@@ -23,8 +21,6 @@ public class ExtractAuthorsID
     String listaAuthors = "Authors.txt";
     String output = "AutoriDEI.txt";
     
-    
-    //Apre File PersoneDei1 in modo normale che sono belli e ordinati
     //Crea HashSet
     FileReader reader = null;
     Scanner sc = null;
@@ -38,7 +34,7 @@ public class ExtractAuthorsID
       while (sc.hasNextLine()) {
         String autoreDEI = sc.nextLine();
         //System.out.println("Prossimo autore DEI:|"+autoreDEI+"|");
-        //carico il nome nella tabella
+        //carico il nome nel set
         setDEI.add(autoreDEI);
       }
       
@@ -59,8 +55,7 @@ public class ExtractAuthorsID
       }
     }    
     
-    //Apre Author con buffer
-    
+    //Apre Author con buffer    
     reader = null;
     sc = null;
     List<String> autoriTrovati = new LinkedList<String>();
@@ -69,8 +64,7 @@ public class ExtractAuthorsID
     
     int i=1;
     int j=1;
-    
-    
+        
     try {
       reader = new FileReader(listaAuthors);
       sc = new Scanner(reader);
@@ -81,7 +75,7 @@ public class ExtractAuthorsID
         String line = sc.nextLine();
         //System.out.println(line);
         
-        //Pigghia una riga, estrae il nome (2^ colonna) e cerca contains
+        //Estrae una riga, estrae il nome (2^ colonna) e cerca contains
         parse = new Scanner(line);
         String ID = parse.next();
         String nome = parse.next();
@@ -125,9 +119,5 @@ public class ExtractAuthorsID
         sc.close();
       }
     }    
-    
-    
-    
-    //System.out.println("Ciao, Mondo di Java!");
   }
 }
