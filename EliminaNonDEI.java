@@ -1,8 +1,5 @@
 //Da fare:
 
-
-
-
 //import java.util.Scanner;
 //import java.io.FileReader;
 //import java.io.FileNotFoundException;
@@ -14,20 +11,17 @@ import java.util.*;
 
 //import org.apache.commons.io.*;
 
-public class EliminaInfiltrati
+public class EliminaNonDEI
 {
   public static void main(String[] args)
   {
-    //nella lista di paper di autori del DEI e infiltrati
+    //nella lista di paper di autori del DEI e non DEI
     //cerco l'affiliation (se c'è) nella lista di affiliation di padova
-    //se c'è copio
-    
-    
+    //se l'autore è davvero padovano, lo copio
     
     String affiliation = "PadovaPadua.txt";
     String paperList = "PaperAutAffDEI.txt";
     String output = "PaperRealiDEI.txt";
-   
    
     //Carico gli id delle affiliation in una HashSet
     
@@ -66,14 +60,10 @@ public class EliminaInfiltrati
       }
     }    
     
-    
     //Da PaperAutAffDEI estraggo i paper del DEI (e non degli omonimi) (se c'è l'affiliation)
-    
     
     reader = null;
     sc = null;
-    //List<String> autoriTrovati = new LinkedList<String>();
-    //File out = new File("output.txt");
     BufferedWriter writer = null;
     
     int i=1;  //riga analizzata
@@ -90,7 +80,7 @@ public class EliminaInfiltrati
         String line = sc.nextLine();
         //System.out.println(line);
         
-        //Pigghia una riga, estrae l'ID affiliation (3^ colonna) e cerca contains
+        //Estrae una riga, estrae l'ID affiliation (3^ colonna) e vede se è nel Set
         parse = new Scanner(line);
         String paperID = parse.next();    //c'è sempre
         String authorID = parse.next();   //c'è sempre
@@ -99,7 +89,7 @@ public class EliminaInfiltrati
           affID = parse.next();
         }
         
-        //Se c'è copia il paper DEI reale
+        //Se c'è copia il paper autoctono
         if(affID != null && setIDAffiliation.contains(affID)) {
           System.out.println(j+"a istanza alla riga "+i+":\t"+line);
           //autoriTrovati.add(line);
@@ -108,11 +98,10 @@ public class EliminaInfiltrati
         }
         
         System.out.println("Paper: "+paperID+"\tAutore: "+authorID+"\tAffiliation: "+affID);
-        //System.out.println("ID: "+ID+"\tNome:|"+nome+"|\t\t\tautore DEI? "+setDEI.contains(nome));
         i=i+1;
       }
       
-      //writeLines(out, autoriTrovati);
+      //writeLines(out, autoriTrovati);     //sarebbe bello se apache.io andasse
       //System.out.println(autoriTrovati);
       
     } catch(Exception e){
@@ -136,12 +125,5 @@ public class EliminaInfiltrati
         sc.close();
       }
     }    
-    
-    
-    //lo ordino per paper
-    
-    //qualcun altro farà un check di chi sono le affiliation
-    //*/
-    //System.out.println("Ciao, Mondo di Java!");
   }
 }
