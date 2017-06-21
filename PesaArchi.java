@@ -25,12 +25,13 @@ public class PesaArchi
     //a
     //autore1 autore2 2
     //autore1 autore3 1
-    //un altro modo per farlo è caricare man mano gli archi in un set
-    
+    //un altro modo per farlo è caricare man mano gli archi in un set    
     
     String input = "EdgeDEI.txt";
+    input = "EdgePadovani.txt";
     //input  = "PesaArchiTest.txt";
     String output = "EdgeDEIPesati1.txt";
+    output = "EdgePadovaniPesati.txt";
     //output  = "PesaArchiTestOutput.txt";
    
     FileReader reader = null;

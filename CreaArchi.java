@@ -27,13 +27,14 @@ public class CreaArchi
     //a (arco in ordine lessicografico)
     //autore1 autore2
     //autore1 autore3
-    //autore1 autore2
-    
+    //autore1 autore2    
     
     String input = "PaperAutAffDEIOrdinatiPAPER.txt";
-    input  = "CreaArchiTest.txt";
+    input  = "PaperPadovani.txt";
+    //input  = "CreaArchiTest.txt";
     String output = "EdgeDEI1.txt";
-    output = "CreaArchiOutput.txt";
+    output = "EdgePadovani.txt";
+    //output = "CreaArchiOutput.txt";
    
     FileReader reader = null;
     Scanner sc = null;
@@ -85,34 +86,8 @@ public class CreaArchi
             System.out.println("Coppia "+arco+"\b");
           }
         }
-        
-       
-        /*
-        i=i+1;
-        if(i%1000 == 0) {System.out.println(i);}
-        String newLine = sc.nextLine();       //e se fosse l'ultima?
-        newParse = new Scanner(newLine);
-        String nextPaper = newParse.next();   //se thePaper e nextPaper sono uguali guarda anche il prossimo
-        
-        while(sc.hasNextLine() && thePaper.equals(nextPaper)) {
-          autori.add(newParse.next());        //visto che sono uguali metto l'autore in lista
-          newLine = sc.nextLine();            //posso perché se no non sarebbe entrato nel while
-          newParse = new Scanner(newLine);    //stringa Paper Autore successiva
-          nextPaper = newParse.next();        //paper che confronterò nel while
-        }
-        //*/
-        
-        //System.out.println(line);
-        
-        
-        //String authorID = parse.next();
-        
-        //System.out.println("Paper: "+thePaper+"\tAutore: "+authorID);
       }
-      System.out.println(i+" paper hanno un autore singolo del DEI");
-      //writeLines(out, autoriTrovati);
-      //System.out.println(autoriTrovati);
-      
+      System.out.println(i+" paper hanno un autore singolo");      
     } catch(Exception e){
       System.err.println("Error: "+e.getMessage());
     } finally {
