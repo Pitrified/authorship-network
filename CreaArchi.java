@@ -18,7 +18,7 @@ public class CreaArchi
 {
   public static void main(String[] args)
   {
-    //da  (già ordinato per paper)
+    //da  (già ordinato per paper) !!!!!
     //paper1 autore1
     //paper1 autore2
     //paper1 autore3
@@ -31,9 +31,11 @@ public class CreaArchi
     
     String input = "PaperAutAffDEIOrdinatiPAPER.txt";
     input  = "PaperPadovani.txt";
+    input  = "PaperPadovaniCompleti.txt";
     //input  = "CreaArchiTest.txt";
     String output = "EdgeDEI1.txt";
     output = "EdgePadovani.txt";
+    output = "EdgePadovaniCompleti.txt";
     //output = "CreaArchiOutput.txt";
    
     FileReader reader = null;

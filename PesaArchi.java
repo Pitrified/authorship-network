@@ -18,7 +18,7 @@ public class PesaArchi
 {
   public static void main(String[] args)
   {
-    //da
+    //da  (ORDINATO)
     //autore1 autore2
     //autore1 autore3
     //autore1 autore2
@@ -29,9 +29,11 @@ public class PesaArchi
     
     String input = "EdgeDEI.txt";
     input = "EdgePadovani.txt";
+    input = "EdgePadovaniCompleti.txt";
     //input  = "PesaArchiTest.txt";
     String output = "EdgeDEIPesati1.txt";
     output = "EdgePadovaniPesati.txt";
+    output = "EdgePadovaniPesatiCompleti.txt";
     //output  = "PesaArchiTestOutput.txt";
    
     FileReader reader = null;
