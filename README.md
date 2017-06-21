@@ -30,7 +30,7 @@ Con le coppie: ID autore  Nome autore DEI
 Il programma ExtractPapersDEI cerca gli ID degli autori DEI all'interno di PaperAuthorAffiliations.txt e produce
 PaperAutAffDEI.txt            14.360 righe
 con la stessa struttura di PaperAuthorAffiliations.txt
-è da notare che di questi paper, 8.907 non hanno il campo affiliation compilato
+di questi paper, 8.907 non hanno il campo affiliation compilato
 
 Il file PaperAutAffDEI viene ordinato per Paper ID, in modo da avere in sequenza 
 paper1 autore1
@@ -58,4 +58,6 @@ PadovaPadua.txt
 2 Affiliation name
 
 Dal file PaperAutAffDEI EliminaNonPadova estrae solo i paper con affiliation padovana si ottengono 2.875 paper salvati in
-PaperDEIPadovani.txt
+PaperPadovani.txt
+
+Il file EstraiAutoriPadovani estrae da AutoriDEI quelli che hanno un paper in PaperPadovani, 248 autori salvati in AutoriPadovani

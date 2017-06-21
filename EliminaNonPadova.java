@@ -21,7 +21,7 @@ public class EliminaNonPadova
     
     String affiliation = "PadovaPadua.txt";
     String paperList = "PaperAutAffDEI.txt";
-    String output = "PaperDEIPadovani.txt";
+    String output = "PaperPadovani.txt";
    
     //Carico gli id delle affiliation in una HashSet
     
