@@ -52,6 +52,15 @@ autore1 autore2 2
 autore1 autore3 1
 autore2 autore3 1
 ```
+
+Una lista di autori si può estrarre senza considerare le affiliazioni ma cercando tra gli autori quelli che hanno collaborato almeno una volta (ipotizzando sia improbabile che un omonimo autore abbia lavorato con un afferente DEI):
+
+**EstraiAutoriCollab.java** estrae da *AutoriDEI.txt* (che sono 2135) gli autori che compaiono almeno una volta in *EdgeDEIPesati.txt*, salvati in *AutoriCollab.txt* (che sono 247). Circa il 75% degli autori compare nella componente centrale salvata in *EDAT_GiantComp.pdf*
+
+---
+
+Un altro modo per estrarre una lista di autori è tramite le Affiliation:
+
 Filtrando il file *Affiliation.txt* con "Padova|Padua" risultano 8.285 istituzioni Padovane, copiate in *PadovaPadua.txt*
 
 **EliminaNonPadova.java**: cerca gli ID delle affiliation padovane (*PadovaPadua.txt*) all'interno di *PaperAutAffDEI.txt*: risultano 2.875 paper, copiati in *PaperPadovani.txt*.
@@ -59,9 +68,3 @@ Filtrando il file *Affiliation.txt* con "Padova|Padua" risultano 8.285 istituzio
 **EstraiAutoriPadovani.java** estrae da *AutoriDEI.txt* quelli che hanno un paper in *PaperPadovani.txt*: 248 autori salvati in *AutoriPadovani.txt* (prova a rimuovere gli omonimi, che probabilmente non avranno pubblicazioni a Padova, tenendo gli autori con almeno un paper con affiliazione padovana)
 
 **EstraiAutoriPadovaniCompleti.java** estrae da *PaperAutAffDEI.txt* i paper scritti da *AutoriPadovani.txt*, copiati in *PaperPadovaniCompleti.txt*, a cui si applicano **CreaArchi** e **PesaArchi** per generare *EdgePadovaniCompletiPesati.txt*. Il grafo formato da questi archi, caricato in Gephi e manipolato risulta nella componente centrale visualizzabile in *EPCP_GiantComp.pdf*
-
----
-
-Una lista di autori si può estrarre senza considerare le affiliazioni ma cercando tra gli autori quelli che hanno collaborato almeno una volta (ipotizzando sia improbabile che un omonimo autore abbia lavorato con un afferente DEI)
-
-**EstraiAutoriCollab.java** estrae da *AutoriDEI.txt* (che sono 2135) gli autori che compaiono almeno una volta in *EdgeDEIPesati.txt*, salvati in *AutoriCollab.txt* (che sono 247). Circa il 75% degli autori compare nella componente centrale salvata in *EDAT_GiantComp.pdf*
