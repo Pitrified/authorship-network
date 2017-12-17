@@ -33,7 +33,7 @@ public class PesaArchi
     //input  = "PesaArchiTest.txt";
     String output = "EdgeDEIPesati1.txt";
     output = "EdgePadovaniPesati.txt";
-    output = "EdgePadovaniPesatiCompleti.txt";
+    output = "EdgePadovaniCompletiPesati.txt";
     //output  = "PesaArchiTestOutput.txt";
    
     FileReader reader = null;
@@ -53,7 +53,7 @@ public class PesaArchi
         do {
           newLine = sc.nextLine();            //la prossima riga forse non c'è solo la prima volta
           if(line.equals(newLine)) {          //sono uguali?
-            weight=weight+1;      //alzo il peso
+            weight=weight+1;                  //alzo il peso
           }
         } while(sc.hasNextLine() && line.equals(newLine));  //se sono diversi o è finito il file esce
 
@@ -62,11 +62,11 @@ public class PesaArchi
 
         line = newLine;                       //il prossimo ciclo questa sarà la line col paper
         if(!sc.hasNextLine()) {               //se è l'unica rimasta
-          writer.write(line+"\t1\r\n");   //sarà un edge con peso 1
+          writer.write(line+"\t1\r\n");       //sarà un edge con peso 1
           //System.out.println("Coppia "+line+"\t"+"1");
         }
       }
-      //System.out.println(autoriTrovati);
+      System.out.println("");
       
     } catch(Exception e){
       System.err.println("Error: "+e.getMessage());
