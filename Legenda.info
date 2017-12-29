@@ -1,4 +1,4 @@
-PROGRAMMI
+### PROGRAMMI ###
 
 Titolo:: ExtractAuthorsID.java
 Input:: PersoneDei.txt
@@ -94,12 +94,13 @@ Commento:: ok
 Titolo:: CollassaNodiAmpi.py
 Input:: EdgeCollabPesatiAmpi.txt; EdgePadovaniCompletiPesatiAmpi.txt
 Database:: PersoneDEI.txt; AutoriCollabAmpiOrdinatiNOMEpoiID.txt; AutoriPadovaniAmpiOrdinatiNOMEpoiID.txt
-Output:: EdgeCollabPesatiAmpiUnificati.txt; EdgePadovaniCompletiPesatiAmpiUnificati.txt
+Output:: EdgeCollabPesatiAmpiUnificatiBis.txt; EdgePadovaniCompletiPesatiAmpiUnificatiBis.txt
 Descrizione:: collassa i nodi risalendo anche da abbreviazione a nome completo
-Commento:: ??? negli edge padovani ne spariscono troppi
+Commento:: ok con Bis
 
 
-FILE
+### FILE ###
+
 Authors			123.017.489 lines
 Papers
 PaperAuthorAffiliations	325.498.063 lines
@@ -134,12 +135,12 @@ AutoriPadovaniAmpi.txt	401	EstraiAutoriPadovani.java	IDaut-nomeAutore	considerat
 PaperPadovaniCompletiAmpi.txt	13721	EstraiAutoriPadovaniCompleti.java	IDpap-IDaut-IDaff	da PapAutAffDEIampi prendo tutti i paper scritti da AutoriPadovaniAmpi
 EdgePadovaniCompletiPesatiAmpi.txt	892	CreaEdgeCollab.py	IDaut1-IDaut2-peso	edge pesati tra autori che hanno collaborato su un PaperPadovaniCompletiAmpi
 EdgePadovaniCompletiPesatiAmpiUnificati.txt	232	CollassaNodiAmpi.py	IDaut1-IDaut2-peso	edge pesati con IDaut uno per nome collassati (660 erano archi tra stessi autori)
+EdgePadovaniCompletiPesatiAmpiUnificatiBis.txt	494	CollassaNodiAmpi.py	IDaut1-IDaut2-peso	edge pesati con IDaut uno per nome collassati (398 erano archi tra la stessa coppia di autori)
+EdgeCollabPesatiAmpiUnificatiBis.txt	693	CollassaNodiAmpi.py	IDaut1-IDaut2-peso	edge pesati con IDaut uno per nome collassati (961 erano archi tra la stessa coppia di autori)
 
 
 
-
-
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+### EXTRA ###
 PadovaPaduaFiltratoDEI	da PadovaPadua con il filtro dei dep|dei uni|dei pad|informa
 AutoriDEISingoli	da AutoriDEI togliendo gli omonimi
 
