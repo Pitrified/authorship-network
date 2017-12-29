@@ -19,9 +19,12 @@ public class EstraiAutoriPadovani
     //scorro AutoriDEI, se il loro ID è nel set
     //Salvo ID e autore in AutoriPadovani
     
-    String paperPadova = "PaperPadovani.txt";
-    String autoriDEI = "AutoriDEI.txt";
-    String output = "AutoriPadovani.txt";
+    //String paperPadova = "PaperPadovani.txt";
+    String paperPadova = "PaperPadovaniAmpi.txt";
+    //String autoriDEI = "AutoriDEI.txt";
+    String autoriDEI = "AutoriDEIampi.txt";
+    //String output = "AutoriPadovani.txt";
+    String output = "AutoriPadovaniAmpi.txt";
    
     //Carico gli id delle affiliation in una HashSet
     

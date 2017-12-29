@@ -19,9 +19,12 @@ public class EstraiAutoriCollab
     //scorro AutoriDEI, se il loro ID è nel set
     //Salvo ID e autore in AutoriCollab
     
-    String edgeCollab = "EdgeDEIPesati.txt";
-    String autoriDEI = "AutoriDEI.txt";
-    String output = "AutoriCollab.txt";
+    //String edgeCollab = "EdgeDEIPesati.txt";
+    String edgeCollab = "EdgeCollabPesatiAmpi.txt";
+    //String autoriDEI = "AutoriDEI.txt";
+    String autoriDEI = "AutoriDEIampi.txt";
+    //String output = "AutoriCollab.txt";
+    String output = "AutoriCollabAmpi.txt";
    
     //Carico gli id degli autori in una HashSet
     

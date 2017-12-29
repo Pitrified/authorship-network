@@ -20,8 +20,10 @@ public class EliminaNonPadova
     //se l'autore è davvero padovano, lo copio
     
     String affiliation = "PadovaPadua.txt";
-    String paperList = "PaperAutAffDEI.txt";
-    String output = "PaperPadovani.txt";
+    //String paperList = "PaperAutAffDEI.txt";
+    String paperList = "PapAutAffDEIampi.txt";
+    //String output = "PaperPadovani.txt";
+    String output = "PaperPadovaniAmpi.txt";
    
     //Carico gli id delle affiliation in una HashSet
     
