@@ -18,12 +18,12 @@ public class EliminaNonPadova
     //nella lista di paper di autori del DEI e non DEI
     //cerco l'affiliation (se c'è) nella lista di affiliation di padova
     //se l'autore è davvero padovano, lo copio
-    
+    String CARTELLA = "Versione2\\";
     String affiliation = "PadovaPadua.txt";
     //String paperList = "PaperAutAffDEI.txt";
-    String paperList = "PapAutAffDEIampi.txt";
+    String paperList = CARTELLA+"PapAutAffDEIampi.txt";
     //String output = "PaperPadovani.txt";
-    String output = "PaperPadovaniAmpi.txt";
+    String output = CARTELLA+"PaperPadovaniAmpi.txt";
    
     //Carico gli id delle affiliation in una HashSet
     
@@ -73,6 +73,7 @@ public class EliminaNonPadova
     
     
     try {
+      System.out.println("Path: "+paperList);
       reader = new FileReader(paperList);
       sc = new Scanner(reader);
       writer = new BufferedWriter(new FileWriter(output));

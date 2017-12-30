@@ -7,6 +7,9 @@
 #a rossi-> aldo rossi
 #m rossi-> michele rossi
 
+#CARTELLA = "Versione2\\"
+CARTELLA = "Versione1Ampi\\"
+
 def printType(obj):
   print obj, " - ", type(obj)
   
@@ -33,7 +36,7 @@ def trovaNome(abbreviato):
   return "NAMENOTFOUND!"
 
 dpersone = {}                       #dizionario persone con abbreviazioni
-fpersone = open("PersoneDEI.txt")
+fpersone = open(CARTELLA+"PersoneDEI.txt")
 for line in fpersone:
   line = line.rstrip()
   dpersone.update({line:set()})
@@ -56,51 +59,69 @@ for line in fpersone:
   elif len(pz)==6:
     dpersone[line].add(pz[0][0]+" "+pz[1][0]+" "+pz[2][0]+" "+pz[3][0]+" "+pz[4][0]+" "+pz[5])
   
-#fautori = open("AutoriCollabOrdinatiNOMEpoiIDridotto.txt", "r")
-fautori = open("AutoriCollabAmpiOrdinatiNOMEpoiID.txt", "r")  #produce Bis
-#fautori = open("AutoriPadovaniAmpiOrdinatiNOMEpoiID.txt", "r") #produce Bis
-#fautori = open("AutoriDEIampi.txt", "r")          #produce Ter
-dautori = {}
+#fautori = open(CARTELLA+"AutoriCollabOrdinatiNOMEpoiIDridotto.txt", "r")
+#fautori = open(CARTELLA+"AutoriCollabAmpiOrdinatiNOMEpoiID.txt", "r")  #produce Bis
+#fautori = open(CARTELLA+"AutoriCollabAmpi.txt", "r")  #produce Bis
+#fautori = open(CARTELLA+"AutoriPadovaniAmpiOrdinatiNOMEpoiID.txt", "r") #produce Bis
+fautori = open(CARTELLA+"AutoriPadovaniAmpi.txt", "r") #produce Bis
+#fautori = open(CARTELLA+"AutoriDEIampi.txt", "r")          #produce Ter
+dautori = {}  #{nome:[IDaut,IDaut,...,IDaut]}
+dIDautori = {}  #{IDaut:nome}
 
 for line in fautori:
   pezzi = line.split("\t", 1)
-  pezzi[1] = pezzi[1].rstrip()          #tolgo il \n
+  
+  pezzi[1] = pezzi[1].rstrip()      #tolgo il \n
   nome = trovaNome(pezzi[1])        #trovo il nome completo
   if not dautori.has_key(nome):
     dautori.update({nome:[]})       #creo una lista vuota per la chiave nome, NOME
-  print "Nome:",nome,"Pezzi[1]",pezzi[1]
+  #print "Nome:",nome,"Pezzi[1]",pezzi[1]
   if nome == pezzi[1]:              #il nome era gia' completo
     dautori[nome].insert(0, pezzi[0])   #inserisco il nome all'inizo della lista
-    print "Metto in cima lalala"
+    #print "Metto in cima lalala"
   else:                             #era un nome abbreviato
-    dautori[nome].append(pezzi[0])  #aggiungo l'IDaut (relativo ad un abbreviazione) alla fine della lista  
+    dautori[nome].append(pezzi[0])  #aggiungo l'IDaut (relativo ad un abbreviazione) alla fine della lista
+
+  dIDautori.update({pezzi[0]:pezzi[1]})
 fautori.close()
 
 #print dautori
+#print dIDautori
 
-#fedge = open("EdgeDEIPesatiRidotto.txt", "r")
-fedge = open("EdgeCollabPesatiAmpi.txt", "r")
-#fedge = open("EdgePadovaniCompletiPesatiAmpi.txt", "r")
-fedgenuovi = open("EdgeCollabPesatiAmpiUnificatiBis.txt", "w")
-#fedgenuovi = open("EdgePadovaniCompletiPesatiAmpiUnificatiBis.txt", "w")
-#fedgenuovi = open("EdgePadovaniCompletiPesatiAmpiUnificatiTer.txt", "w")
-dpesato = {}
+#fedge = open(CARTELLA+"EdgeDEIPesatiRidotto.txt", "r")
+#fedge = open(CARTELLA+"EdgeCollabPesatiAmpi.txt", "r")
+fedge = open(CARTELLA+"EdgePadovaniCompletiPesatiAmpi.txt", "r")
+#fedgenuovi = open(CARTELLA+"EdgeCollabPesatiAmpiUnificati.txt", "w")
+fedgenuovi = open(CARTELLA+"EdgePadovaniCompletiPesatiAmpiUnificatiTemp.txt", "w")
+#fedgenuovi = open(CARTELLA+"EdgePadovaniCompletiPesatiAmpiUnificatiTer.txt", "w")
+#fautorinuovi = open(CARTELLA+"AutoriCollabAmpiUnificati.txt", "w")
+fautorinuovi = open(CARTELLA+"AutoriPadovaniAmpiUnificati.txt", "w")
+dpesato = {}  #edge unificati
+dautoriunificati = {} #autori unificati
 
 for line in fedge:
   pezzi = line.split("\t")
+  
   id0 = trovaSostituto(pezzi[0])
-  id1 = trovaSostituto(pezzi[1])
-  
+  id1 = trovaSostituto(pezzi[1])  
   if id0<id1: coppia = id0+"\t"+id1
-  else: coppia = id1+"\t"+id0
-  
+  else: coppia = id1+"\t"+id0  
   if not dpesato.has_key(coppia): dpesato.update({coppia:int(pezzi[2].rstrip())})
   else: dpesato[coppia]+=int(pezzi[2].rstrip())
+
+  dautoriunificati.update({id0:dIDautori[id0]})
+  dautoriunificati.update({id1:dIDautori[id1]})
     
 #print dpesato
+print "len ID:",str(len(dIDautori)),"len unificati:",str(len(dautoriunificati))
 
 for entry in dpesato:
   fedgenuovi.write(entry+"\t"+str(dpesato[entry])+"\n")
+
+for entry in dautoriunificati:
+  fautorinuovi.write(entry+"\t"+dautoriunificati[entry]+"\n")
   
 fedge.close()
 fedgenuovi.close()
+fautorinuovi.close()
+

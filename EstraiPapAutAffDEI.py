@@ -12,9 +12,10 @@ for line in faut:
   #print pezzi[0]
   sidaut.add(pezzi[0])
   
-pat="C:\Users\Pietro\Documents\Universit"+u"\u00E0"+"\Tesi\Programmi\PaperAuthorAffiliations.txt"
+#pat="C:\Users\Pietro\Documents\Universit"+u"\u00E0"+"\Tesi\Programmi\PaperAuthorAffiliations.txt"
+pat = "C:\Users\Test\Documents\Tesi\FileRAW\PaperAuthorAffiliations.txt"
 fid = open(pat, "r")
-fout = open("PapAutAffDEIampi0.txt", "w") 
+fout = open("PapAutAffDEIampi.txt", "w") 
 
 for line in fid:
   pezzi = line.split("\t")

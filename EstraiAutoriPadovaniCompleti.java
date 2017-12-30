@@ -18,12 +18,13 @@ public class EstraiAutoriPadovaniCompleti
     //filtro PaperAutAffDEI e tengo i paper scritti da autori che hanno almeno un paper con affiliation padovana
     //in PaperPadovaniCompleti alcuni paper non avranno affiliation
     
+    String CARTELLA = "Versione2\\";
     //String autoriPadovani = "AutoriPadovani.txt";
-    String autoriPadovani = "AutoriPadovaniAmpi.txt";
+    String autoriPadovani = CARTELLA+"AutoriPadovaniAmpi.txt";
     //String paperAutAff = "PaperAutAffDEI.txt";
-    String paperAutAff = "PapAutAffDEIampi.txt";
+    String paperAutAff = CARTELLA+"PapAutAffDEIampi.txt";
     //String output = "PaperPadovaniCompleti.txt";
-    String output = "PaperPadovaniCompletiAmpi.txt";
+    String output = CARTELLA+"PaperPadovaniCompletiAmpi.txt";
    
     //Carico gli id autori in una HashSet
     

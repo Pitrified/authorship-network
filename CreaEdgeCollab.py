@@ -4,13 +4,15 @@
 #carico in dizionario IDpap:IDaut1,IDaut2,IDaut3
 #creo gli edge IDaut1.2;13;23;
 
+CARTELLA = "Versione2\\"
+
 def ptype(obj):
   print obj, " - ", type(obj)
 
 #carico il dizionario {paper:[a1,a2,a4,a3]}
 dpaa = {}
-fpaa = open("PapAutAffDEIampi.txt")
-#fpaa = open("PaperPadovaniCompletiAmpi.txt")
+#fpaa = open(CARTELLA+"PapAutAffDEIampi.txt")
+fpaa = open(CARTELLA+"PaperPadovaniCompletiAmpi.txt")
 for line in fpaa:
   pezzi = line.split("\t")
   if not dpaa.has_key(pezzi[0]): dpaa.update({pezzi[0]:[]})     #se non c'e' la chiave creo lista vuota
@@ -38,7 +40,7 @@ for entry in dpaa:
     i+=1
 #print dedgepesati
 
-fedge = open("EdgeCollabPesatiAmpi.txt", "w")
-#fedge = open("EdgePadovaniCompletiPesatiAmpi.txt", "w")
+#fedge = open(CARTELLA+"EdgeCollabPesatiAmpi.txt", "w")
+fedge = open(CARTELLA+"EdgePadovaniCompletiPesatiAmpi.txt", "w")
 for entry in dedgepesati:
   fedge.write(entry+"\t"+str(dedgepesati[entry])+"\n")
