@@ -3,20 +3,21 @@
 import re
   
  
-dir = r'C:\Users\Test\Documents\Tesi\authorship-network\Versione2'    #cartella in cui lavora
-nome = "LegendaFile.info"
+dir = r'C:\Users\Test\Documents\Tesi\authorship-network'    #cartella in cui lavora
+nome = "LegendaProgrammi.info"
 fullname = dir+"\\"+nome
 finput = open(fullname, "r")
 strInput = finput.readline()        #tolgo la prima riga di titolo
 strInput = finput.read()
 
-nome = "LegendaFile.md"
+strInput = strInput.replace(";","<br/>")
+
+nome = "LegendaProgrammi.md"
 fullname = dir+"\\"+nome
 foutput = open(fullname, "w")
-foutput.write("# FILE\n")
-foutput.write("Nome|#entry|Generato da|Struttura|Commento\n")
-foutput.write("|-|-|-|-|-|\n")
-foutput.write(re.sub("(.*?)\t(.*?)\t(.*?)\t(.*?)\t(.*?)\n", r'|<p style="width:130px;"><sub>\1</sub></p> | <sub>\2</sub> | <p style="width:130px;"><sub>\3</sub></p> | <p style="width:80px;"><sub>\4</sub></p> | <sub>\5</sub>|\n', strInput))
+foutput.write("# PROGRAMMI\n")
+foutput.write(re.sub("Titolo:: (.*?)\nInput:: (.*?)\nDatabase:: (.*?)\nOutput:: (.*?)\nDescrizione:: (.*?)\nCommento:: (.*?)\n", r'||\1|\n|-|-|\n|Input|\2|\n|Database|\3|\n|Output|\4|\n|Descrizione|\5|\n|Commento|\6|\n', strInput))
+#foutput.write(re.sub("(.*?)(.*?)\t(.*?)\t(.*?)\t(.*?)\t(.*?)\n", r'|<p style="width:130px;"><sub>\1</sub></p> | <sub>\2</sub> | <p style="width:130px;"><sub>\3</sub></p> | <p style="width:80px;"><sub>\4</sub></p> | <sub>\5</sub>|\n', strInput))
 
 finput.close()
 foutput.close()
