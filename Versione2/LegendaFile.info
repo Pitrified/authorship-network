@@ -1,0 +1,42 @@
+### FILE ###
+
+Database aggiornato al 2015/08/28
+Authors			123.017.489 lines
+Papers
+PaperAuthorAffiliations	325.498.063 lines
+Affiliations		2.719.436 lines
+
+PersoneDEIOLD.txt	353	manualmente	nomi	nomi di afferenti DEI dal sito di dipartimento
+PersoneDEI.txt	434	manualmente	nomi	nomi di afferenti DEI dal sito di dipartimento aggiornato al 2017/12/29 con duplicati sugli accenti
+AutoriDEI.txt	2135	ExtractAuthorsID.java	IDaut-nomeAutore	coppie ID autore
+PadovaPadua.txt	8285	emeditor	IDaff-nomeAffiliation	affiliazioni in Affiliations.txt con Padova o Padua nel nome
+PaperAutAffDEI.txt	14360	ExtractPapersDEI.java	IDpap-IDaut-IDaff	gli autori sono in AutoriDEI
+PaperPadovani.txt	2875	EliminaNonPadova.java	IDpap-IDaut-IDaff	le affiliation sono in PadovaPadua (e gli autori in AutoriDEI)
+EdgeDEI.txt	2413	CreaArchi.java	IDaut1-IDaut2	edge tra autori che hanno collaborato su un PaperAutAffDEI
+EdgeDEIPesati.txt	488	PesaArchi.java	IDaut1-IDaut2-peso	edge pesati
+AutoriCollab.txt	247	EstraiAutoriCollab.java	IDaut-nomeAutore	considerati del DEI perche' hanno collaborato con nomi in AutoriDEI in un paper in PaperAutAffDEI
+AutoriPadovani.txt	248	EstraiAutoriPadovani.java	IDaut-nomeAutore	considerati del DEI perche' hanno almeno un paper in PaperPadovani (ossia in PaperAutAffDEI con affiliation in PadovaPadua)
+EdgePadovani.txt	43	CreaArchi.java	IDaut1-IDaut2	edge tra autori che hanno collaborato su un PaperPadovani
+EdgePadovaniPesati.txt	31	PesaArchi.java	IDaut1-IDaut2-peso	edge pesati
+PaperPadovaniCompleti.txt	7014	EstraiAutoriPadovaniCompleti.java	IDpap-IDaut-IDaff	da PaperAutAffDEI prendo tutti i paper scritti da AutoriPadovani
+EdgePadovaniCompleti.txt	2295	CreaArchi.java	IDaut1-IDaut2	edge tra autori che hanno collaborato su un PaperPadovaniCompleti
+EdgePadovaniCompletiPesati.txt	404	PesaArchi.java	IDaut1-IDaut2-peso	edge pesati
+AffiliationPadovane.txt	887	ignoto	IDaff-nomeAffiliation	lista di affiliation padovane misteriose ???
+EdgeDEIPesatiUnificati.txt	351	CollassaNodi.py	IDaut1-IDaut2-peso	edge pesati con IDaut uno per nome collassati (137 erano archi tra stessi autori)
+EdgePadovaniCompletiPesatiUnificati.txt	285	CollassaNodi.py	IDaut1-IDaut2-peso	edge pesati con IDaut uno per nome collassati (119 erano archi tra stessi autori)
+PersoneDEIampie.txt	778	EstraiIDAutoriDEIampi.py	nomi	nomi con tutte le combinazioni di iniziali abbreviate
+AutoriDEIampi.txt	9388	EstraiIDAutoriDEIampi.py	IDaut-nomeAutore	coppie ID autore con anche le iniziali dei nomi
+PapAutAffDEIampi.txt	64391	EstraiPapAutAffDEI.py	IDpap-IDaut-IDaff	gli autori sono in AutoriDEIampi
+PapersDEITitoliAmpi.txt	51958	EstraiTitoliPaper.py	IDpap-titoloPaper	titoli dei paper in PapAutAffDEIampi ??? da aggiornare se serve
+EdgeCollabPesatiAmpi.txt	2127	CreaEdgeCollab.py	IDaut1-IDaut2-peso	edge pesati tra autori che hanno un paper in comune in PapAutAffDEIampi
+AutoriCollabAmpi.txt	873	EstraiAutoriCollab.java	IDaut-nomeAutore	considerati del DEI perche' hanno collaborato con nomi in AutoriDEIampi in un paper in PapAutAffDEIampi
+EdgeCollabPesatiAmpiUnificati.txt	806	CollassaNodiAmpi.py	IDaut1-IDaut2-peso	edge pesati con IDaut uno per nome collassati (? erano archi tra stessi autori)
+AutoriCollabAmpiUnificati.txt	228	CollassaNodiAmpi.py	IDaut-nomeAutore	nodi restanti dopo il collasso
+PaperPadovaniAmpi.txt	4407	EliminaNonPadova.java	IDpap-IDaut-IDaff	le affiliation sono in PadovaPadua (e gli autori in AutoriDEIampi)
+AutoriPadovaniAmpi.txt	415	EstraiAutoriPadovani.java	IDaut-nomeAutore	considerati del DEI perche' hanno almeno un paper in PaperPadovaniAmpi (ossia in PapAutAffDEIampi con affiliation in PadovaPadua)
+AutoriPadovaniAMpiUnificati.txt	175	CollassaNodiAmpi.py	IDaut-nomeAutore	nodi restanti dopo il collasso
+PaperPadovaniCompletiAmpi.txt	13939	EstraiAutoriPadovaniCompleti.java	IDpap-IDaut-IDaff	da PapAutAffDEIampi prendo tutti i paper scritti da AutoriPadovaniAmpi
+EdgePadovaniCompletiPesatiAmpi.txt	932	CreaEdgeCollab.py	IDaut1-IDaut2-peso	edge pesati tra autori che hanno collaborato su un PaperPadovaniCompletiAmpi
+EdgePadovaniCompletiPesatiAmpiUnificati.txt	534	CollassaNodiAmpi.py	IDaut1-IDaut2-peso	edge pesati con IDaut uno per nome collassati (? erano archi tra stessi autori)	erano 232
+EdgePadovaniCompletiPesatiAmpiUnificatiBis.txt	494	CollassaNodiAmpi.py	IDaut1-IDaut2-peso	edge pesati con IDaut uno per nome collassati (? erano archi tra la stessa coppia di autori)
+EdgeCollabPesatiAmpiUnificatiBis.txt	693	CollassaNodiAmpi.py	IDaut1-IDaut2-peso	edge pesati con IDaut uno per nome collassati (? erano archi tra la stessa coppia di autori)
