@@ -1,0 +1,10 @@
+### EXTRA ###
+
+PadovaPaduaFiltratoDEI	da PadovaPadua con il filtro dei dep|dei uni|dei pad|informa
+AutoriDEISingoli	da AutoriDEI togliendo gli omonimi
+
+PersoneDEI		353
+AutoriDEISingoli	274	nomi di PersoneDEI che hanno almeno un ID nel file gigante (2135 con gli omonimi())
+AutoriCollabSingoli	150	(247 con gli omonimi(stesso autore diverso ID))	18 sono in collab ma non in padovani
+AutoriPadovaniSingoli	147	(248)						15 sono in padovani ma non in collab
+			totale autori 132 (=150-18=147-15) +18+15	-> 165
