@@ -1,21 +1,14 @@
 #! python2
 
 import re
-
-def ptype(obj):
-  print obj, " - ", type(obj)
   
  
 dir = r'C:\Users\Test\Documents\Tesi\authorship-network\Versione2'    #cartella in cui lavora
 nome = "LegendaFile.info"
 fullname = dir+"\\"+nome
 finput = open(fullname, "r")
-#strInput = finput.read()
-
-#print finput
-#ptype(finput)
-#ptype(strInput)
-
+strInput = finput.readline()
+strInput = finput.read()
 
 nome = "LegendaFile.md"
 fullname = dir+"\\"+nome
@@ -23,20 +16,20 @@ foutput = open(fullname, "w")
 foutput.write("# FILE\n")
 foutput.write("Nome|#entry|Generato da|Struttura|Commento\n")
 foutput.write("|-|-|-|-|-|\n")
-
-#strelab = re.sub("", "", strInput)    #tolgo il titolo
-for line in finput:
-  #linelab = re.sub("(<.*?>)\t(<.*?>)\t(<.*?>)\t(<.*?>)\t(<.*?>)\n", "\1aa\2bb\3cc\4dd\5", line)
-  linelab = re.sub("(.*?)\t(.*?)\t(.*?)\t(.*?)\t(.*?)\n", r'|<p style="width:130px;">\1</p> | \2 | <p style="width:130px;">\3</p> | <p style="width:80px;">\4</p> | \5|\n', line)
-  foutput.write(linelab)
-  #serched = re.search("(.*?)\t(.*?)\t(.*?)\t(.*?)\t(.*?)\n", line)
-  #print line,"==>",linelab
-  #if serched: print serched.groups()
-  #else: print 'nomatch'
-
+foutput.write(re.sub("(.*?)\t(.*?)\t(.*?)\t(.*?)\t(.*?)\n", r'|<p style="width:130px;"><sub>\1</sub></p> | <sub>\2</sub> | <p style="width:130px;"><sub>\3</sub></p> | <p style="width:80px;"><sub>\4</sub></p> | <sub>\5</sub>|\n', strInput))
 
 finput.close()
 foutput.close()
+
+# #strelab = re.sub("", "", strInput)    #tolgo il titolo
+# for line in finput:
+  # #linelab = re.sub("(<.*?>)\t(<.*?>)\t(<.*?>)\t(<.*?>)\t(<.*?>)\n", "\1aa\2bb\3cc\4dd\5", line)
+  # linelab = re.sub("(.*?)\t(.*?)\t(.*?)\t(.*?)\t(.*?)\n", r'|<p style="width:130px;">\1</p> | \2 | <p style="width:130px;">\3</p> | <p style="width:80px;">\4</p> | \5|\n', line)
+  # foutput.write(linelab)
+  # #serched = re.search("(.*?)\t(.*?)\t(.*?)\t(.*?)\t(.*?)\n", line)
+  # #print line,"==>",linelab
+  # #if serched: print serched.groups()
+  # #else: print 'nomatch'
 
 
 ### FORMATO ### 

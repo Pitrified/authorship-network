@@ -1,3 +1,4 @@
+### FILE ###
 PersoneDEIOLD.txt	353	manualmente	nomeAut	nomi di afferenti DEI dal sito di dipartimento
 PersoneDEI.txt	434	manualmente	nomeAut	nomi di afferenti DEI dal sito di dipartimento aggiornato al 2017/12/29 con duplicati sugli accenti
 AutoriDEI.txt	2135	ExtractAuthorsID.java	IDaut-nomeAut	coppie ID autore
