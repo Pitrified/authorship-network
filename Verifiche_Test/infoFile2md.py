@@ -27,7 +27,7 @@ foutput.write("|-|-|-|-|-|\n")
 #strelab = re.sub("", "", strInput)    #tolgo il titolo
 for line in finput:
   #linelab = re.sub("(<.*?>)\t(<.*?>)\t(<.*?>)\t(<.*?>)\t(<.*?>)\n", "\1aa\2bb\3cc\4dd\5", line)
-  linelab = re.sub("(.*?)\t(.*?)\t(.*?)\t(.*?)\t(.*?)\n", r'|<p style="width:130px;">\1</p> | \2 | <p style="width:130px;">\3</p> | <p style="width:80px;">\4</p> | \5\n|', line)
+  linelab = re.sub("(.*?)\t(.*?)\t(.*?)\t(.*?)\t(.*?)\n", r'|<p style="width:130px;">\1</p> | \2 | <p style="width:130px;">\3</p> | <p style="width:80px;">\4</p> | \5|\n', line)
   foutput.write(linelab)
   #serched = re.search("(.*?)\t(.*?)\t(.*?)\t(.*?)\t(.*?)\n", line)
   #print line,"==>",linelab
