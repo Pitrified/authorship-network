@@ -35,11 +35,11 @@ def processaEdge(nome, est=".txt"):
 
 dir = r'C:\Users\Test\Documents\Tesi\authorship-network\Versione2'    #cartella in cui lavora
 
-processaNodi("AutoriPadovaniAmpiUnificati")
-processaNodi("AutoriCollabAmpiUnificati")
-processaNodi("AutoriPadovaniAmpi")
-processaNodi("AutoriCollabAmpi")
+processaNodi("AutoriPadovaniAmpiUnificatiBis")
+processaNodi("AutoriCollabAmpiUnificatiBis")
+#processaNodi("AutoriPadovaniAmpi")
+#processaNodi("AutoriCollabAmpi")
 
-processaEdge("EdgePadovaniCompletiPesatiAmpiUnificati")
-processaEdge("EdgeCollabPesatiAmpiUnificati")
+processaEdge("EdgePadovaniCompletiPesatiAmpiUnificatiBis")
+processaEdge("EdgeCollabPesatiAmpiUnificatiBis")
 
