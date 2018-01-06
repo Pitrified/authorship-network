@@ -3,10 +3,12 @@
 #carica da PaperAutAffDEI.txt gli ID dei paper scritti da AutoriDEI
 #scorri Papers.txt e se l'ID e' noto copia la riga
 
+CARTELLA = "Versione2\\"
+
 spaper = set()
 
-#fpapautaff = open("PaperAutAffDEI.txt", "r")
-fpapautaff = open("PapAutAffDEIampi.txt", "r")
+#fpapautaff = open(CARTELLA+"PaperAutAffDEI.txt", "r")
+fpapautaff = open(CARTELLA+"PapAutAffDEIampi.txt", "r")
 
 for line in fpapautaff:
   pezzi = line.split("\t", 1)
@@ -14,7 +16,8 @@ for line in fpapautaff:
 
 fpapautaff.close()
 
-pat="C:\Users\Pietro\Documents\Universit"+u"\u00E0"+"\Tesi\Programmi\Papers.txt"
+#pat="C:\Users\Pietro\Documents\Universit"+u"\u00E0"+"\Tesi\Programmi\Papers.txt"
+pat="C:\Users\Test\Documents\Tesi\FileRAW\Papers.txt"
 fpapers = open(pat, "r")
 ltitoli = []
 
@@ -26,6 +29,10 @@ for line in fpapers:
     
 #print ltitoli
 
-#ftitoli = open("PapersDEITitoli.txt", "w")
-ftitoli = open("PapersDEITitoliAmpi.txt", "w")
+#ftitoli = open(CARTELLA+"PapersDEITitoli.txt", "w")
+ftitoli = open(CARTELLA+"PapersDEITitoliAmpi.txt", "w")
 ftitoli.writelines(ltitoli)
+ftitoli.close()
+
+
+
