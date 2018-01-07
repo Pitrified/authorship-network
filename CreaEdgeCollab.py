@@ -2,57 +2,69 @@
 
 #in PapAutAffDEIampi.txt ho IDpap-IDaut
 #carico in dizionario IDpap:IDaut1,IDaut2,IDaut3
-#creo gli edge IDaut1.2;13;23;
+#creo gli edge IDaut12;13;23;
 
-CARTELLA = "Versione2\\"
+def creaEdgeCollab(pfPapAutAff, pfEdgeCollab, dPAA=None):
+  """
+  in pfPapAutAff ho IDpap-IDaut
+  in dPAA carico {IDpap:[IDa1, IDa2, IDa4, IDa3]}
+  in pfEdgeCollab creo edge IDa1-2, IDa1-4, IDa1-3, IDa2-4, IDa2-3, IDa3-4 con pesi
+  """
+  if dPAA is None:
+    dPAA = {}
+    with open(pfPapAutAff, 'rb') as fPapAutAff:
+      for line in fPapAutAff:
+        #print line,
+        pezzi = line.rstrip().split("\t")
+        if not dPAA.has_key(pezzi[0]):    #pezzi[0] : IDpap
+          dPAA.update({pezzi[0]:[]})      #se non c'e' la chiave creo lista vuota
+        dPAA[pezzi[0]].append(pezzi[1])   #carico pezzi[1] = IDaut nella lista
+  #else:
+    #print 'arrivato {}'.format(dPAA)
 
-def ptype(obj):
-  print obj, " - ", type(obj)
-
-
-dpaa = {} #carico il dizionario {paper:[a1,a2,a4,a3]}
-fpaa = open(CARTELLA+"PapAutAffDEIampi.txt")
-#fpaa = open(CARTELLA+"PaperPadovaniCompletiAmpi.txt")
-for line in fpaa:
-  pezzi = line.split("\t")
-  if not dpaa.has_key(pezzi[0]): dpaa.update({pezzi[0]:[]})     #se non c'e' la chiave creo lista vuota
-  dpaa[pezzi[0]].append(pezzi[1])
-  #ptype(dpaa[pezzi[0]])
-fpaa.close()
-#print dpaa
-
-#controllo duplicati nei IDaut dei paper
-#check solo sugli ID, non considera i nomi
-fpaperloop = open(CARTELLA+"PaperAADALoopBis.txt", "w")
-for entry in dpaa:
-  if len(dpaa[entry]) <> len(set(dpaa[entry])):
-    print "paper con ID duplicati nella lista:", entry, "lista", dpaa[entry]
-    fpaperloop.write("paper con ID duplicati nella lista: "+ entry + " lista: " + str(dpaa[entry]) + "\n")
+  dEdgeCollab = {}
+  for entry in dPAA:
+    ledge = dPAA[entry]
+    #print len(ledge)
+    i=0
+    #ptype(ledge)
+    while i<len(ledge)-1:
+      j=i+1
+      while j<len(ledge):
+        if ledge[i]<ledge[j]: coppia = ledge[i]+"\t"+ledge[j]
+        else: coppia = ledge[j]+"\t"+ledge[i]
+        #print coppia
+        if not dEdgeCollab.has_key(coppia): dEdgeCollab.update({coppia:1})
+        else: dEdgeCollab[coppia]+=1      
+        j+=1
+      i+=1
+  #print dEdgeCollab
     
-fpaperloop.close()
+  with open(pfEdgeCollab, 'wb') as fEdgeCollab: 
+    for entry in dEdgeCollab:
+      fEdgeCollab.write('{}\t{}\r\n'.format(entry, dEdgeCollab[entry]))
+      #fEdgeCollab.write(entry+"\t"+str(dEdgeCollab[entry])+"\n")
+  return dEdgeCollab
+
+if __name__ == '__main__':
+  print 'This program is CreaEdgeCollab, being run by itself' 
+  #PATH TO FILES
+  celaborati = 'Versione3_Single\\'
+  pfPapAutAff = celaborati + 'PapAutAffDEI.txt'
+  pfEdgeCollab = celaborati + 'EdgeCollab.txt'
+  creaEdgeCollab(pfPapAutAff, pfEdgeCollab)
+  print 'finitoCECsolo'
+else:
+  print 'I am CreaEdgeCollab, being imported from another module'
+
+
+##trova i paper che creeranno selfloop
+# #controllo duplicati nei IDaut dei paper
+# #check solo sugli ID, non considera i nomi
+# fpaperloop = open(CARTELLA+"PaperAADALoopBis.txt", "w")
+# for entry in dpaa:
+  # if len(dpaa[entry]) <> len(set(dpaa[entry])):
+    # print "paper con ID duplicati nella lista:", entry, "lista", dpaa[entry]
+    # fpaperloop.write("paper con ID duplicati nella lista: "+ entry + " lista: " + str(dpaa[entry]) + "\n")
+# fpaperloop.close()
   
-
-#creo edge a1a2,a1a4,a1a3,a2a4,a2a3,a3a4 pesati
-dedgepesati = {}
-for entry in dpaa:
-  ledge = dpaa[entry]
-  #print len(ledge)
-  i=0
-  #ptype(ledge)
-  while i<len(ledge)-1:
-    j=i+1
-    while j<len(ledge):
-      if ledge[i]<ledge[j]: coppia = ledge[i]+"\t"+ledge[j]
-      else: coppia = ledge[j]+"\t"+ledge[i]
-      #print coppia
-      if not dedgepesati.has_key(coppia): dedgepesati.update({coppia:1})
-      else: dedgepesati[coppia]+=1      
-      j+=1
-    i+=1
-#print dedgepesati
-
-fedge = open(CARTELLA+"EdgeCollabPesatiAmpiBis.txt", "w")
-#fedge = open(CARTELLA+"EdgePadovaniCompletiPesatiAmpiBis.txt", "w")
-for entry in dedgepesati:
-  fedge.write(entry+"\t"+str(dedgepesati[entry])+"\n")
-fedge.close()

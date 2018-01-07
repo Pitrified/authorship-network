@@ -2,44 +2,31 @@
 
 import re
 
-def ptype(obj):
-  print obj, " - ", type(obj)
-
-def processaNodi(nome, est=".txt"):
-  fullname = dir+"\\"+nome+est
-  finput = open(fullname, "r")
-  strInput = finput.read()
-  finput.close()
-
-  fullnameout = dir+"\\"+nome+".tsv"
-  foutput = open(fullnameout, "w")
-  foutput.write("id\tLabel\n")          #aggiunge la riga iniziale
-  foutput.write(strInput)
-  foutput.close()
+def preparaPerGephi(pfEdge, pfAut, pfEdgeGephi, pfAutGephi):
+  with open(pfEdge, 'rb') as fEdge:
+    strInput = fEdge.read()
+    
+  with open(pfEdgeGephi, 'wb') as fEdgeGephi:
+    fEdgeGephi.write("Source\tTarget\tWeight\tType\r\n")
+    fEdgeGephi.write(strInput.replace("\r\n","\tUndirected\r\n" ) )
+    
+  with open(pfAut, 'rb') as fAut:
+    strInput = fAut.read()
+    
+  with open(pfAutGephi, 'wb') as fAutGephi:
+    fAutGephi.write("id\tLabel\r\n")
+    fAutGephi.write(strInput)
   
-def processaEdge(nome, est=".txt"):
-  fullname = dir+"\\"+nome+est
-  finput = open(fullname, "r")
-  strInput = finput.read()
-  finput.close()
-
-  strOutput = strInput.replace("\n","\tUndirected\n")     #gli edge sono Undirected
-  #strOutput = re.sub("\n","\tUndirected\n", strInput)
-
-  fullnameout = dir+"\\"+nome+".tsv"
-  foutput = open(fullnameout, "w")
-  foutput.write("Source\tTarget\tWeight\tType\n")         #aggiunge la riga iniziale
-  foutput.write(strOutput)
-  foutput.close()
-
-
-dir = r'C:\Users\Test\Documents\Tesi\authorship-network\Versione2'    #cartella in cui lavora
-
-processaNodi("AutoriPadovaniAmpiUnificatiBis")
-processaNodi("AutoriCollabAmpiUnificatiBis")
-#processaNodi("AutoriPadovaniAmpi")
-#processaNodi("AutoriCollabAmpi")
-
-processaEdge("EdgePadovaniCompletiPesatiAmpiUnificatiBis")
-processaEdge("EdgeCollabPesatiAmpiUnificatiBis")
-
+if __name__ == '__main__':
+  print 'This program is PreparaPerGephi, being run by itself' 
+  #PATH TO FILES
+  celaborati = 'C:\\Users\\Test\\Documents\\Tesi\\authorship-network\\Versione3_Single\\'
+  pfEdge = celaborati + 'EdgeCollabUnificati.txt'
+  pfAut = celaborati + 'AutoriCollabUnificatiMacro.txt'
+  pfEdgeGephi = celaborati + 'EdgeCollabUnificatiGephi.tsv'
+  pfAutGephi = celaborati + 'AutoriCollabUnificatiGephi.tsv'
+  #pfAutLoop = celaborati + 'AutoriCollabLoop.txt'
+  preparaPerGephi(pfEdge, pfAut, pfEdgeGephi, pfAutGephi)
+  print 'finitoPPGsolo'
+else:
+  print 'I am PreparaPerGephi, being imported from another module'
