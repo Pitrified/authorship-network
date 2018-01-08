@@ -10,7 +10,7 @@ def estraiIDautori(pfPersone, pfAuthorRAW, pfAutoriID):
   in pfAuthorRAW (Authors.txt) ci sono record IDaut-nomeAut, cerco i nomi nel set
   salvo il record in pfAutoriID (AutoriDEIampi.txt)
   """
-  print 'pfPersone:{}\tpfAuthorRAW:{}\tpfAutoriID:{}'.format(pfPersone, pfAuthorRAW, pfAutoriID)
+  #print 'pfPersone:{}\tpfAuthorRAW:{}\tpfAutoriID:{}'.format(pfPersone, pfAuthorRAW, pfAutoriID)
   #popolo il set
   sPersone = set()
   with open(pfPersone, 'rb') as fPersone:
@@ -35,7 +35,7 @@ def estraiIDautori(pfPersone, pfAuthorRAW, pfAutoriID):
         sPersone.add(pz[0][0]+" "+pz[1]   +" "+pz[2]   +" "+pz[3])
       elif len(pz)==6:
         sPersone.add(pz[0][0]+" "+pz[1][0]+" "+pz[2][0]+" "+pz[3][0]+" "+pz[4][0]+" "+pz[5])
-  print 'abbreviazioni {}'.format(len(sPersone))
+  #print 'abbreviazioni {}'.format(len(sPersone))
   
   #cerco i nomi nel set
   #popolo il set degli IDautDEI
