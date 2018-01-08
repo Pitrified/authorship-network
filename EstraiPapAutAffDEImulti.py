@@ -28,7 +28,6 @@ def processaPAADm(pfPapAutAffRAW, chunkStart, chunkSize, sIDautDEI):
     raise
     
 
-
 def chunkMyFile(fpath, roughSize):
   fileEnd = os.path.getsize(fpath)
   with open(fpath, 'rb') as f:
@@ -81,9 +80,11 @@ if __name__ == '__main__':
   pfAutoriID = celaborati + 'AutoriDEI.txt'
   pfAutoriID = celaborati + 'AutoriDEIMacroFull.txt'
   #pfPapAutAffRAW = 'C:\Users\Test\Documents\Tesi\FileRAW\PaperAuthorAffiliations5000000.txt'
-  pfPapAutAffRAW = 'C:\Users\Test\Documents\Tesi\FileRAW\PaperAuthorAffiliations.txt'
+  #pfPapAutAffRAW = 'C:\Users\Test\Documents\Tesi\FileRAW\PaperAuthorAffiliations.txt'
+  pfPapAutAffRAW = 'C:\Users\Pietro\Documents\Universit'+u'\u00E0'+'\Tesi\Programmi\PaperAuthorAffiliations.txt'
+  pfPapAutAffRAW = 'C:\Users\Pietro\Documents\University\Tesi\FileRAW\PaperAuthorAffiliations.txt'
   #pfPapAutAffRAW = 'C:\Users\Test\Documents\Tesi\FileRAW\PaperAuthorAffiliations500.txt'
-  pfPapAutAff = celaborati + 'PapAutAffDEImultiFullcrlf.txt'
+  pfPapAutAff = celaborati + 'PapAutAffDEImultiFullcrlfPav.txt'
   start = timer()
   estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff)
   end = timer()
