@@ -46,7 +46,7 @@ def processaEIADAm(pfAuthorRAW, chunkStart, chunkSize, sIDautDEI):
     raise
     
   
-def creaSetPersone(pfPersone):
+def creaSetAbbreviazioni(pfPersone):
   sPersone = set()
   with open(pfPersone, 'rb') as fPersone:
     for line in fPersone:
@@ -81,7 +81,7 @@ def estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID):
   """
   print 'pfPersone:{}\tpfAuthorRAW:{}\tpfAutoriID:{}'.format(pfPersone, pfAuthorRAW, pfAutoriID)
   #popolo il set
-  sPersone = creaSetPersone(pfPersone)
+  sPersone = creaSetAbbreviazioni(pfPersone)
   print 'abbreviazioni {}'.format(len(sPersone))
   
   #cerco i nomi nel set
