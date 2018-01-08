@@ -50,6 +50,7 @@ def estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff, sIDautDEI=N
   in pfPapAutAff salvo i record
   in sIDautDEI ho il set precaricato degli IDaut
   """
+  print 'pfPapAutAff:{}\tpfPapAutAffRAW:{}\tpfAutoriID:{}'.format(pfPapAutAff, pfPapAutAffRAW, pfAutoriID)
   #proceso scrittore con coda dei risultati scitti subito ???
   if sIDautDEI is None:
     sIDautDEI = set()
@@ -81,10 +82,10 @@ if __name__ == '__main__':
   pfAutoriID = celaborati + 'AutoriDEIMacroFull.txt'
   #pfPapAutAffRAW = 'C:\Users\Test\Documents\Tesi\FileRAW\PaperAuthorAffiliations5000000.txt'
   #pfPapAutAffRAW = 'C:\Users\Test\Documents\Tesi\FileRAW\PaperAuthorAffiliations.txt'
-  pfPapAutAffRAW = 'C:\Users\Pietro\Documents\Universit'+u'\u00E0'+'\Tesi\Programmi\PaperAuthorAffiliations.txt'
-  pfPapAutAffRAW = 'C:\Users\Pietro\Documents\University\Tesi\FileRAW\PaperAuthorAffiliations.txt'
+  pfPapAutAffRAW = 'C:\Users\Pietro\Documents\University\Tesi\FileRAW\PaperAuthorAffiliations1000.txt'
   #pfPapAutAffRAW = 'C:\Users\Test\Documents\Tesi\FileRAW\PaperAuthorAffiliations500.txt'
-  pfPapAutAff = celaborati + 'PapAutAffDEImultiFullcrlfPav.txt'
+  pfPapAutAff = celaborati + 'PapAutAffDEImultiFull.txt'
+  pfPapAutAff = celaborati + 'PapAutAffDEImulti.txt'
   start = timer()
   estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff)
   end = timer()
