@@ -4,6 +4,7 @@ import os
 import multiprocessing as mp
 from timeit import default_timer as timer
 import traceback
+import re
 
 def processaPAADm(pfPapAutAffRAW, chunkStart, chunkSize, sIDautDEI):
   try:
@@ -16,7 +17,9 @@ def processaPAADm(pfPapAutAffRAW, chunkStart, chunkSize, sIDautDEI):
     for line in lines:
       pezzi = line.split('\t')
       if len(pezzi)>=2:
-        if pezzi[1] in sIDautDEI:
+        #if pezzi[1] in sIDautDEI:
+        if pezzi[1] in sIDautDEI or re.search('pad(ov|u)a', line, re.I):
+        #if re.search('pad(ov|u)a', line, re.I):  #352s
           # chuRes += '{}\n'.format(line)
           chuRes += '{}\r\n'.format(line.rstrip())
       else:
@@ -85,7 +88,7 @@ if __name__ == '__main__':
   pfPapAutAffRAW = 'C:\Users\Pietro\Documents\University\Tesi\FileRAW\PaperAuthorAffiliations1000.txt'
   #pfPapAutAffRAW = 'C:\Users\Test\Documents\Tesi\FileRAW\PaperAuthorAffiliations500.txt'
   pfPapAutAff = celaborati + 'PapAutAffDEImultiFull.txt'
-  pfPapAutAff = celaborati + 'PapAutAffDEImulti.txt'
+  pfPapAutAff = celaborati + 'PapAutAffDEImultiIDePaduanonono.txt'
   start = timer()
   estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff)
   end = timer()

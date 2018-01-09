@@ -222,18 +222,46 @@ def modulo():
 
 
 def singlePadova():
-  import EstraiIDAutoriDEIampi as eaID
-  import EstraiPapAutAffDEI as ePAAD
-  import EstraiPaperPadovaniCompleti as ePPc
+  from EstraiIDAutoriDEIampi import estraiIDautori
+  from EstraiPapAutAffDEI import estraiPapAutAffDEI
+  from EstraiPaperPadovaniCompleti import estraiPaperPadovaniCompleti
     #estrai paperpadovani per affiliazione se in PadovaPadua
       #(da PapAutAffDEI, devono comunque essere IDaut nella lista)
       #in eliminanonpadova.java
     #estrai autoripadovani
     #estrai paperpadovanicompleti
       #(da PapAutAffDEI prendo i paper scritti da IDaut con almeno un aff padovana)
-  import CreaEdgeCollab as cec
-  import CollassaNodiAmpi as cna
-  from Verifiche_Test import PreparaPerGephi as ppg
+  #import CreaEdgeCollab as cec
+  from CreaEdgeCollab import creaEdgeCollab
+  from CollassaNodiAmpi import collassaNodiAmpi
+  #from Verifiche_Test import PreparaPerGephi as ppg
+  from Verifiche_Test.PreparaPerGephi import preparaPerGephi
+  
+  
+  celaborati = 'Versione3_Single\\'
+  sub = 'Padovani\\'
+  pfAffPad = 'PadovaPadua.txt'
+  
+  pfPersone    = celaborati + 'PersoneDEI.txt'
+  pfAutoriID   = celaborati + 'AutoriDEIMacroFull.txt'
+  pfPapAutAff  = celaborati + 'PapAutAffDEIMacroFull.txt'
+  pfPapPad = celaborati + sub + 'PaperPadovaniCompletiMacro.txt'
+  pfAutPad = celaborati + sub + 'AutoriPadovaniMacro.txt'
+  pfEdgePadovani = celaborati + sub + 'EdgePadovaniMacro.txt'
+  pfEdgePadovaniUnificati = celaborati + sub + 'EdgePadovaniUnificatiMacro.txt'
+  pfAutPadovaniUnificati  = celaborati + sub + 'AutoriPadovaniUnificatiMacro.txt'
+  pfEdgeGephi  = celaborati + sub + 'EdgePadovaniUnificatiMacroGephi.tsv'
+  pfAutGephi   = celaborati + sub + 'AutoriPadovaniUnificatiMacroGephi.tsv'
+  
+  #estraiIDautori(pfPersone, pfAuthorRAW, pfAutoriID)
+  #estraiPapAutAffDEI(pfAutoriID, pfPapAutAffRAW, pfPapAutAff)
+  estraiPaperPadovaniCompleti(pfPapAutAff, pfAffPad, pfAutoriID, pfPapPad, pfAutPad)
+  creaEdgeCollab(pfPapPad, pfEdgePadovani)
+  collassaNodiAmpi(pfPersone, pfEdgePadovani, pfAutPad, pfEdgePadovaniUnificati, pfAutPadovaniUnificati)
+  preparaPerGephi(pfEdgePadovaniUnificati, pfAutPadovaniUnificati, pfEdgeGephi, pfAutGephi)
+  
+  
+  
 
 if __name__ == '__main__':
   #singleCollab()

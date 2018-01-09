@@ -2,7 +2,7 @@
 
 
 
-def estraiPaperPadovaniCompleti(pfPapAutAff, pfAffPad, pfPapPad, pfAutPad):
+def estraiPaperPadovaniCompleti(pfPapAutAff, pfAffPad, pfAutoriID, pfPapPad, pfAutPad):
   """
   #estrai paperpadovani per affiliazione se in PadovaPadua
     #(da PapAutAffDEI, devono comunque essere IDaut nella lista)
@@ -51,7 +51,7 @@ if __name__ == '__main__':
   pfAutoriID = celaborati + 'AutoriDEIMacroFull.txt'
   pfPapPad = celaborati + 'PaperPadovaniCompletiSingolo.txt'
   pfAutPad = celaborati + 'AutoriPadovaniSingolo.txt'
-  estraiPaperPadovaniCompleti(pfPapAutAff, pfAffPad, pfPapPad, pfAutPad)
+  estraiPaperPadovaniCompleti(pfPapAutAff, pfAffPad, pfAutoriID, pfPapPad, pfAutPad)
   print('finito EPPC solo'.format() )
   
 else:

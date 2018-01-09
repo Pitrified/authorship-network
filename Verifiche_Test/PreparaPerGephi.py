@@ -7,14 +7,14 @@ def preparaPerGephi(pfEdge, pfAut, pfEdgeGephi, pfAutGephi):
     strInput = fEdge.read()
     
   with open(pfEdgeGephi, 'wb') as fEdgeGephi:
-    fEdgeGephi.write("Source\tTarget\tWeight\tType\r\n")
-    fEdgeGephi.write(strInput.replace("\r\n","\tUndirected\r\n" ) )
+    fEdgeGephi.write("Source\tTarget\tWeight\tType\teLabel\r\n")
+    fEdgeGephi.write(strInput.replace("\r\n","\tUndirected\t0\r\n" ) )
     
   with open(pfAut, 'rb') as fAut:
     strInput = fAut.read()
     
   with open(pfAutGephi, 'wb') as fAutGephi:
-    fAutGephi.write("id\tLabel\r\n")
+    fAutGephi.write("id\tnLabel\r\n")
     fAutGephi.write(strInput)
   
 if __name__ == '__main__':
