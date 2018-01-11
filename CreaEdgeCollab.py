@@ -55,7 +55,8 @@ if __name__ == '__main__':
   creaEdgeCollab(pfPapAutAff, pfEdgeCollab)
   print 'finitoCECsolo'
 else:
-  print 'I am CreaEdgeCollab, being imported from another module'
+  pass
+  # print 'I am CreaEdgeCollab, being imported from another module'
 
 
 ##trova i paper che creeranno selfloop

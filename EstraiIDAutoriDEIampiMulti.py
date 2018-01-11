@@ -29,7 +29,7 @@ def chunkMyFile(fpath, roughSize):
   
 def processaEIADAm(pfAuthorRAW, chunkStart, chunkSize, sIDautDEI):
   try:
-    #carica solo le linee da processare
+    # carica solo le linee da processare
     with open(pfAuthorRAW, 'rb') as fAuthorRAW:
       fAuthorRAW.seek(chunkStart)
       lines = fAuthorRAW.read(chunkSize).splitlines()
@@ -53,7 +53,7 @@ def creaSetAbbreviazioni(pfPersone):
       line = line.rstrip()
       sPersone.add(line)
       pz = line.split()
-      #print(pz, " ", len(pz))
+      # print(pz, " ", len(pz))
       if len(pz)==2:
         sPersone.add(pz[0][0]+" "+pz[1])
       elif len(pz)==3:
@@ -79,20 +79,20 @@ def estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID):
   in pfAuthorRAW (Authors.txt) ci sono record IDaut-nomeAut, cerco i nomi nel set
   salvo il record in pfAutoriID (AutoriDEIampi.txt)
   """
-  print 'pfPersone:{}\tpfAuthorRAW:{}\tpfAutoriID:{}'.format(pfPersone, pfAuthorRAW, pfAutoriID)
-  #popolo il set
+  # print 'pfPersone:{}\tpfAuthorRAW:{}\tpfAutoriID:{}'.format(pfPersone, pfAuthorRAW, pfAutoriID)
+  # popolo il set
   sPersone = creaSetAbbreviazioni(pfPersone)
-  print 'abbreviazioni {}'.format(len(sPersone))
+  # print 'abbreviazioni {}'.format(len(sPersone))
   
-  #cerco i nomi nel set
-  #popolo il set degli IDautDEI
+  # cerco i nomi nel set
+  # popolo il set degli IDautDEI
   sIDautDEI = set()
   with open(pfAuthorRAW, 'rb') as fAutoriRAW, open(pfAutoriID, 'wb') as fAutoriID:
     for line in fAutoriRAW:
       pezzi = line.rstrip().split('\t')         #record IDaut-nomeAut
-      #print 'pezzi[1]: <{}>'.format(pezzi[1])
+      # print 'pezzi[1]: <{}>'.format(pezzi[1])
       if pezzi[1] in sPersone:                  #pezzi[1] : nomeAut
-        #print pezzi[1]
+        # print pezzi[1]
         fAutoriID.write(line)
         sIDautDEI.add(pezzi[0])                 #pezzi[0] : IDaut
   
@@ -131,6 +131,7 @@ if __name__ == '__main__':
   end = timer()
   print 'Completato estraiIDautoriMulti in {}'.format(end-start)
 else:
-  print 'I am EstraiIDAutoriDEIampiMulti, being imported from another module'
+  pass
+  # print 'I am EstraiIDAutoriDEIampiMulti, being imported from another module'
   #_init_import() #se serve fare cose al momento dell'importazione
   #print 'finitoEIADAimport'

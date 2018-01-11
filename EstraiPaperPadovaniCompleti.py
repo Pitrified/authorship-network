@@ -55,4 +55,5 @@ if __name__ == '__main__':
   print('finito EPPC solo'.format() )
   
 else:
-  print 'I am EstraiPaperPadovaniCompleti, being imported from another module'
+  pass
+  # print 'I am EstraiPaperPadovaniCompleti, being imported from another module'

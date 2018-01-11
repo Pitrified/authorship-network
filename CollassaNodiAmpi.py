@@ -123,7 +123,8 @@ if __name__ == '__main__':
   collassaNodiAmpi(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati)
   print 'finitoCNAsolo'
 else:
-  print 'I am CollassaNodiAmpi, being imported from another module'
+  pass
+  # print 'I am CollassaNodiAmpi, being imported from another module'
 
 
 

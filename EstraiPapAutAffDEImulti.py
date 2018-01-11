@@ -17,9 +17,9 @@ def processaPAADm(pfPapAutAffRAW, chunkStart, chunkSize, sIDautDEI):
     for line in lines:
       pezzi = line.split('\t')
       if len(pezzi)>=2:
-        #if pezzi[1] in sIDautDEI:
-        if pezzi[1] in sIDautDEI or re.search('pad(ov|u)a', line, re.I):
-        #if re.search('pad(ov|u)a', line, re.I):  #352s
+        if pezzi[1] in sIDautDEI:
+        # if pezzi[1] in sIDautDEI or re.search('pad(ov|u)a', line, re.I): # che tanto non serve a niente perche trovo paper scritti a padova da autori che non sono nel dei
+        # if re.search('pad(ov|u)a', line, re.I):  # 352s  # da questa lista di paper posso estrarre affiliation padovane che forse non erano in PadovaPadua
           # chuRes += '{}\n'.format(line)
           chuRes += '{}\r\n'.format(line.rstrip())
       else:
@@ -53,16 +53,16 @@ def estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff, sIDautDEI=N
   in pfPapAutAff salvo i record
   in sIDautDEI ho il set precaricato degli IDaut
   """
-  print 'pfPapAutAff:{}\tpfPapAutAffRAW:{}\tpfAutoriID:{}'.format(pfPapAutAff, pfPapAutAffRAW, pfAutoriID)
-  #proceso scrittore con coda dei risultati scitti subito ???
+  # print 'pfPapAutAff:{}\tpfPapAutAffRAW:{}\tpfAutoriID:{}'.format(pfPapAutAff, pfPapAutAffRAW, pfAutoriID)
+  # proceso scrittore con coda dei risultati scitti subito ???
   if sIDautDEI is None:
     sIDautDEI = set()
-    #print 'devo caricare il set perche non l\'avevo'
+    # print 'devo caricare il set perche non l\'avevo'
     with open(pfAutoriID, 'rb') as fAutoriID:
       for line in fAutoriID:
         sIDautDEI.add(line.split('\t')[0])
-  #else:
-    #print 'arrivato {}'.format(sIDautDEI)
+  # else:
+    # print 'arrivato {}'.format(sIDautDEI)
 
   roughSize = 1024*1024
   pool = mp.Pool(mp.cpu_count())

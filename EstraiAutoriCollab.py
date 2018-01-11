@@ -40,6 +40,7 @@ if __name__ == '__main__':
   estraiAutoriCollab(pfAutoriID, pfEdgeCollab, pfAutCollab)
   print 'finitoEACsolo'
 else:
-  print 'I am EstraiAutoriCollab, being imported from another module'
+  pass
+  # print 'I am EstraiAutoriCollab, being imported from another module'
 
 

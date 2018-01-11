@@ -14,7 +14,7 @@ def preparaPerGephi(pfEdge, pfAut, pfEdgeGephi, pfAutGephi):
     strInput = fAut.read()
     
   with open(pfAutGephi, 'wb') as fAutGephi:
-    fAutGephi.write("id\tnLabel\r\n")
+    fAutGephi.write("id\tLabel\r\n")
     fAutGephi.write(strInput)
   
 if __name__ == '__main__':
@@ -29,4 +29,5 @@ if __name__ == '__main__':
   preparaPerGephi(pfEdge, pfAut, pfEdgeGephi, pfAutGephi)
   print 'finitoPPGsolo'
 else:
-  print 'I am PreparaPerGephi, being imported from another module'
+  pass
+  # print 'I am PreparaPerGephi, being imported from another module'
