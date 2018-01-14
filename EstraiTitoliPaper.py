@@ -16,8 +16,7 @@ for line in fpapautaff:
 
 fpapautaff.close()
 
-#pat="C:\Users\Pietro\Documents\Universit"+u"\u00E0"+"\Tesi\Programmi\Papers.txt"
-pat="C:\Users\Test\Documents\Tesi\FileRAW\Papers.txt"
+pat="..\FileRAW\Papers.txt"
 fpapers = open(pat, "r")
 ltitoli = []
 

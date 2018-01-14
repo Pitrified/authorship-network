@@ -119,10 +119,9 @@ if __name__ == '__main__':
   if not os.path.exists(celaborati + sub): os.makedirs(celaborati + sub)
   tag = 'Alone'
   # pfAutoriID = celaborati + sub + 'AutoriDEI' + tag + '.txt'
-  # pfPapAutAffRAW = 'C:\Users\Test\Documents\Tesi\FileRAW\PaperAuthorAffiliations.txt'
-  pfPapAutAffRAW = 'C:\Users\Pietro\Documents\University\Tesi\FileRAW\PaperAuthorAffiliations1000.txt'
-  # pfPapAutAffRAW = 'C:\Users\Pietro\Documents\University\Tesi\FileRAW\PaperAuthorAffiliations.txt'
-  pfAffRAW = 'C:\Users\Pietro\Documents\University\Tesi\FileRAW\Affiliations.txt'
+  # pfPapAutAffRAW = '..\FileRAW\PaperAuthorAffiliations.txt'
+  pfPapAutAffRAW = '..\FileRAW\PaperAuthorAffiliations1000.txt'
+  pfAffRAW = '..\FileRAW\Affiliations.txt'
   pfPapAffPad = celaborati + sub + 'PaperAffPad' + tag + '.txt'
   pfAffPad = celaborati + sub + 'AffiliationPadovaPaduta' + tag + '.txt'
   start = timer()

@@ -58,7 +58,7 @@ if __name__ == '__main__':
   celaborati = 'Versione3_Single\\'
   pfPersone = celaborati + 'PersoneDEI.txt'
   pfAutoriID = celaborati + 'AutoriDEI.txt'
-  pfAuthorRAW = 'C:\Users\Test\Documents\Tesi\FileRAW\Authors10.txt'
+  pfAuthorRAW = '..\FileRAW\Authors10.txt'
   estraiIDautori(pfPersone, pfAuthorRAW, pfAutoriID)
   #faccio cose che servono quando sono da solo
   print 'finitoEIADAsolo'

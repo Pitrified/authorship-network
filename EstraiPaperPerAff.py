@@ -171,7 +171,7 @@ def estraiAffPadovane(pfPapAutAffRAW, pfAffDaEstr, pfPapAutAffEstr, pfAutRAW, pf
 if __name__ == '__main__':
   print 'This program is estraiPaperPerAff, being run by itself' 
   # PATH TO FILES
-  craw = 'C:\Users\Pietro\Documents\University\Tesi\FileRAW\\'
+  craw = '..\FileRAW\\'
   pfPapAutAffRAW = craw + 'PaperAuthorAffiliations1000.txt'
   # pfPapAutAffRAW = craw + 'PaperAuthorAffiliations.txt'
   pfAffRAW = craw + 'Affiliations.txt'

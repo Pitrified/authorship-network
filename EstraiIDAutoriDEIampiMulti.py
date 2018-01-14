@@ -121,10 +121,9 @@ if __name__ == '__main__':
   celaborati = 'Versione3_Multi\\'
   pfPersone = celaborati + 'PersoneDEI.txt'
   pfAutoriID = celaborati + 'AutoriDEI240.txt'
-  # pfAuthorRAW = 'C:\Users\Test\Documents\Tesi\FileRAW\Authors10.txt'
-  # pfAuthorRAW = 'C:\Users\Pietro\Documents\Universit'+u'\u00E0'+'\Tesi\Programmi\Authors10.txt'
-  # pfAuthorRAW = 'C:\Users\Pietro\Documents\University\Tesi\FileRAW\Authors1000.txt'
-  pfAuthorRAW = 'C:\Users\Pietro\Documents\University\Tesi\FileRAW\Authors.txt'
+  # pfAuthorRAW = '..\FileRAW\Authors10.txt'
+  # pfAuthorRAW = '..\FileRAW\Authors1000.txt'
+  pfAuthorRAW = '..\FileRAW\Authors.txt'
   
   start = timer()
   estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID)

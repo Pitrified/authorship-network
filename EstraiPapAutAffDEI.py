@@ -38,7 +38,7 @@ if __name__ == '__main__':
   #PATH TO FILES
   celaborati = 'Versione3_Single\\'
   pfAutoriID = celaborati + 'AutoriDEI.txt'
-  pfPapAutAffRAW = 'C:\Users\Test\Documents\Tesi\FileRAW\PaperAuthorAffiliations500.txt'
+  pfPapAutAffRAW = '..\FileRAW\PaperAuthorAffiliations500.txt'
   pfPapAutAff = celaborati + 'PapAutAffDEI.txt'
   estraiPapAutAffDEI(pfAutoriID, pfPapAutAffRAW, pfPapAutAff)
 else:

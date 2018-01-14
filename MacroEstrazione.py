@@ -17,8 +17,7 @@ def singleCollab():
   celaborati = 'Versione3_Single\\'
   sub = 'Collab\\'
   if not os.path.exists(celaborati + sub): os.makedirs(celaborati + sub)
-  # cfileRAW   = 'C:\Users\Test\Documents\Tesi\FileRAW\\'
-  cfileRAW   = 'C:\Users\Pietro\Documents\University\Tesi\FileRAW\\'
+  cfileRAW   = '..\FileRAW\\'
   pfAuthorRAW = cfileRAW + 'Authors1000.txt'
   # pfAuthorRAW = cfileRAW + 'AuthorsDA0A1000000.txt'
   # pfAuthorRAW = cfileRAW + 'Authors.txt'
@@ -86,8 +85,7 @@ def multiCollab():
   celaborati = 'Versione3_Multi\\'
   sub = 'Collab\\'
   if not os.path.exists(celaborati + sub): os.makedirs(celaborati + sub)
-  # cfileRAW   = 'C:\Users\Test\Documents\Tesi\FileRAW\\'
-  cfileRAW   = 'C:\Users\Pietro\Documents\University\Tesi\FileRAW\\'
+  cfileRAW   = '..\FileRAW\\'
   pfAuthorRAW = cfileRAW + 'Authors1000.txt'
   # pfAuthorRAW = cfileRAW + 'AuthorsDA0A1000000.txt'
   # pfAuthorRAW = cfileRAW + 'Authors.txt'
@@ -150,8 +148,7 @@ def modulo():
 
   celaborati = 'Versione3_Single\\'
   # celaborati = 'Versione3_Multi\\'
-  # cfileRAW   = 'C:\Users\Test\Documents\Tesi\FileRAW\\'
-  cfileRAW   = 'C:\Users\Pietro\Documents\University\Tesi\FileRAW\\'
+  cfileRAW   = '..\FileRAW\\'
   pfAuthorRAW = cfileRAW + 'Authors1000.txt'
   # pfAuthorRAW = cfileRAW + 'AuthorsDA0A1000000.txt'
   # pfAuthorRAW = cfileRAW + 'Authors.txt'
@@ -233,7 +230,7 @@ def singlePadova():
   sub = 'Padovani\\'
   if not os.path.exists(celaborati + sub): os.makedirs(celaborati + sub)
   pfAffPad = 'PadovaPadua.txt'
-  cfileRAW   = 'C:\Users\Pietro\Documents\University\Tesi\FileRAW\\'
+  cfileRAW   = '..\FileRAW\\'
   pfAuthorRAW = cfileRAW + 'Authors1000.txt'
   pfPapAutAffRAW = cfileRAW + 'PaperAuthorAffiliations1000.txt'
   
@@ -276,7 +273,7 @@ def multiPadova():
   if not os.path.exists(celaborati + sub): os.makedirs(celaborati + sub)
   pfAffPad = 'PadovaPadua.txt'
   pfAffPad = 'Versione3_Multi\Amplia\AffiliationPadovaPadutaAlone.txt'
-  cfileRAW   = 'C:\Users\Pietro\Documents\University\Tesi\FileRAW\\'
+  cfileRAW   = '..\FileRAW\\'
   pfAuthorRAW = cfileRAW + 'Authors1000.txt'
   pfPapAutAffRAW = cfileRAW + 'PaperAuthorAffiliations1000.txt'
   
@@ -334,8 +331,7 @@ def multiEstratti():
   celaborati = 'Versione3_Multi\\'
   sub = 'Amplia\\'
   if not os.path.exists(celaborati + sub): os.makedirs(celaborati + sub)
-  # cfileRAW   = 'C:\Users\Test\Documents\Tesi\FileRAW\\'
-  cfileRAW   = 'C:\Users\Pietro\Documents\University\Tesi\FileRAW\\'
+  cfileRAW   = '..\FileRAW\\'
   pfAuthorRAW = cfileRAW + 'Authors1000.txt'
   # pfAuthorRAW = cfileRAW + 'AuthorsDA0A1000000.txt'
   # pfAuthorRAW = cfileRAW + 'Authors.txt'
@@ -399,15 +395,14 @@ def multiCollabCTF():
   celaborati = 'Versione3_Multi\\'
   sub = 'Collab\\'
   if not os.path.exists(celaborati + sub): os.makedirs(celaborati + sub)
-  # cfileRAW   = 'C:\Users\Test\Documents\Tesi\FileRAW\\'
-  cfileRAW   = 'C:\Users\Pietro\Documents\University\Tesi\FileRAW\\'
+  cfileRAW   = '..\FileRAW\\'
   # pfAuthorRAW = cfileRAW + 'Authors1000.txt'
   # pfAuthorRAW = cfileRAW + 'AuthorsDA0A1000000.txt'
   pfAuthorRAW = cfileRAW + 'Authors.txt'
   # pfPapAutAffRAW = cfileRAW + 'PaperAuthorAffiliations1000.txt'
   pfPapAutAffRAW = cfileRAW + 'PaperAuthorAffiliations.txt'
 
-  tag = 'CTF'
+  tag = 'CTFpunti'
   pfPersone    = celaborati + 'PersoneNomi' + tag + '.txt'
   pfAutoriID   = celaborati + 'AutoriID' + tag + '.txt'
   pfPapAutAff  = celaborati + 'PapAutAff' + tag + '.txt'
@@ -419,7 +414,7 @@ def multiCollabCTF():
   pfAutGephi   = celaborati + sub + 'AutoriUnificatiGephi' + tag + '.tsv'
   
   
-  print('inizio multiCollab')
+  print('inizio multiCollabCTF')
   ##in pfPersone ho una lista di nomi del dipartimento
   ##estraggo gli IDautDEI corrispondenti (anche alle abbreviazioni)
   start = timer()
