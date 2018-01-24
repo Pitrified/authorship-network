@@ -383,7 +383,7 @@ def multiEstratti():
   
 
 
-def multiCollabCTF():
+def multiCollabSPGI():
   from EstraiIDAutoriDEIampiMulti import estraiIDautoriMulti
   from EstraiPapAutAffDEImulti import estraiPapAutAffDEImulti
   from CreaEdgeCollab import creaEdgeCollab
@@ -402,7 +402,7 @@ def multiCollabCTF():
   # pfPapAutAffRAW = cfileRAW + 'PaperAuthorAffiliations1000.txt'
   pfPapAutAffRAW = cfileRAW + 'PaperAuthorAffiliations.txt'
 
-  tag = 'CTFpunti'
+  tag = 'SPGI'
   pfPersone    = celaborati + 'PersoneNomi' + tag + '.txt'
   pfAutoriID   = celaborati + 'AutoriID' + tag + '.txt'
   pfPapAutAff  = celaborati + 'PapAutAff' + tag + '.txt'
@@ -449,7 +449,73 @@ def multiCollabCTF():
 
   end = timer()
   print('completato multi in {}'.format(end-start) )
-    
+ 
+ 
+def multiPadovaSPGI():
+  from EstraiIDAutoriDEIampiMulti import estraiIDautoriMulti
+  from EstraiPapAutAffDEImulti import estraiPapAutAffDEImulti
+  from EstraiPaperPadovaniCompleti import estraiPaperPadovaniCompleti
+    #estrai paperpadovani per affiliazione se in PadovaPadua
+      #(da PapAutAffDEI, devono comunque essere IDaut nella lista)
+      #in eliminanonpadova.java
+    #estrai autoripadovani
+    #estrai paperpadovanicompleti
+      #(da PapAutAffDEI prendo i paper scritti da IDaut con almeno un aff padovana)
+  from CreaEdgeCollab import creaEdgeCollab
+  from CollassaNodiAmpi import collassaNodiAmpi
+  from Verifiche_Test.PreparaPerGephi import preparaPerGephi
+  
+  
+  celaborati = 'Versione3_Multi\\'
+  sub = 'Padovani\\'
+  if not os.path.exists(celaborati + sub): os.makedirs(celaborati + sub)
+  pfAffPad = 'PadovaPadua.txt'
+  pfAffPad = 'Versione3_Multi\Amplia\AffiliationPadovaPadutaAlone.txt'
+  cfileRAW   = '..\FileRAW\\'
+  pfAuthorRAW = cfileRAW + 'Authors.txt'
+  pfPapAutAffRAW = cfileRAW + 'PaperAuthorAffiliations.txt'
+  
+  tag = 'SPGIpad'
+  pfPersone    = celaborati + 'PersoneNomi' + tag + '.txt'
+  pfAutoriID   = celaborati + 'Autori' + tag + '.txt'
+  pfPapAutAff  = celaborati + 'PapAutAff' + tag + '.txt'
+  pfPapPad = celaborati + sub + 'PaperPadovaniCompleti' + tag + '.txt'
+  pfAutPad = celaborati + sub + 'AutoriPadovani' + tag + '.txt'
+  pfEdgePadovani = celaborati + sub + 'EdgePadovani' + tag + '.txt'
+  pfEdgePadovaniUnificati = celaborati + sub + 'EdgePadovaniUnificati' + tag + '.txt'
+  pfAutPadovaniUnificati  = celaborati + sub + 'AutoriPadovaniUnificati' + tag + '.txt'
+  pfEdgeGephi  = celaborati + sub + 'EdgePadovaniUnificatiGephi' + tag + '.tsv'
+  pfAutGephi   = celaborati + sub + 'AutoriPadovaniUnificatiGephi' + tag + '.tsv'
+  
+  
+  print('inizio multiPadova')
+  start = timer()
+  estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID)
+  lap1 = timer()
+  print 'completato estraiIDautoriMulti in {}'.format(lap1 - start)
+  
+  # pfAutoriID   = celaborati + 'AutoriDEIMacroFull.txt'                #tutti gli autori per test
+  estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff)
+  lap2 = timer()
+  print 'completato estraiPapAutAffDEImulti in {}'.format(lap2-lap1)
+  
+  # pfPapAutAff  = celaborati + 'PapAutAffDEImultiFull.txt'             #tutti i paper per test
+  estraiPaperPadovaniCompleti(pfPapAutAff, pfAffPad, pfAutoriID, pfPapPad, pfAutPad)
+  lap3 = timer()
+  print 'completato estraiPaperPadovaniCompleti in {}'.format(lap3-lap2)
+  
+  creaEdgeCollab(pfPapPad, pfEdgePadovani)
+  lap4 = timer()
+  print 'completato creaEdgeCollab in {}'.format(lap4-lap3)
+  
+  collassaNodiAmpi(pfPersone, pfEdgePadovani, pfAutPad, pfEdgePadovaniUnificati, pfAutPadovaniUnificati)
+  lap5 = timer()
+  print 'completato collassaNodiAmpi in {}'.format(lap5-lap4)
+  
+  preparaPerGephi(pfEdgePadovaniUnificati, pfAutPadovaniUnificati, pfEdgeGephi, pfAutGephi)
+  lap6 = timer()
+  print 'completato preparaPerGephi in {}'.format(lap6-lap5)
+
 
 if __name__ == '__main__':
   # singleCollab()
@@ -457,8 +523,9 @@ if __name__ == '__main__':
   # modulo()
   # singlePadova()
   # multiPadova()
+  multiPadovaSPGI()
   # multiEstratti()
-  multiCollabCTF()
+  # multiCollabCTF()
 else:
   pass
   

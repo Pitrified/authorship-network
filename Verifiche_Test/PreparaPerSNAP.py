@@ -16,7 +16,7 @@ def preparaPerSNAP(pfEdge, pfAut, pfPaj, pfAutNum):
         if not pezzi[0] in dIDaut:
           dIDaut.update({pezzi[0]:[i, pezzi[1]]})
           dNaut.update({i:pezzi[1]})
-          fAutNum.write(pezzi[0]+'\t'+`i`+'\r\n')
+          fAutNum.write(pezzi[0]+'\t'+`i`+'\t'+pezzi[1]+'\r\n')
           i += 1
       print dIDaut
     
@@ -55,10 +55,10 @@ if __name__ == '__main__':
   print 'This program is preparaPerSNAP, being run by itself' 
   #PATH TO FILES
   celaborati = '..\\Versione3_Multi\\'
-  pfEdge = celaborati + 'EdgeCollabUnificatiMacro.txt'
-  pfAut = celaborati + 'AutoriCollabUnificatiMacro.txt'
-  pfAutNum = celaborati + 'AutoriIDeNumeri.txt'
-  pfPaj = celaborati + 'DatiSNAP1.paj'
+  pfEdge = celaborati + 'EdgeCollabMacro.txt'
+  pfAut = celaborati + 'AutoriCollabMacro.txt'
+  pfAutNum = celaborati + 'AutoriIdNumNomi.txt'
+  pfPaj = celaborati + 'AutoriEdgeSNAP.paj'
   preparaPerSNAP(pfEdge, pfAut, pfPaj, pfAutNum)
   print 'finitoPPSsolo'
 else:
