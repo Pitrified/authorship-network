@@ -70,7 +70,7 @@ def estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff, sIDautDEI=N
   lresult = []
   
   sizePAAraw = os.path.getsize(pfPapAutAffRAW)
-  print 'sizePAAraw: {} chunks: {} roughSize: {}'.format(sizePAAraw, sizePAAraw/roughSize, roughSize)
+  # print 'sizePAAraw: {} chunks: {} roughSize: {}'.format(sizePAAraw, sizePAAraw/roughSize, roughSize)
   up = Upd(sizePAAraw/roughSize)
 
   for chunkStart, chunkSize in chunkMyFile(pfPapAutAffRAW, roughSize):
@@ -89,6 +89,7 @@ if __name__ == '__main__':
   celaborati = 'Versione3_Upd\\'
   pfAutoriID = celaborati + 'AutoriDEI.txt'
   pfAutoriID = celaborati + 'AutoriDEIMacroFull.txt'
+  pfAutoriID = celaborati + 'AutoriDEIupd.txt'
   #pfPapAutAffRAW = '..\FileRAW\PaperAuthorAffiliations5000000.txt'
   pfPapAutAffRAW = '..\FileRAW\PaperAuthorAffiliations.txt'
   # pfPapAutAffRAW = '..\FileRAW\PaperAuthorAffiliations1000.txt'

@@ -4,6 +4,7 @@ import os
 import multiprocessing as mp
 from timeit import default_timer as timer
 import traceback
+from Updater import Upd
 
 #da PersoneDEI.txt ho una lista di nomi
 #in Authors.txt ci sono ID-autori, cerco gli autori
@@ -11,7 +12,7 @@ import traceback
 
 def chunkMyFile(fpath, roughSize):
   """
-  generatore che divide un file in pezzi da circa roughSize
+  generatore che divide un file in pezzi di circa roughSize byte
   """
   fileEnd = os.path.getsize(fpath)
   with open(fpath, 'rb') as f:
@@ -27,7 +28,7 @@ def chunkMyFile(fpath, roughSize):
         break
       
   
-def processaEIADAm(pfAuthorRAW, chunkStart, chunkSize, sIDautDEI):
+def processaEIADAm(pfAuthorRAW, chunkStart, chunkSize, sPersone):
   try:
     # carica solo le linee da processare
     with open(pfAuthorRAW, 'rb') as fAuthorRAW:
@@ -36,7 +37,7 @@ def processaEIADAm(pfAuthorRAW, chunkStart, chunkSize, sIDautDEI):
     chuRes = ''
     for line in lines:
       pezzi = line.split('\t')
-      if pezzi[0] in sIDautDEI:
+      if pezzi[1] in sPersone:
         # chuRes += '{}\n'.format(line)
         # chuRes += '{}\r\n'.format(line.rstrip())
         chuRes += '{}\r\n'.format(line)
@@ -86,31 +87,36 @@ def estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID):
   
   # cerco i nomi nel set
   # popolo il set degli IDautDEI
-  sIDautDEI = set()
-  with open(pfAuthorRAW, 'rb') as fAutoriRAW, open(pfAutoriID, 'wb') as fAutoriID:
-    for line in fAutoriRAW:
-      pezzi = line.rstrip().split('\t')         #record IDaut-nomeAut
-      # print 'pezzi[1]: <{}>'.format(pezzi[1])
-      if pezzi[1] in sPersone:                  #pezzi[1] : nomeAut
-        # print pezzi[1]
-        fAutoriID.write(line)
-        sIDautDEI.add(pezzi[0])                 #pezzi[0] : IDaut
+  # sIDautDEI = set()
+  # with open(pfAuthorRAW, 'rb') as fAutoriRAW, open(pfAutoriID, 'wb') as fAutoriID:
+    # for line in fAutoriRAW:
+      # pezzi = line.rstrip().split('\t')         #record IDaut-nomeAut
+      # # print 'pezzi[1]: <{}>'.format(pezzi[1])
+      # if pezzi[1] in sPersone:                  #pezzi[1] : nomeAut
+        # # print pezzi[1]
+        # fAutoriID.write(line)
+        # sIDautDEI.add(pezzi[0])                 #pezzi[0] : IDaut
   
   
   roughSize = 1024*1024
   pool = mp.Pool(mp.cpu_count())
   lresult = []
 
+  sizeAraw = os.path.getsize(pfAuthorRAW)
+  print 'sizePAAraw: {} chunks: {} roughSize: {}'.format(sizeAraw, sizeAraw/roughSize, roughSize)
+  up  = Upd(sizeAraw/roughSize)
+  up.update('redraw')
+  
   for chunkStart, chunkSize in chunkMyFile(pfAuthorRAW, roughSize):
-    lresult.append(pool.apply_async(processaEIADAm,(pfAuthorRAW, chunkStart, chunkSize, sIDautDEI) ) )
+    lresult.append(pool.apply_async(processaEIADAm,(pfAuthorRAW, chunkStart, chunkSize, sPersone) ) )
     
   with open(pfAutoriID, 'wb') as fAutoriID:
     for r in lresult:
       fAutoriID.write(r.get())
+      up.update('next')
       
   pool.close()
   
-  return sIDautDEI
 
 
 
@@ -118,9 +124,9 @@ if __name__ == '__main__':
   print 'This program is EstraiIDAutoriDEIampiMulti, being run by itself'
   
   #PATH TO FILES
-  celaborati = 'Versione3_Multi\\'
+  celaborati = 'Versione3_Upd\\'
   pfPersone = celaborati + 'PersoneDEI.txt'
-  pfAutoriID = celaborati + 'AutoriDEI240.txt'
+  pfAutoriID = celaborati + 'AutoriDEIupd.txt'
   # pfAuthorRAW = '..\FileRAW\Authors10.txt'
   # pfAuthorRAW = '..\FileRAW\Authors1000.txt'
   pfAuthorRAW = '..\FileRAW\Authors.txt'
