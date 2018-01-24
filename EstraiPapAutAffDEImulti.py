@@ -5,6 +5,7 @@ import multiprocessing as mp
 from timeit import default_timer as timer
 import traceback
 import re
+from Updater import Upd
 
 def processaPAADm(pfPapAutAffRAW, chunkStart, chunkSize, sIDautDEI):
   try:
@@ -64,31 +65,36 @@ def estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff, sIDautDEI=N
   # else:
     # print 'arrivato {}'.format(sIDautDEI)
 
-  roughSize = 1024*1024
+  roughSize = 1024*1024*128
   pool = mp.Pool(mp.cpu_count())
   lresult = []
+  
+  sizePAAraw = os.path.getsize(pfPapAutAffRAW)
+  print 'sizePAAraw: {} chunks: {} roughSize: {}'.format(sizePAAraw, sizePAAraw/roughSize, roughSize)
+  up = Upd(sizePAAraw/roughSize)
 
   for chunkStart, chunkSize in chunkMyFile(pfPapAutAffRAW, roughSize):
     lresult.append(pool.apply_async(processaPAADm,(pfPapAutAffRAW, chunkStart, chunkSize, sIDautDEI) ) )
-    
   with open(pfPapAutAff, 'wb') as fPapAutAff:
     for r in lresult:
       fPapAutAff.write(r.get())
+      up.update('next')
       
   pool.close()
+  del up
 
 if __name__ == '__main__':
   print 'This program is EstraiPapAutAffDEImulti, being run by itself' 
   #PATH TO FILES
-  celaborati = 'Versione3_Multi\\'
+  celaborati = 'Versione3_Upd\\'
   pfAutoriID = celaborati + 'AutoriDEI.txt'
   pfAutoriID = celaborati + 'AutoriDEIMacroFull.txt'
   #pfPapAutAffRAW = '..\FileRAW\PaperAuthorAffiliations5000000.txt'
-  #pfPapAutAffRAW = '..\FileRAW\PaperAuthorAffiliations.txt'
-  pfPapAutAffRAW = '..\FileRAW\PaperAuthorAffiliations1000.txt'
-  #pfPapAutAffRAW = '..\FileRAW\PaperAuthorAffiliations500.txt'
+  pfPapAutAffRAW = '..\FileRAW\PaperAuthorAffiliations.txt'
+  # pfPapAutAffRAW = '..\FileRAW\PaperAuthorAffiliations1000.txt'
+  # pfPapAutAffRAW = '..\FileRAW\PaperAuthorAffiliations500.txt'
   pfPapAutAff = celaborati + 'PapAutAffDEImultiFull.txt'
-  pfPapAutAff = celaborati + 'PapAutAffDEImultiIDePaduanonono.txt'
+  pfPapAutAff = celaborati + 'PapAutAffDEIupd.txt'
   start = timer()
   estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff)
   end = timer()
