@@ -124,12 +124,14 @@ if __name__ == '__main__':
   print 'This program is EstraiIDAutoriDEIampiMulti, being run by itself'
   
   #PATH TO FILES
-  celaborati = 'Versione3_Upd\\'
+  celaborati = '.\Versione3_Upd\\'
+  # celaborati = './Versione3_Upd/'
   pfPersone = celaborati + 'PersoneDEI.txt'
   pfAutoriID = celaborati + 'AutoriDEIupd.txt'
   # pfAuthorRAW = '..\FileRAW\Authors10.txt'
   # pfAuthorRAW = '..\FileRAW\Authors1000.txt'
   pfAuthorRAW = '..\FileRAW\Authors.txt'
+  # pfAuthorRAW = '../FileRAW/Authors.txt'
   
   start = timer()
   estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID)

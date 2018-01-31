@@ -516,6 +516,72 @@ def multiPadovaSPGI():
   lap6 = timer()
   print 'completato preparaPerGephi in {}'.format(lap6-lap5)
 
+  
+  
+def multiProvaUpd():  
+  from EstraiIDAutoriDEIampiMulti import estraiIDautoriMulti
+  from EstraiPapAutAffDEImulti import estraiPapAutAffDEImulti
+  from CreaEdgeCollab import creaEdgeCollab
+  from EstraiAutoriCollab import estraiAutoriCollab
+  from CollassaNodiAmpi import collassaNodiAmpi
+  from Verifiche_Test.PreparaPerGephi import preparaPerGephi
+  
+  
+  celaborati = 'Versione3_Upd\\'
+  sub = ''
+  if not os.path.exists(celaborati + sub): os.makedirs(celaborati + sub)
+  cfileRAW   = celaborati
+  pfAuthorRAW = cfileRAW + 'Authors.txt'
+  pfPapAutAffRAW = cfileRAW + 'PaperAuthorAffiliations.txt'
+
+  tag = 'UPD'
+  pfPersone    = celaborati + sub + 'PersoneNomi' + tag + '.txt'
+  pfAutoriID   = celaborati + sub + 'AutoriID' + tag + '.txt'
+  pfPapAutAff  = celaborati + sub + 'PapAutAff' + tag + '.txt'
+  pfEdgeCollab = celaborati + sub + 'EdgeCollab' + tag + '.txt'
+  pfAutCollab  = celaborati + sub + 'AutoriCollab' + tag + '.txt'
+  pfEdgeCollabUnificati = celaborati + sub + 'EdgeCollabUnificati' + tag + '.txt'
+  pfAutCollabUnificati  = celaborati + sub + 'AutoriCollabUnificati' + tag + '.txt'
+  pfEdgeGephi  = celaborati + sub + 'EdgeUnificatiGephi' + tag + '.tsv'
+  pfAutGephi   = celaborati + sub + 'AutoriUnificatiGephi' + tag + '.tsv'
+  
+  
+  print('inizio multiCollab'+tag)
+  ##in pfPersone ho una lista di nomi del dipartimento
+  ##estraggo gli IDautDEI corrispondenti (anche alle abbreviazioni)
+  start = timer()
+  estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID)
+  lap1 = timer()
+  print 'completato estraiIDautoriMulti in {}'.format(lap1 - start)
+
+  ##estraggo i paper scritti da questi IDautDEI
+  estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff)
+  lap2 = timer()
+  print 'completato estraiPapAutAffDEImulti in {}'.format(lap2-lap1)
+
+  ##estraggo gli EdgeCollab
+  creaEdgeCollab(pfPapAutAff, pfEdgeCollab)
+  lap3 = timer()
+  print 'completato creaEdgeCollab in {}'.format(lap3-lap2)
+
+  ##estraggo gli AutoriCollab
+  estraiAutoriCollab(pfAutoriID, pfEdgeCollab, pfAutCollab)
+  lap4 = timer()
+  print 'completato estraiAutoriCollab in {}'.format(lap4-lap3)
+
+  ##collasso i nodi
+  collassaNodiAmpi(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati)
+  lap5 = timer()
+  print 'completato collassaNodiAmpi in {}'.format(lap5-lap4)
+
+  ##preparo per gephi
+  preparaPerGephi(pfEdgeCollabUnificati, pfAutCollabUnificati, pfEdgeGephi, pfAutGephi)
+  lap6 = timer()
+  print 'completato preparaPerGephi in {}'.format(lap6-lap5)
+
+  end = timer()
+  print('completato multi in {}'.format(end-start) )
+ 
 
 if __name__ == '__main__':
   # singleCollab()
@@ -523,9 +589,10 @@ if __name__ == '__main__':
   # modulo()
   # singlePadova()
   # multiPadova()
-  multiPadovaSPGI()
+  # multiPadovaSPGI()
   # multiEstratti()
   # multiCollabCTF()
+  multiProvaUpd()
 else:
   pass
   
