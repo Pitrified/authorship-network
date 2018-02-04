@@ -33,7 +33,7 @@ def singleCollab():
   pfAutCollabUnificati  = celaborati + sub + 'AutoriCollabUnificatiMacro.txt'
   pfEdgeGephi  = celaborati + sub + 'EdgeCollabUnificatiMacroGephi.tsv'
   pfAutGephi   = celaborati + sub + 'AutoriCollabUnificatiMacroGephi.tsv'
-  
+
   print('inizio single')
   ##in pfPersone ho una lista di nomi del dipartimento
   ##estraggo gli IDautDEI corrispondenti (anche alle abbreviazioni)
@@ -71,8 +71,8 @@ def singleCollab():
 
   end = timer()
   print('completato single in {}'.format(end-start) )
-  
-  
+
+
 def multiCollab():
   from EstraiIDAutoriDEIampiMulti import estraiIDautoriMulti
   from EstraiPapAutAffDEImulti import estraiPapAutAffDEImulti
@@ -80,8 +80,7 @@ def multiCollab():
   from EstraiAutoriCollab import estraiAutoriCollab
   from CollassaNodiAmpi import collassaNodiAmpi
   from Verifiche_Test.PreparaPerGephi import preparaPerGephi
-  
-  
+
   celaborati = 'Versione3_Multi\\'
   sub = 'Collab\\'
   if not os.path.exists(celaborati + sub): os.makedirs(celaborati + sub)
@@ -102,8 +101,7 @@ def multiCollab():
   pfAutCollabUnificati  = celaborati + sub + 'AutoriCollabUnificati' + tag + '.txt'
   pfEdgeGephi  = celaborati + sub + 'EdgePadovaniUnificatiGephi' + tag + '.tsv'
   pfAutGephi   = celaborati + sub + 'AutoriPadovaniUnificatiGephi' + tag + '.tsv'
-  
-  
+
   print('inizio multiCollab')
   ##in pfPersone ho una lista di nomi del dipartimento
   ##estraggo gli IDautDEI corrispondenti (anche alle abbreviazioni)
@@ -141,8 +139,8 @@ def multiCollab():
 
   end = timer()
   print('completato multi in {}'.format(end-start) )
-  
-  
+
+
 def modulo():
   import AnalisiMSR as amsr
 
@@ -164,7 +162,7 @@ def modulo():
   pfAutCollabUnificati  = celaborati + 'AutoriCollabUnificatiMacroModulo.txt'
   pfEdgeGephi  = celaborati + 'EdgeCollabUnificatiMacroGephiModulo.tsv'
   pfAutGephi   = celaborati + 'AutoriCollabUnificatiMacroGephiModulo.tsv'
-  
+
   print('inizio modulo')
   ##in pfPersone ho una lista di nomi del dipartimento
   ##estraggo gli IDautDEI corrispondenti (anche alle abbreviazioni)
@@ -224,8 +222,7 @@ def singlePadova():
   from CreaEdgeCollab import creaEdgeCollab
   from CollassaNodiAmpi import collassaNodiAmpi
   from Verifiche_Test.PreparaPerGephi import preparaPerGephi
-  
-  
+
   celaborati = 'Versione3_Single\\'
   sub = 'Padovani\\'
   if not os.path.exists(celaborati + sub): os.makedirs(celaborati + sub)
@@ -233,7 +230,7 @@ def singlePadova():
   cfileRAW   = '..\FileRAW\\'
   pfAuthorRAW = cfileRAW + 'Authors1000.txt'
   pfPapAutAffRAW = cfileRAW + 'PaperAuthorAffiliations1000.txt'
-  
+
   pfPersone    = celaborati + 'PersoneDEI.txt'
   pfAutoriID   = celaborati + 'AutoriDEIMacroFull.txt'
   pfPapAutAff  = celaborati + 'PapAutAffDEIMacroFull.txt'
@@ -244,7 +241,7 @@ def singlePadova():
   pfAutPadovaniUnificati  = celaborati + sub + 'AutoriPadovaniUnificatiMacro.txt'
   pfEdgeGephi  = celaborati + sub + 'EdgePadovaniUnificatiMacroGephi.tsv'
   pfAutGephi   = celaborati + sub + 'AutoriPadovaniUnificatiMacroGephi.tsv'
-  
+
   #estraiIDautori(pfPersone, pfAuthorRAW, pfAutoriID)
   #estraiPapAutAffDEI(pfAutoriID, pfPapAutAffRAW, pfPapAutAff)
   estraiPaperPadovaniCompleti(pfPapAutAff, pfAffPad, pfAutoriID, pfPapPad, pfAutPad)
@@ -266,8 +263,7 @@ def multiPadova():
   from CreaEdgeCollab import creaEdgeCollab
   from CollassaNodiAmpi import collassaNodiAmpi
   from Verifiche_Test.PreparaPerGephi import preparaPerGephi
-  
-  
+
   celaborati = 'Versione3_Multi\\'
   sub = 'Padovani\\'
   if not os.path.exists(celaborati + sub): os.makedirs(celaborati + sub)
@@ -276,7 +272,7 @@ def multiPadova():
   cfileRAW   = '..\FileRAW\\'
   pfAuthorRAW = cfileRAW + 'Authors1000.txt'
   pfPapAutAffRAW = cfileRAW + 'PaperAuthorAffiliations1000.txt'
-  
+
   tag = 'AffPP'
   pfPersone    = celaborati + 'PersoneDEI.txt'
   pfAutoriID   = celaborati + 'AutoriDEI' + tag + '.txt'
@@ -288,32 +284,31 @@ def multiPadova():
   pfAutPadovaniUnificati  = celaborati + sub + 'AutoriPadovaniUnificati' + tag + '.txt'
   pfEdgeGephi  = celaborati + sub + 'EdgePadovaniUnificatiGephi' + tag + '.tsv'
   pfAutGephi   = celaborati + sub + 'AutoriPadovaniUnificatiGephi' + tag + '.tsv'
-  
-  
+
   print('inizio multiPadova')
   start = timer()
   estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID)
   lap1 = timer()
   print 'completato estraiIDautoriMulti in {}'.format(lap1 - start)
-  
+
   pfAutoriID   = celaborati + 'AutoriDEIMacroFull.txt'                #tutti gli autori per test
   estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff)
   lap2 = timer()
   print 'completato estraiPapAutAffDEImulti in {}'.format(lap2-lap1)
-  
+
   pfPapAutAff  = celaborati + 'PapAutAffDEImultiFull.txt'             #tutti i paper per test
   estraiPaperPadovaniCompleti(pfPapAutAff, pfAffPad, pfAutoriID, pfPapPad, pfAutPad)
   lap3 = timer()
   print 'completato estraiPaperPadovaniCompleti in {}'.format(lap3-lap2)
-  
+
   creaEdgeCollab(pfPapPad, pfEdgePadovani)
   lap4 = timer()
   print 'completato creaEdgeCollab in {}'.format(lap4-lap3)
-  
+
   collassaNodiAmpi(pfPersone, pfEdgePadovani, pfAutPad, pfEdgePadovaniUnificati, pfAutPadovaniUnificati)
   lap5 = timer()
   print 'completato collassaNodiAmpi in {}'.format(lap5-lap4)
-  
+
   preparaPerGephi(pfEdgePadovaniUnificati, pfAutPadovaniUnificati, pfEdgeGephi, pfAutGephi)
   lap6 = timer()
   print 'completato preparaPerGephi in {}'.format(lap6-lap5)
@@ -326,8 +321,7 @@ def multiEstratti():
   from EstraiAutoriCollab import estraiAutoriCollab
   from CollassaNodiAmpi import collassaNodiAmpi
   from Verifiche_Test.PreparaPerGephi import preparaPerGephi
-  
-  
+
   celaborati = 'Versione3_Multi\\'
   sub = 'Amplia\\'
   if not os.path.exists(celaborati + sub): os.makedirs(celaborati + sub)
@@ -347,8 +341,7 @@ def multiEstratti():
   pfAutCollabUnificati  = celaborati + sub + 'AutoriCollabUnificati' + tag + '.txt'
   pfEdgeGephi  = celaborati + sub + 'EdgePadovaniUnificatiGephi' + tag + '.tsv'
   pfAutGephi   = celaborati + sub + 'AutoriPadovaniUnificatiGephi' + tag + '.tsv'
-  
-  
+
   print('inizio multiEstratti')
   lap1 = timer()
   ##estraggo i paper scritti da questi IDaut
@@ -380,7 +373,6 @@ def multiEstratti():
 
   end = timer()
   print('completato multi in {}'.format(end-start) )
-  
 
 
 def multiCollabSPGI():
@@ -390,8 +382,7 @@ def multiCollabSPGI():
   from EstraiAutoriCollab import estraiAutoriCollab
   from CollassaNodiAmpi import collassaNodiAmpi
   from Verifiche_Test.PreparaPerGephi import preparaPerGephi
-  
-  
+
   celaborati = 'Versione3_Multi\\'
   sub = 'Collab\\'
   if not os.path.exists(celaborati + sub): os.makedirs(celaborati + sub)
@@ -412,8 +403,7 @@ def multiCollabSPGI():
   pfAutCollabUnificati  = celaborati + sub + 'AutoriCollabUnificati' + tag + '.txt'
   pfEdgeGephi  = celaborati + sub + 'EdgeUnificatiGephi' + tag + '.tsv'
   pfAutGephi   = celaborati + sub + 'AutoriUnificatiGephi' + tag + '.tsv'
-  
-  
+
   print('inizio multiCollabCTF')
   ##in pfPersone ho una lista di nomi del dipartimento
   ##estraggo gli IDautDEI corrispondenti (anche alle abbreviazioni)
@@ -449,8 +439,8 @@ def multiCollabSPGI():
 
   end = timer()
   print('completato multi in {}'.format(end-start) )
- 
- 
+
+
 def multiPadovaSPGI():
   from EstraiIDAutoriDEIampiMulti import estraiIDautoriMulti
   from EstraiPapAutAffDEImulti import estraiPapAutAffDEImulti
@@ -464,8 +454,7 @@ def multiPadovaSPGI():
   from CreaEdgeCollab import creaEdgeCollab
   from CollassaNodiAmpi import collassaNodiAmpi
   from Verifiche_Test.PreparaPerGephi import preparaPerGephi
-  
-  
+
   celaborati = 'Versione3_Multi\\'
   sub = 'Padovani\\'
   if not os.path.exists(celaborati + sub): os.makedirs(celaborati + sub)
@@ -474,7 +463,7 @@ def multiPadovaSPGI():
   cfileRAW   = '..\FileRAW\\'
   pfAuthorRAW = cfileRAW + 'Authors.txt'
   pfPapAutAffRAW = cfileRAW + 'PaperAuthorAffiliations.txt'
-  
+
   tag = 'SPGIpad'
   pfPersone    = celaborati + 'PersoneNomi' + tag + '.txt'
   pfAutoriID   = celaborati + 'Autori' + tag + '.txt'
@@ -486,48 +475,46 @@ def multiPadovaSPGI():
   pfAutPadovaniUnificati  = celaborati + sub + 'AutoriPadovaniUnificati' + tag + '.txt'
   pfEdgeGephi  = celaborati + sub + 'EdgePadovaniUnificatiGephi' + tag + '.tsv'
   pfAutGephi   = celaborati + sub + 'AutoriPadovaniUnificatiGephi' + tag + '.tsv'
-  
-  
+
   print('inizio multiPadova')
   start = timer()
   estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID)
   lap1 = timer()
   print 'completato estraiIDautoriMulti in {}'.format(lap1 - start)
-  
+
   # pfAutoriID   = celaborati + 'AutoriDEIMacroFull.txt'                #tutti gli autori per test
   estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff)
   lap2 = timer()
   print 'completato estraiPapAutAffDEImulti in {}'.format(lap2-lap1)
-  
+
   # pfPapAutAff  = celaborati + 'PapAutAffDEImultiFull.txt'             #tutti i paper per test
   estraiPaperPadovaniCompleti(pfPapAutAff, pfAffPad, pfAutoriID, pfPapPad, pfAutPad)
   lap3 = timer()
   print 'completato estraiPaperPadovaniCompleti in {}'.format(lap3-lap2)
-  
+
   creaEdgeCollab(pfPapPad, pfEdgePadovani)
   lap4 = timer()
   print 'completato creaEdgeCollab in {}'.format(lap4-lap3)
-  
+
   collassaNodiAmpi(pfPersone, pfEdgePadovani, pfAutPad, pfEdgePadovaniUnificati, pfAutPadovaniUnificati)
   lap5 = timer()
   print 'completato collassaNodiAmpi in {}'.format(lap5-lap4)
-  
+
   preparaPerGephi(pfEdgePadovaniUnificati, pfAutPadovaniUnificati, pfEdgeGephi, pfAutGephi)
   lap6 = timer()
   print 'completato preparaPerGephi in {}'.format(lap6-lap5)
 
-  
-  
-def multiProvaUpd():  
+
+def multiProvaUpd():
   from EstraiIDAutoriDEIampiMulti import estraiIDautoriMulti
   from EstraiPapAutAffDEImulti import estraiPapAutAffDEImulti
   from CreaEdgeCollab import creaEdgeCollab
   from EstraiAutoriCollab import estraiAutoriCollab
   from CollassaNodiAmpi import collassaNodiAmpi
   from Verifiche_Test.PreparaPerGephi import preparaPerGephi
-  
-  
-  celaborati = 'Versione3_Upd\\'
+
+  # celaborati = 'Versione3_Upd\\'
+  celaborati = 'Versione3_Upd/'
   sub = ''
   if not os.path.exists(celaborati + sub): os.makedirs(celaborati + sub)
   cfileRAW   = celaborati
@@ -544,8 +531,7 @@ def multiProvaUpd():
   pfAutCollabUnificati  = celaborati + sub + 'AutoriCollabUnificati' + tag + '.txt'
   pfEdgeGephi  = celaborati + sub + 'EdgeUnificatiGephi' + tag + '.tsv'
   pfAutGephi   = celaborati + sub + 'AutoriUnificatiGephi' + tag + '.tsv'
-  
-  
+
   print('inizio multiCollab'+tag)
   ##in pfPersone ho una lista di nomi del dipartimento
   ##estraggo gli IDautDEI corrispondenti (anche alle abbreviazioni)
@@ -581,7 +567,7 @@ def multiProvaUpd():
 
   end = timer()
   print('completato multi in {}'.format(end-start) )
- 
+
 
 if __name__ == '__main__':
   # singleCollab()
@@ -595,8 +581,8 @@ if __name__ == '__main__':
   multiProvaUpd()
 else:
   pass
-  
-  
+
+
 
 
 

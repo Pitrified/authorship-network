@@ -18,7 +18,7 @@ def trovaNome(abbreviato, dPersone):
   cerca l'abbreviato nei set del dizionario e restituisce l'entry del set in cui lo trovi
   eve sempre trovare il nome
   """
-  #if abbreviato in lconflitti: return abbreviato  #non restituisce la forma estesa 
+  #if abbreviato in lconflitti: return abbreviato  #non restituisce la forma estesa
   for entry in dPersone:
     #printType(dPersone[entry])
     if abbreviato == entry:         #abbreviato era gia' il nome esteso
@@ -61,18 +61,18 @@ def collassaNodiAmpi(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati
         dPersone[line].add(pz[0][0]+" "+pz[1]   +" "+pz[2]   +" "+pz[3])
       elif len(pz)==6:
         dPersone[line].add(pz[0][0]+" "+pz[1][0]+" "+pz[2][0]+" "+pz[3][0]+" "+pz[4][0]+" "+pz[5])
-      
+
   dAutori = {}  #{nome:[IDaut,IDaut,...,IDaut]}
   dIdAutori = {}  #{IDaut:nome}
   with open(pfAutCollab, 'rb') as fAutCollab:
     for line in fAutCollab:
       pezzi = line.rstrip().split('\t')    #pezzi[0] id; pezzi[1] nome senza \n
-      
+
       nome =  trovaNome(pezzi[1], dPersone)       #trovo il nome completo
-      
+
       if not dAutori.has_key(nome):
         dAutori.update({nome:[]})       #creo una lista vuota per la chiave nome
-      
+
       #print "Nome:",nome,"Pezzi[1]",pezzi[1]
       if nome == pezzi[1]:              #il nome era gia' completo
         dAutori[nome].insert(0, pezzi[0])   #inserisco il nome all'inizio della lista
@@ -89,28 +89,28 @@ def collassaNodiAmpi(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati
       pezzi = line.rstrip().split()
       id0 = trovaSostituto(pezzi[0], dAutori)
       id1 = trovaSostituto(pezzi[1], dAutori)
-      
+
       if id0<id1: coppia = id0+"\t"+id1
-      else: coppia = id1+"\t"+id0  
-      
+      else: coppia = id1+"\t"+id0
+
       #if not dEdgeCU.has_key(coppia): dEdgeCU.update({coppia:int(pezzi[2].rstrip())})
       #else: dEdgeCU[coppia]+=int(pezzi[2].rstrip())
       if not dEdgeCU.has_key(coppia): dEdgeCU.update({coppia:int(pezzi[2])})
       else: dEdgeCU[coppia]+=int(pezzi[2])
-      
+
       dAutCU.update({id0:dIdAutori[id0]})
       dAutCU.update({id1:dIdAutori[id1]})
 
   with open(pfEdgeCollabUnificati, 'wb') as fEdgeCollabUnificati:
     for entry in dEdgeCU:
       fEdgeCollabUnificati.write('{}\t{}\r\n'.format(entry, dEdgeCU[entry]))
-  
+
   with open(pfAutCollabUnificati, 'wb') as fAutCollabUnificati:
     for entry in dAutCU:
       fAutCollabUnificati.write('{}\t{}\r\n'.format(entry, dAutCU[entry]))
 
 if __name__ == '__main__':
-  print 'This program is CollassaNodiAmpi, being run by itself' 
+  print 'This program is CollassaNodiAmpi, being run by itself'
   #PATH TO FILES
   celaborati = 'Versione3_Single\\'
   pfPersone = celaborati + 'PersoneDEI.txt'
@@ -147,7 +147,7 @@ else:
 
 # def printType(obj):
   # print obj, " - ", type(obj)
-  
+
 # #cerca l'ID nelle liste del dizionario e restituisce il primo ID della lista giusta
 # #deve sempre trovare l'ID nel dizionario
 # def trovaSostituto(id):
@@ -158,11 +158,11 @@ else:
       # #print dAutori[entry]
       # return dAutori[entry][0]
   # return "IDNOTFOUND!"
-  
+
 # #cerca l'abbreviato nei set del dizionario e restituisce l'entry del set in cui lo trovi
 # #deve sempre trovare il nome
 # def trovaNome(abbreviato):
-  # if abbreviato in lconflitti: return abbreviato  #non restituisce la forma estesa 
+  # if abbreviato in lconflitti: return abbreviato  #non restituisce la forma estesa
   # for entry in dPersone:
     # #printType(dPersone[entry])
     # if abbreviato == entry:         #abbreviato era gia' il nome esteso
@@ -196,7 +196,7 @@ else:
   # elif len(pz)==6:
     # dPersone[line].add(pz[0][0]+" "+pz[1][0]+" "+pz[2][0]+" "+pz[3][0]+" "+pz[4][0]+" "+pz[5])
 
-##selfloop 
+##selfloop
 # lconflitti = ["m zorzi","g marin","m schiavon"]  #lista di nomi da mantenere abbreviati
 # lIDconflitti = ["430A940B","0940501E","0FBC4502","3D94B201","42F1454E","41469B2F","3F95F553","4291A227","3485CD4D","3FDAF618","414C514D","3EA3BBB7","4149CAD1","3F93B63D","431A54FF","3EA3BBB7"] #lista di ID da non collassare
 # print lconflitti
@@ -213,12 +213,12 @@ else:
 
 # for line in fautori:
   # pezzi = line.split("\t", 1)
-  
+
   # pezzi[1] = pezzi[1].rstrip()      #tolgo il \n
   # nome = trovaNome(pezzi[1])        #trovo il nome completo
   # if not dAutori.has_key(nome):
     # dAutori.update({nome:[]})       #creo una lista vuota per la chiave nome, NOME
-  
+
   # #print "Nome:",nome,"Pezzi[1]",pezzi[1]
   # if nome == pezzi[1]:              #il nome era gia' completo
     # dAutori[nome].insert(0, pezzi[0])   #inserisco il nome all'inizo della lista
@@ -261,17 +261,17 @@ else:
 # totpesi = 0
 # for line in fedge:
   # pezzi = line.split("\t")
-  
+
   # id0 = trovaSostituto(pezzi[0])
-  # id1 = trovaSostituto(pezzi[1])  
+  # id1 = trovaSostituto(pezzi[1])
   # if id0<id1: coppia = id0+"\t"+id1
-  # else: coppia = id1+"\t"+id0  
+  # else: coppia = id1+"\t"+id0
   # if not dEdgeCU.has_key(coppia): dEdgeCU.update({coppia:int(pezzi[2].rstrip())})
   # else: dEdgeCU[coppia]+=int(pezzi[2].rstrip())
 
   # dAutCU.update({id0:dIdAutori[id0]})
   # dAutCU.update({id1:dIdAutori[id1]})
-  
+
   ##selfloop
   # #controllo non siano nomi uguali
   # # nome0, nome1 = None, None
@@ -284,8 +284,8 @@ else:
   # nome1 = dIdAutori[id1]
   # nomepre0 = dIdAutori[pezzi[0]]
   # nomepre1 = dIdAutori[pezzi[1]]
-  
-  
+
+
   # if nome0 == nome1:
     # i+=1
     # peso = pezzi[2].rstrip()
@@ -293,7 +293,7 @@ else:
     # stringa = str(i)+"\t"+id0+"\t"+ id1+"\t"+ pezzi[0]+"\t"+ pezzi[1]+"\t"+str(peso)+"\t"+ str(totpesi)+"\t"+nome0+"\t"+ nome1+"\t"+nomepre0+"\t"+ nomepre1
     # print stringa
     # fautoriloop.write(stringa+"\n")
-    
+
 # #print dEdgeCU
 # print "len ID:",str(len(dIdAutori)),"len unificati:",str(len(dAutCU))
 
@@ -302,7 +302,7 @@ else:
 
 # for entry in dAutCU:
   # fautorinuovi.write(entry+"\t"+dAutCU[entry]+"\n")
-  
+
 # fedge.close()
 # fedgenuovi.close()
 # fautorinuovi.close()
