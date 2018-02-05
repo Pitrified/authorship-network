@@ -68,14 +68,14 @@ def ssd(a, b):
   else: return (b, a)
 
 
-def collassaNodiShortPath(pfAutNum, pfDatiPaj, pfEdgeUnif, pfAutUnif):
+def collassaNodiShortPath(pfAutINN, pfDatiPaj, pfEdgeUnif, pfAutUnif, maxhops):
   #edge e autori non collassati
-  with open(pfAutNum, 'rb') as fAutNum:
+  with open(pfAutINN, 'rb') as fAutINN:
     # load nomi id num
     daID   = {} # {id : numero, nome}
     daNum  = {} # {numero : id, nome}
     daNome = {} # {nome : ([id, id...], [num, num...])}
-    for line in fAutNum:
+    for line in fAutINN:
       pezzi = line.rstrip().split('\t')
       autID = pezzi[0]
       autNum = int(pezzi[1])
@@ -98,8 +98,7 @@ def collassaNodiShortPath(pfAutNum, pfDatiPaj, pfEdgeUnif, pfAutUnif):
   lenfreq = {}
   dacollassare = {}
   cdc = {} # coppie da collassare {nome: [[src, dst], ...]}
-  maxhops = 2
-  maxhops = 4
+  # maxhops = 2
   tsdc = []
   for au in abbUguali(nameSort):
     # print au
@@ -199,11 +198,12 @@ if __name__ == '__main__':
   # print 'This program is CollassaNodiShortPathSort, being run by itself'
   # PATH TO FILES
   celaborati = 'Versione3_Multi'
-  pfDatiPaj = join(celaborati, 'AutoriEdgeSNAP.paj')
-  pfAutNum = join(celaborati, 'AutoriIdNumNomi.txt') # ID e Numero e Nome
+  pfDatiPaj = join(celaborati, 'AutoriEdgeCollabSNAP.paj')
+  pfAutINN = join(celaborati, 'AutoriCollabIdNumNomi.txt') # ID e Numero e Nome
   pfEdgeUnif = join(celaborati, 'EdgeCollabUnifShortPath4.txt')
   pfAutUnif = join(celaborati, 'AutoriCollabUnifShortPath4.txt')
+  maxhops = 4
   start = timer()
-  collassaNodiShortPath(pfAutNum, pfDatiPaj, pfEdgeUnif, pfAutUnif)
+  collassaNodiShortPath(pfAutINN, pfDatiPaj, pfEdgeUnif, pfAutUnif, maxhops)
   end = timer()
   print 'CollassaNodiShortPathSort in {}'.format(end-start)

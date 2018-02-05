@@ -1,6 +1,8 @@
 #! python2
 
 # import re
+from os import getcwd
+from os.path import dirname
 from os.path import join
 
 def preparaPerGephi(pfEdge, pfAut, pfEdgeGephi, pfAutGephi):
@@ -21,14 +23,16 @@ def preparaPerGephi(pfEdge, pfAut, pfEdgeGephi, pfAutGephi):
 if __name__ == '__main__':
   print 'This program is PreparaPerGephi, being run by itself'
   #PATH TO FILES
+  pardir = dirname(getcwd())
+  print pardir
   celaborati = 'Versione3_Multi'
   nEdge = 'EdgeCollabUnifShortPath4'
-  pfEdge = join('..', celaborati, nEdge+'.txt')
-  print pfEdge
-  pfEdgeGephi = join('..', celaborati, nEdge+'Gephi.tsv')
+  pfEdge = join(pardir, celaborati, nEdge+'.txt')
+  # print pfEdge
+  pfEdgeGephi = join(pardir, celaborati, nEdge+'Gephi.tsv')
   nAut = 'AutoriCollabUnifShortPath4'
-  pfAut = join('..', celaborati, nAut+'.txt')
-  pfAutGephi = join('..', celaborati, nAut+'Gephi.tsv')
+  pfAut = join(pardir, celaborati, nAut+'.txt')
+  pfAutGephi = join(pardir, celaborati, nAut+'Gephi.tsv')
   preparaPerGephi(pfEdge, pfAut, pfEdgeGephi, pfAutGephi)
   print 'finitoPPGsolo'
 else:

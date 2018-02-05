@@ -1,6 +1,9 @@
 #! python2
 
-import re
+# import re
+from os import getcwd
+from os.path import dirname
+from os.path import join
 
 def preparaPerSNAP(pfEdge, pfAut, pfPaj, pfAutNum):
   # with open(pfPaj, 'wb') as fPaj, with open(pfEdge, 'rb') as fEdge,
@@ -18,7 +21,7 @@ def preparaPerSNAP(pfEdge, pfAut, pfPaj, pfAutNum):
           dNaut.update({i:pezzi[1]})
           fAutNum.write(pezzi[0]+'\t'+`i`+'\t'+pezzi[1]+'\r\n')
           i += 1
-      print dIDaut
+      # print dIDaut
 
     fPaj.write('*Vertices '+str(len(dIDaut))+'\r\n')
     for i in range(1, len(dNaut)+1):
@@ -37,28 +40,25 @@ def preparaPerSNAP(pfEdge, pfAut, pfPaj, pfAutNum):
         # fPaj.write(dIDaut[id0][0]+'\t'+dIDaut[id1][0]+'\t'+str(peso)+'\r\n')
         fPaj.write(`idNum0`+' '+`idNum1`+' '+peso+'\r\n')
 
-  # with open(pfEdge, 'rb') as fEdge:
-    # strInput = fEdge.read()
-
-  # with open(pfEdgeGephi, 'wb') as fEdgeGephi:
-    # fEdgeGephi.write("Source\tTarget\tWeight\tType\teLabel\r\n")
-    # fEdgeGephi.write(strInput.replace("\r\n","\tUndirected\t0\r\n" ) )
-
-  # with open(pfAut, 'rb') as fAut:
-    # strInput = fAut.read()
-
-  # with open(pfAutGephi, 'wb') as fAutGephi:
-    # fAutGephi.write("id\tLabel\r\n")
-    # fAutGephi.write(strInput)
 
 if __name__ == '__main__':
   print 'This program is preparaPerSNAP, being run by itself'
   #PATH TO FILES
-  celaborati = '..\\Versione3_Multi\\'
-  pfEdge = celaborati + 'EdgeCollabMacro.txt'
-  pfAut = celaborati + 'AutoriCollabMacro.txt'
-  pfAutNum = celaborati + 'AutoriIdNumNomi.txt'
-  pfPaj = celaborati + 'AutoriEdgeSNAP.paj'
+  pardir = dirname(getcwd())
+  celaborati = 'Versione3_Multi'
+  nEdge = 'EdgeCollabMacro'
+  pfEdge = join(pardir, celaborati, nEdge+'.txt')
+  # pfEdge = celaborati + 'EdgeCollabMacro.txt'
+  nAut = 'AutoriCollabMacro'
+  pfAut = join(pardir, celaborati, nAut+'.txt')
+  # pfAut = celaborati + 'AutoriCollabMacro.txt'
+  nAutNum = 'AutoriCollab'
+  pfAutNum = join(pardir, celaborati, nAutNum+'IdNumNomi.txt')
+  # pfAutNum = celaborati + 'AutoriIdNumNomi.txt'
+  nPaj = 'Collab'
+  pfPaj = join(pardir, celaborati, 'AutoriEdge'+nPaj+'SNAP.paj')
+  # pfPaj = celaborati + 'AutoriEdgeSNAP.paj'
+  # for pf in [pfEdge, pfAut, pfAutNum, pfPaj]: print pf
   preparaPerSNAP(pfEdge, pfAut, pfPaj, pfAutNum)
   print 'finitoPPSsolo'
 else:
