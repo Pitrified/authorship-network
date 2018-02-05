@@ -200,9 +200,9 @@ if __name__ == '__main__':
   celaborati = 'Versione3_Multi'
   pfDatiPaj = join(celaborati, 'AutoriEdgeCollabSNAP.paj')
   pfAutINN = join(celaborati, 'AutoriCollabIdNumNomi.txt') # ID e Numero e Nome
-  pfEdgeUnif = join(celaborati, 'EdgeCollabUnifShortPath4.txt')
-  pfAutUnif = join(celaborati, 'AutoriCollabUnifShortPath4.txt')
-  maxhops = 4
+  maxhops = 2
+  pfEdgeUnif = join(celaborati, 'EdgeCollabUnifShortPath'+maxhops+'.txt')
+  pfAutUnif = join(celaborati, 'AutoriCollabUnifShortPath'+maxhops+'.txt')
   start = timer()
   collassaNodiShortPath(pfAutINN, pfDatiPaj, pfEdgeUnif, pfAutUnif, maxhops)
   end = timer()

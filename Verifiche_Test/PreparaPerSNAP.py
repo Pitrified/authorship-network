@@ -44,20 +44,16 @@ def preparaPerSNAP(pfEdge, pfAut, pfPaj, pfAutNum):
 if __name__ == '__main__':
   print 'This program is preparaPerSNAP, being run by itself'
   #PATH TO FILES
-  pardir = dirname(getcwd())
+  pardir = dirname(dirname(__file__)) # dir(file)=aut/ver; dd(f)=aut
   celaborati = 'Versione3_Multi'
   nEdge = 'EdgeCollabMacro'
   pfEdge = join(pardir, celaborati, nEdge+'.txt')
-  # pfEdge = celaborati + 'EdgeCollabMacro.txt'
   nAut = 'AutoriCollabMacro'
   pfAut = join(pardir, celaborati, nAut+'.txt')
-  # pfAut = celaborati + 'AutoriCollabMacro.txt'
   nAutNum = 'AutoriCollab'
   pfAutNum = join(pardir, celaborati, nAutNum+'IdNumNomi.txt')
-  # pfAutNum = celaborati + 'AutoriIdNumNomi.txt'
   nPaj = 'Collab'
   pfPaj = join(pardir, celaborati, 'AutoriEdge'+nPaj+'SNAP.paj')
-  # pfPaj = celaborati + 'AutoriEdgeSNAP.paj'
   # for pf in [pfEdge, pfAut, pfAutNum, pfPaj]: print pf
   preparaPerSNAP(pfEdge, pfAut, pfPaj, pfAutNum)
   print 'finitoPPSsolo'
