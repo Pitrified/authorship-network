@@ -1,0 +1,19 @@
+
+### Java ###
+# Compiled class file
+*.class
+
+#*.info
+*.txt
+
+*.png
+*.jpg
+*.xls
+*.tsv
+*.pyc
+
+*~
+
+# .gitignore
+
+BackupNotepad/
