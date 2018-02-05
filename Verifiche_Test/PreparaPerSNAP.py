@@ -3,7 +3,7 @@
 import re
 
 def preparaPerSNAP(pfEdge, pfAut, pfPaj, pfAutNum):
-  # with open(pfPaj, 'wb') as fPaj, with open(pfEdge, 'rb') as fEdge, 
+  # with open(pfPaj, 'wb') as fPaj, with open(pfEdge, 'rb') as fEdge,
   with open(pfPaj, 'wb') as fPaj:
     # carico dizionario dIDaut {IDaut: [IDnumerico, nomeAut]}
     # carico dizionario dNaut  {IDnumerico: nomeAut}
@@ -19,11 +19,11 @@ def preparaPerSNAP(pfEdge, pfAut, pfPaj, pfAutNum):
           fAutNum.write(pezzi[0]+'\t'+`i`+'\t'+pezzi[1]+'\r\n')
           i += 1
       print dIDaut
-    
+
     fPaj.write('*Vertices '+str(len(dIDaut))+'\r\n')
     for i in range(1, len(dNaut)+1):
       fPaj.write(str(i)+' "'+dNaut[i]+'"\r\n')
-  
+
     fPaj.write('*Edges\r\n')
     with open(pfEdge, 'rb') as fEdge:
       for lEdge in fEdge:
@@ -36,23 +36,23 @@ def preparaPerSNAP(pfEdge, pfAut, pfPaj, pfAutNum):
         # fPaj.write(dIDaut[pezzi[0]][0]+'\t'   )
         # fPaj.write(dIDaut[id0][0]+'\t'+dIDaut[id1][0]+'\t'+str(peso)+'\r\n')
         fPaj.write(`idNum0`+' '+`idNum1`+' '+peso+'\r\n')
-  
+
   # with open(pfEdge, 'rb') as fEdge:
     # strInput = fEdge.read()
-    
+
   # with open(pfEdgeGephi, 'wb') as fEdgeGephi:
     # fEdgeGephi.write("Source\tTarget\tWeight\tType\teLabel\r\n")
     # fEdgeGephi.write(strInput.replace("\r\n","\tUndirected\t0\r\n" ) )
-    
+
   # with open(pfAut, 'rb') as fAut:
     # strInput = fAut.read()
-    
+
   # with open(pfAutGephi, 'wb') as fAutGephi:
     # fAutGephi.write("id\tLabel\r\n")
     # fAutGephi.write(strInput)
-  
+
 if __name__ == '__main__':
-  print 'This program is preparaPerSNAP, being run by itself' 
+  print 'This program is preparaPerSNAP, being run by itself'
   #PATH TO FILES
   celaborati = '..\\Versione3_Multi\\'
   pfEdge = celaborati + 'EdgeCollabMacro.txt'
