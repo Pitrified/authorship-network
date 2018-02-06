@@ -26,10 +26,10 @@ def collassaNodiIterato(dirs, files, numit, maxhops):
   pfPaj = join(diriter, sPaj.format(0))
   pfAutINN = join(diriter, sAutINN.format(0))
   pps(pfEdgeCollab, pfAutCollab, pfPaj, pfAutINN)
-  sEdgeCU = 'EdgeCUShortPath{}_{}.txt'.format(maxhops, '{}')
+  sEdgeCU = 'EdgeCUShortPath_{}_{}.txt'.format(maxhops, '{}')
   # print sEdgeC
   # print sEdgeC.format(2)
-  sAutCU = 'AutoriCUShortPath{}_{}.txt'.format(maxhops, '{}')
+  sAutCU = 'AutoriCUShortPath_{}_{}.txt'.format(maxhops, '{}')
 
   for i in range(1, numit+1):
     pfEdgeCU = join(diriter, sEdgeCU.format(i))
@@ -62,11 +62,13 @@ if __name__ == '__main__':
   dirs = (direlab, dirsub, diriter)
 
   tag = 'DEI'
-  pfEdgeCollab = join(dirsub, 'EdgeCollab' + tag + '.txt')
-  pfAutCollab = join(dirsub, 'AutoriCollab' + tag + '.txt')
+  nEdgeCollab = 'EdgeCollab{}.txt'.format(tag)
+  pfEdgeCollab = join(dirsub, nEdgeCollab)
+  nAutCollab = 'AutoriCollab{}.txt'.format(tag)
+  pfAutCollab = join(dirsub, nAutCollab)
   files = (pfEdgeCollab, pfAutCollab)
 
-  maxhops = 2
-  numit = 4
+  maxhops = 3
+  numit = 2
   collassaNodiIterato(dirs, files, numit, maxhops)
   # print diriter
