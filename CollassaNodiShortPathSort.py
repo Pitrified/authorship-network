@@ -183,8 +183,8 @@ def collassaNodiShortPath(pfAutINN, pfDatiPaj, pfEdgeUnif, pfAutUnif, maxhops):
   sAutUnif = set()
   with open(pfEdgeUnif, 'wb') as fEdgeUnif:
     for edge in dEdgeUnif:
-      a = edge[0]
-      b = edge[1]
+      a = daNum[edge[0]][0]
+      b = daNum[edge[1]][0]
       sAutUnif.add(a)
       sAutUnif.add(b)
       w = dEdgeUnif[edge]
@@ -192,7 +192,7 @@ def collassaNodiShortPath(pfAutINN, pfDatiPaj, pfEdgeUnif, pfAutUnif, maxhops):
 
   with open(pfAutUnif, 'wb') as fAutUnif:
     for a in sAutUnif:
-      fAutUnif.write('{}\t{}\r\n'.format(a, daNum[a][1]))
+      fAutUnif.write('{}\t{}\r\n'.format(a, daID[a][1]))
 
 if __name__ == '__main__':
   # print 'This program is CollassaNodiShortPathSort, being run by itself'
@@ -201,8 +201,8 @@ if __name__ == '__main__':
   pfDatiPaj = join(celaborati, 'AutoriEdgeCollabSNAP.paj')
   pfAutINN = join(celaborati, 'AutoriCollabIdNumNomi.txt') # ID e Numero e Nome
   maxhops = 2
-  pfEdgeUnif = join(celaborati, 'EdgeCollabUnifShortPath'+maxhops+'.txt')
-  pfAutUnif = join(celaborati, 'AutoriCollabUnifShortPath'+maxhops+'.txt')
+  pfEdgeUnif = join(celaborati, 'EdgeCollabUnifShortPath'+`maxhops`+'.txt')
+  pfAutUnif = join(celaborati, 'AutoriCollabUnifShortPath'+`maxhops`+'.txt')
   start = timer()
   collassaNodiShortPath(pfAutINN, pfDatiPaj, pfEdgeUnif, pfAutUnif, maxhops)
   end = timer()

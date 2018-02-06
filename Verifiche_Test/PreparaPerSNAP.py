@@ -47,12 +47,16 @@ if __name__ == '__main__':
   pardir = dirname(dirname(__file__)) # dir(file)=aut/ver; dd(f)=aut
   celaborati = 'Versione3_Multi'
   nEdge = 'EdgeCollabMacro'
+  nEdge = 'EdgeCollabUnifShortPath2'
   pfEdge = join(pardir, celaborati, nEdge+'.txt')
   nAut = 'AutoriCollabMacro'
+  nAut = 'AutoriCollabUnifShortPath2'
   pfAut = join(pardir, celaborati, nAut+'.txt')
   nAutNum = 'AutoriCollab'
+  nAutNum = 'AutoriCollabSP2'
   pfAutNum = join(pardir, celaborati, nAutNum+'IdNumNomi.txt')
   nPaj = 'Collab'
+  nPaj = 'CollabSP2'
   pfPaj = join(pardir, celaborati, 'AutoriEdge'+nPaj+'SNAP.paj')
   # for pf in [pfEdge, pfAut, pfAutNum, pfPaj]: print pf
   preparaPerSNAP(pfEdge, pfAut, pfPaj, pfAutNum)

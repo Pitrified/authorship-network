@@ -2,6 +2,8 @@
 
 from timeit import default_timer as timer
 import os
+from os.path import dirname
+from os.path import join
 
 
 def singleCollab():
@@ -569,6 +571,59 @@ def multiProvaUpd():
   print('completato multi in {}'.format(end-start) )
 
 
+
+def collassaNodiIteratoSolo():
+  from EstraiIDAutoriDEIampiMulti import estraiIDautoriMulti
+  from EstraiPapAutAffDEImulti import estraiPapAutAffDEImulti
+  from CreaEdgeCollab import creaEdgeCollab
+  from EstraiAutoriCollab import estraiAutoriCollab
+
+  # from CollassaNodiAmpi import collassaNodiAmpi
+  # from Verifiche_Test.PreparaPerGephi import preparaPerGephi
+
+  aut =  dirname(__file__)
+  tesi = dirname(aut)
+  celaborati = 'Versione4_Short'
+  sub = ''
+  direlab = join(aut, celaborati)
+  dirsub = join(aut, celaborati, sub)
+  # for c in (aut, tesi, direlab, dirsub): print c
+  cfileRAW = 'FileRAW'
+  pfAuthorRAW = join(tesi, cfileRAW, 'Authors.txt')
+  pfPapAutAffRAW = join(tesi, cfileRAW, 'PaperAuthorAffiliations.txt')
+
+  tag = 'DEI'
+  pfPersone = join(direlab, 'PersoneNomi' + tag + '.txt')
+  pfAutoriID = join(direlab, 'AutoriID' + tag + '.txt')
+  pfPapAutAff = join(direlab, 'PapAutAff' + tag + '.txt')
+
+  pfEdgeCollab = join(dirsub, 'EdgeCollab' + tag + '.txt')
+  pfAutCollab = join(dirsub, 'AutoriCollab' + tag + '.txt')
+
+  print('inizio multiCollab'+tag)
+  ##in pfPersone ho una lista di nomi del dipartimento
+  ##estraggo gli IDautDEI corrispondenti (anche alle abbreviazioni)
+  start = timer()
+  # estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID)
+  lap1 = timer()
+  print 'completato estraiIDautoriMulti in {}'.format(lap1 - start)
+
+  ##estraggo i paper scritti da questi IDautDEI
+  # estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff)
+  lap2 = timer()
+  print 'completato estraiPapAutAffDEImulti in {}'.format(lap2-lap1)
+
+  ##estraggo gli EdgeCollab
+  creaEdgeCollab(pfPapAutAff, pfEdgeCollab)
+  lap3 = timer()
+  print 'completato creaEdgeCollab in {}'.format(lap3-lap2)
+
+  ##estraggo gli AutoriCollab
+  estraiAutoriCollab(pfAutoriID, pfEdgeCollab, pfAutCollab)
+  lap4 = timer()
+  print 'completato estraiAutoriCollab in {}'.format(lap4-lap3)
+
+
 if __name__ == '__main__':
   # singleCollab()
   # multiCollab()
@@ -578,7 +633,8 @@ if __name__ == '__main__':
   # multiPadovaSPGI()
   # multiEstratti()
   # multiCollabCTF()
-  multiProvaUpd()
+  # multiProvaUpd()
+  collassaNodiIteratoSolo()
 else:
   pass
 
