@@ -154,7 +154,7 @@ def collassaNodiShortPath(pfAutINN, pfDatiPaj, pfEdgeUnif, pfAutUnif, maxhops):
     setleader =  max([daNum[x] for x in s], key=itemgetter(1))
     # print setleader
     autUniti[setleader[1]] = (s, setleader[0], daID[setleader[0]][0])
-  print autUniti
+  # print autUniti
 
   dEdgeUnif = {}
   with open(pfDatiPaj, 'rb') as fDatiPaj:
@@ -178,7 +178,7 @@ def collassaNodiShortPath(pfAutINN, pfDatiPaj, pfEdgeUnif, pfAutUnif, maxhops):
       else:
         dEdgeUnif[ssd(a,b)] = w
       line = fDatiPaj.readline().rstrip()
-    print 'len(dEdgeUnif) {} dEdgeUnif {}'.format(len(dEdgeUnif), dEdgeUnif)
+    # print 'len(dEdgeUnif) {} dEdgeUnif {}'.format(len(dEdgeUnif), dEdgeUnif)
 
   sAutUnif = set()
   with open(pfEdgeUnif, 'wb') as fEdgeUnif:

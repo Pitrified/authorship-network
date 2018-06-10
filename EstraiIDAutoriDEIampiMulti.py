@@ -4,7 +4,7 @@ import os
 import multiprocessing as mp
 from timeit import default_timer as timer
 import traceback
-from Updater import Upd
+# from Updater import Upd
 
 #da PersoneDEI.txt ho una lista di nomi
 #in Authors.txt ci sono ID-autori, cerco gli autori
@@ -26,8 +26,8 @@ def chunkMyFile(fpath, roughSize):
       yield chunkStart, chunkEnd-chunkStart #lo uso come generatore
       if chunkEnd > fileEnd:  #EOF superata
         break
-      
-  
+
+
 def processaEIADAm(pfAuthorRAW, chunkStart, chunkSize, sPersone):
   try:
     # carica solo le linee da processare
@@ -45,8 +45,8 @@ def processaEIADAm(pfAuthorRAW, chunkStart, chunkSize, sPersone):
   except:
     traceback.print_exc()
     raise
-    
-  
+
+
 def creaSetAbbreviazioni(pfPersone):
   sPersone = set()
   with open(pfPersone, 'rb') as fPersone:
@@ -73,7 +73,7 @@ def creaSetAbbreviazioni(pfPersone):
         sPersone.add(pz[0][0]+" "+pz[1][0]+" "+pz[2][0]+" "+pz[3][0]+" "+pz[4][0]+" "+pz[5])
   return sPersone
 
-  
+
 def estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID):
   """
   in pfPersone (PersoneDEI.txt) ho una lista di nomi
@@ -84,7 +84,7 @@ def estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID):
   # popolo il set
   sPersone = creaSetAbbreviazioni(pfPersone)
   # print 'abbreviazioni {}'.format(len(sPersone))
-  
+
   # cerco i nomi nel set
   # popolo il set degli IDautDEI
   # sIDautDEI = set()
@@ -96,33 +96,33 @@ def estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID):
         # # print pezzi[1]
         # fAutoriID.write(line)
         # sIDautDEI.add(pezzi[0])                 #pezzi[0] : IDaut
-  
-  
-  roughSize = 1024*1024
+
+
+  roughSize = 1024*1024 *10
   pool = mp.Pool(mp.cpu_count())
   lresult = []
 
   sizeAraw = os.path.getsize(pfAuthorRAW)
-  print 'sizePAAraw: {} chunks: {} roughSize: {}'.format(sizeAraw, sizeAraw/roughSize, roughSize)
-  up  = Upd(sizeAraw/roughSize)
-  up.update('redraw')
-  
+  print 'sizeAuthorRAW: {} chunks: {} roughSize: {}'.format(sizeAraw, sizeAraw/roughSize, roughSize)
+  # up  = Upd(sizeAraw/roughSize)
+  # up.update('redraw')
+
   for chunkStart, chunkSize in chunkMyFile(pfAuthorRAW, roughSize):
     lresult.append(pool.apply_async(processaEIADAm,(pfAuthorRAW, chunkStart, chunkSize, sPersone) ) )
-    
+
   with open(pfAutoriID, 'wb') as fAutoriID:
     for r in lresult:
       fAutoriID.write(r.get())
-      up.update('next')
-      
+      # up.update('next')
+
   pool.close()
-  
+
 
 
 
 if __name__ == '__main__':
   print 'This program is EstraiIDAutoriDEIampiMulti, being run by itself'
-  
+
   #PATH TO FILES
   celaborati = '.\Versione3_Upd\\'
   # celaborati = './Versione3_Upd/'
@@ -132,7 +132,7 @@ if __name__ == '__main__':
   # pfAuthorRAW = '..\FileRAW\Authors1000.txt'
   pfAuthorRAW = '..\FileRAW\Authors.txt'
   # pfAuthorRAW = '../FileRAW/Authors.txt'
-  
+
   start = timer()
   estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID)
   end = timer()

@@ -5,7 +5,7 @@ import multiprocessing as mp
 from timeit import default_timer as timer
 import traceback
 import re
-from Updater import Upd
+# from Updater import Upd
 
 def processaPAADm(pfPapAutAffRAW, chunkStart, chunkSize, sIDautDEI):
   try:
@@ -26,11 +26,11 @@ def processaPAADm(pfPapAutAffRAW, chunkStart, chunkSize, sIDautDEI):
       else:
         'errore alla linea {}'.format(line)
     return chuRes
-    
+
   except:
     traceback.print_exc()
     raise
-    
+
 
 def chunkMyFile(fpath, roughSize):
   fileEnd = os.path.getsize(fpath)
@@ -45,7 +45,7 @@ def chunkMyFile(fpath, roughSize):
       yield chunkStart, chunkEnd-chunkStart #lo uso come generatore
       if chunkEnd > fileEnd:  #EOF superata
         break
-      
+
 
 def estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff, sIDautDEI=None):
   """
@@ -68,23 +68,23 @@ def estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff, sIDautDEI=N
   roughSize = 1024*1024*128
   pool = mp.Pool(mp.cpu_count())
   lresult = []
-  
+
   sizePAAraw = os.path.getsize(pfPapAutAffRAW)
-  # print 'sizePAAraw: {} chunks: {} roughSize: {}'.format(sizePAAraw, sizePAAraw/roughSize, roughSize)
-  up = Upd(sizePAAraw/roughSize)
+  print 'sizePaperAuthorAffiliationRAW: {} chunks: {} roughSize: {}'.format(sizePAAraw, sizePAAraw/roughSize, roughSize)
+  # up = Upd(sizePAAraw/roughSize)
 
   for chunkStart, chunkSize in chunkMyFile(pfPapAutAffRAW, roughSize):
     lresult.append(pool.apply_async(processaPAADm,(pfPapAutAffRAW, chunkStart, chunkSize, sIDautDEI) ) )
   with open(pfPapAutAff, 'wb') as fPapAutAff:
     for r in lresult:
       fPapAutAff.write(r.get())
-      up.update('next')
-      
+      # up.update('next')
+
   pool.close()
-  del up
+  # del up
 
 if __name__ == '__main__':
-  print 'This program is EstraiPapAutAffDEImulti, being run by itself' 
+  print 'This program is EstraiPapAutAffDEImulti, being run by itself'
   #PATH TO FILES
   celaborati = 'Versione3_Upd\\'
   pfAutoriID = celaborati + 'AutoriDEI.txt'
@@ -104,4 +104,4 @@ else:
   pass
   #tutti i processi figli eseguono questo codice
   #print 'I am EstraiPapAutAffDEImulti, being imported from another module'
-  
+

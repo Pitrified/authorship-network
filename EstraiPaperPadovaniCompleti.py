@@ -10,6 +10,13 @@ def estraiPaperPadovaniCompleti(pfPapAutAff, pfAffPad, pfAutoriID, pfPapPad, pfA
   #estrai autoripadovani
   #estrai paperpadovanicompleti
     #(da PapAutAffDEI prendo i paper scritti da IDaut con almeno un aff padovana)
+
+  pfPapAutAff: lista paper estratti da estraiPapAutAffDEImulti
+  pfAffPad: lista di affiliation padovane estratta da estraiAffPadovaneVeloce
+  pfAutoriID: autori estratti da estraiIDautoriMulti
+
+  pfPapPad: paper padovani
+  pfAutPad: autori con almeno un paper con affiliation padovana
   """
 
   # IDaff affiliation padovane
@@ -26,20 +33,20 @@ def estraiPaperPadovaniCompleti(pfPapAutAff, pfAffPad, pfAutoriID, pfPapPad, pfA
       if len(pezzi)>=2:           #campo IDaff compilato
         if pezzi[2] in sAffPad:   #paper con aff padovana
           sAutPad.add(pezzi[1])   #carico l'IDaut
-    
+
     # estraggo i paper scritti da autori padovani
     fPapAutAff.seek(0)
     for line in fPapAutAff:
       pezzi = line.rstrip().split('\t')
       if pezzi[1] in sAutPad:     #paper scritto da autore con almeno un aff pad
         fPapPad.write(line)
-  
+
   # autori padovani
   with open(pfAutoriID, 'rb') as fAutoriID, open(pfAutPad, 'wb') as fAutPad:
     for line in fAutoriID:
       if line.split('\t')[0] in sAutPad:
         fAutPad.write(line)
-  
+
 
 
 if __name__ == '__main__':
@@ -53,7 +60,7 @@ if __name__ == '__main__':
   pfAutPad = celaborati + 'AutoriPadovaniSingolo.txt'
   estraiPaperPadovaniCompleti(pfPapAutAff, pfAffPad, pfAutoriID, pfPapPad, pfAutPad)
   print('finito EPPC solo'.format() )
-  
+
 else:
   pass
   # print 'I am EstraiPaperPadovaniCompleti, being imported from another module'
