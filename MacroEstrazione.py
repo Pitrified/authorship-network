@@ -4,6 +4,7 @@ from timeit import default_timer as timer
 import os
 from os.path import dirname
 from os.path import join
+from os.path import abspath
 
 
 def singleCollab():
@@ -571,7 +572,6 @@ def multiProvaUpd():
   print('completato multi in {}'.format(end-start) )
 
 
-
 def collassaNodiIteratoSolo():
   from EstraiIDAutoriDEIampiMulti import estraiIDautoriMulti
   from EstraiPapAutAffDEImulti import estraiPapAutAffDEImulti
@@ -624,6 +624,166 @@ def collassaNodiIteratoSolo():
   print 'completato estraiAutoriCollab in {}'.format(lap4-lap3)
 
 
+def multiGiugno():
+  from EstraiIDAutoriDEIampiMulti import estraiIDautoriMulti
+  from EstraiPapAutAffDEImulti import estraiPapAutAffDEImulti
+  from CreaEdgeCollab import creaEdgeCollab
+  from EstraiAutoriCollab import estraiAutoriCollab
+  from CollassaNodiAmpi import collassaNodiAmpi
+  from Verifiche_Test.PreparaPerGephi import preparaPerGephi
+
+  # celaborati = 'Versione3_Upd\\'
+  celaborati = 'Versione3_Giu'
+  sub = ''
+  if not os.path.exists(join(celaborati, sub)): os.makedirs(join(celaborati, sub))
+  cfileRAW   = join('..', 'FileRAW') +'\\'
+  print(cfileRAW)
+  pfAuthorRAW = cfileRAW + 'Authors.txt'
+  pfPapAutAffRAW = cfileRAW + 'PaperAuthorAffiliations.txt'
+
+  tag = 'GIU'
+  pfPersone    = join(celaborati, sub, 'PersoneNomi{}.txt'.format(tag))
+  pfAutoriID   = join(celaborati, sub, 'AutoriID{}.txt'.format(tag))
+  pfPapAutAff  = join(celaborati, sub, 'PapAutAff{}.txt'.format(tag))
+  pfEdgeCollab = join(celaborati, sub, 'EdgeCollab{}.txt'.format(tag))
+  pfAutCollab  = join(celaborati, sub, 'AutoriCollab{}.txt'.format(tag))
+  pfEdgeCollabUnificati = join(celaborati, sub, 'EdgeCollabUnificati{}.txt'.format(tag))
+  pfAutCollabUnificati  = join(celaborati, sub, 'AutoriCollabUnificati{}.txt'.format(tag))
+  pfEdgeGephi  = join(celaborati, sub, 'EdgeUnificatiGephi{}.tsv'.format(tag))
+  pfAutGephi   = join(celaborati, sub, 'AutoriUnificatiGephi{}.tsv'.format(tag))
+
+  print('inizio multiCollab'+tag)
+  start = timer()
+
+  ##in pfPersone ho una lista di nomi del dipartimento
+  ##estraggo gli IDautDEI corrispondenti (anche alle abbreviazioni)
+  estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID)
+  lap1 = timer()
+  print 'completato estraiIDautoriMulti in {}'.format(lap1 - start)
+
+  ##estraggo i paper scritti da questi IDautDEI
+  estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff)
+  lap2 = timer()
+  print 'completato estraiPapAutAffDEImulti in {}'.format(lap2-lap1)
+
+  ##estraggo gli EdgeCollab
+  creaEdgeCollab(pfPapAutAff, pfEdgeCollab)
+  lap3 = timer()
+  print 'completato creaEdgeCollab in {}'.format(lap3-lap2)
+
+  ##estraggo gli AutoriCollab
+  estraiAutoriCollab(pfAutoriID, pfEdgeCollab, pfAutCollab)
+  lap4 = timer()
+  print 'completato estraiAutoriCollab in {}'.format(lap4-lap3)
+
+  ##collasso i nodi
+  collassaNodiAmpi(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati)
+  lap5 = timer()
+  print 'completato collassaNodiAmpi in {}'.format(lap5-lap4)
+
+  ##preparo per gephi
+  preparaPerGephi(pfEdgeCollabUnificati, pfAutCollabUnificati, pfEdgeGephi, pfAutGephi)
+  lap6 = timer()
+  print 'completato preparaPerGephi in {}'.format(lap6-lap5)
+
+  end = timer()
+  print('completato multi in {}'.format(end-start) )
+
+
+def esplorazioneTotale():
+  from EstraiIDAutoriDEIampiMulti import estraiIDautoriMulti
+  from EstraiPapAutAffDEImulti import estraiPapAutAffDEImulti
+  from EstraiPaperPadovaniCompleti import estraiPaperPadovaniCompleti
+  from CreaEdgeCollab import creaEdgeCollab
+  from EstraiAutoriCollab import estraiAutoriCollab
+  from CollassaNodiAmpi import collassaNodiAmpi
+  from Verifiche_Test.PreparaPerGephi import preparaPerGephi
+
+  ctesi = abspath(join(__file__, '..', '..') )
+  celaborati = join(ctesi, 'authorship-network', 'Versione4_Totale')
+  sub = 'Prima'
+
+  if not os.path.exists(join(celaborati, sub)): os.makedirs(join(celaborati, sub))
+  cfileRAW   = join(ctesi, 'FileRAW')
+  pfAuthorRAW = join(cfileRAW, 'Authors.txt')
+  pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations.txt')
+  pfAuthorRAW = join(cfileRAW, 'Authors1000000.txt')
+  pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations5000000.txt')
+
+  tag = 'DEI'
+  pfPersone    = join(celaborati, sub, 'PersoneNomi{}.txt'.format(tag))
+  pfAutoriID   = join(celaborati, sub, 'AutoriID{}.txt'.format(tag))
+  pfPapAutAff  = join(celaborati, sub, 'PapAutAff{}.txt'.format(tag))
+  pfEdgeCollab = join(celaborati, sub, 'EdgeCollab{}.txt'.format(tag))
+  pfAutCollab  = join(celaborati, sub, 'AutoriCollab{}.txt'.format(tag))
+  pfEdgeCollabUnificati = join(celaborati, sub, 'EdgeCollabUnificati{}.txt'.format(tag))
+  pfAutCollabUnificati  = join(celaborati, sub, 'AutoriCollabUnificati{}.txt'.format(tag))
+  pfEdgeGephi  = join(celaborati, sub, 'EdgeUnificatiGephi{}.tsv'.format(tag))
+  pfAutGephi   = join(celaborati, sub, 'AutoriUnificatiGephi{}.tsv'.format(tag))
+
+  sceltePadova = ['_tutti'. '_padovani']
+  scelteUnione = ['_nomi', '_distanza']
+  scelteComunita = ['_girmneu', '_altromodo']
+
+  print('Inizio l\'esplorazione totale {}{}{}'.format(sub, '' if sub=='' else ' ', tag))
+  start = timer()
+
+  # in pfPersone ho una lista di nomi del dipartimento
+  # estraggo gli IDautDEI corrispondenti (anche alle abbreviazioni)
+  estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID)
+  lap1 = timer()
+  print 'completato estraiIDautoriMulti in {}'.format(lap1 - start)
+
+  # estraggo i paper scritti da questi IDautDEI
+  estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff)
+  lap2 = timer()
+  print 'completato estraiPapAutAffDEImulti in {}'.format(lap2-lap1)
+
+  # estraggo i paper con affiliation padovana
+  estraiPaperPadovaniCompleti(pfPapAutAff, pfAffPad, pfAutoriID, pfPapPad, pfAutPad)
+  lap25 = timer()
+  print('completato estraiPaperPadovaniCompleti in {}'.format(lap25 - lap2) )
+
+  # # for papers, edges, autori in [lista di (paper, edges, autori)]
+  # for strada in ['_tutti', '_padovani']:
+    # paper = 'PapAutAff{}.txt'.format(strada)
+    # creaEdgeCollab(paper, edge)
+# '''
+  # estraggo gli EdgeCollab
+  creaEdgeCollab(pfPapAutAff, pfEdgeCollab)
+  lap3 = timer()
+  print 'completato creaEdgeCollab in {}'.format(lap3-lap2)
+
+  # estraggo gli AutoriCollab
+  estraiAutoriCollab(pfAutoriID, pfEdgeCollab, pfAutCollab)
+  lap4 = timer()
+  print 'completato estraiAutoriCollab in {}'.format(lap4-lap3)
+
+  # # estraggo gli EdgeCollabPadovani
+  # creaEdgeCollab(pfPapPad, pfEdgeCollabPadovani)
+  # lap43 = timer()
+  # print('completato creaEdgeCollab per i padovani')
+#
+  # # estraggo gli AutoriCollabPadovani
+  # estraiAutoriCollab(pfAutoriID, pfEdgeCollabPadovani, pfAutPadovani)
+  # print('completato estraiAutoriCollab per i padovani')
+# '''
+  ##collasso i nodi
+  collassaNodiAmpi(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati)
+  lap5 = timer()
+  print 'completato collassaNodiAmpi in {}'.format(lap5-lap4)
+
+  ##preparo per gephi
+  preparaPerGephi(pfEdgeCollabUnificati, pfAutCollabUnificati, pfEdgeGephi, pfAutGephi)
+  lap6 = timer()
+  print 'completato preparaPerGephi in {}'.format(lap6-lap5)
+
+  end = timer()
+  print('Completata l\'esplorazione in {} s'.format(end-start) )
+
+
+
+
 if __name__ == '__main__':
   # singleCollab()
   # multiCollab()
@@ -634,7 +794,9 @@ if __name__ == '__main__':
   # multiEstratti()
   # multiCollabCTF()
   # multiProvaUpd()
-  collassaNodiIteratoSolo()
+  # collassaNodiIteratoSolo()
+  # multiGiugno()
+  esplorazioneTotale()
 else:
   pass
 
