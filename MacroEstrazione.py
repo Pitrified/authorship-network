@@ -2,9 +2,10 @@
 
 from timeit import default_timer as timer
 import os
+from os.path import abspath
 from os.path import dirname
 from os.path import join
-from os.path import abspath
+import re
 
 
 def singleCollab():
@@ -693,81 +694,142 @@ def multiGiugno():
 def esplorazioneTotale():
   from EstraiIDAutoriDEIampiMulti import estraiIDautoriMulti
   from EstraiPapAutAffDEImulti import estraiPapAutAffDEImulti
+  from EstraiAffPadovaneVeloce import estraiAffPadovaneVeloce
   from EstraiPaperPadovaniCompleti import estraiPaperPadovaniCompleti
   from CreaEdgeCollab import creaEdgeCollab
   from EstraiAutoriCollab import estraiAutoriCollab
   from CollassaNodiAmpi import collassaNodiAmpi
+  from CollassaNodiShortPathSort import collassaNodiShortPath
   from Verifiche_Test.PreparaPerGephi import preparaPerGephi
+  from Verifiche_Test.PreparaPerSNAP import preparaPerSNAP
 
   ctesi = abspath(join(__file__, '..', '..') )
   celaborati = join(ctesi, 'authorship-network', 'Versione4_Totale')
-  sub = 'Prima'
+  sub = 'Terza'
 
   if not os.path.exists(join(celaborati, sub)): os.makedirs(join(celaborati, sub))
   cfileRAW   = join(ctesi, 'FileRAW')
   pfAuthorRAW = join(cfileRAW, 'Authors.txt')
   pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations.txt')
-  pfAuthorRAW = join(cfileRAW, 'Authors1000000.txt')
-  pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations5000000.txt')
+  pfAffRAW = join(cfileRAW, 'Affiliations.txt')
+  # pfAuthorRAW = join(cfileRAW, 'Authors1000000.txt')
+  # pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations5000000.txt')
 
-  tag = 'DEI'
-  pfPersone    = join(celaborati, sub, 'PersoneNomi{}.txt'.format(tag))
+  tag = '_DEI'
+  # pfPersone    = join(celaborati, sub, 'PersoneNomi{}.txt'.format(tag))
+  pfPersone    = join(celaborati, 'PersoneNomi{}.txt'.format(tag))
   pfAutoriID   = join(celaborati, sub, 'AutoriID{}.txt'.format(tag))
-  pfPapAutAff  = join(celaborati, sub, 'PapAutAff{}.txt'.format(tag))
-  pfEdgeCollab = join(celaborati, sub, 'EdgeCollab{}.txt'.format(tag))
-  pfAutCollab  = join(celaborati, sub, 'AutoriCollab{}.txt'.format(tag))
-  pfEdgeCollabUnificati = join(celaborati, sub, 'EdgeCollabUnificati{}.txt'.format(tag))
-  pfAutCollabUnificati  = join(celaborati, sub, 'AutoriCollabUnificati{}.txt'.format(tag))
-  pfEdgeGephi  = join(celaborati, sub, 'EdgeUnificatiGephi{}.tsv'.format(tag))
-  pfAutGephi   = join(celaborati, sub, 'AutoriUnificatiGephi{}.tsv'.format(tag))
+  # pfPapAutAff  = join(celaborati, sub, 'PapAutAff{}.txt'.format(tag))
+  # pfEdgeCollab = join(celaborati, sub, 'EdgeCollab{}.txt'.format(tag))
+  # pfAutCollab  = join(celaborati, sub, 'AutoriCollab{}.txt'.format(tag))
+  # pfEdgeCollabUnificati = join(celaborati, sub, 'EdgeCollabUnificati{}.txt'.format(tag))
+  # pfAutCollabUnificati  = join(celaborati, sub, 'AutoriCollabUnificati{}.txt'.format(tag))
+  # pfEdgeGephi  = join(celaborati, sub, 'EdgeUnificatiGephi{}.tsv'.format(tag))
+  # pfAutGephi   = join(celaborati, sub, 'AutoriUnificatiGephi{}.tsv'.format(tag))
 
-  sceltePadova = ['_tutti'. '_padovani']
+  pftPapAutAff = join(celaborati, sub, 'PapAutAff{}{}.txt'.format('{}', tag))
+  pftEdgeCollab = join(celaborati, sub, 'EdgeCollab{}{}.txt'.format('{}', tag))
+  pftAutCollab  = join(celaborati, sub, 'AutoriCollab{}{}.txt'.format('{}', tag))
+  pftEdgeCollabUnificati = join(celaborati, sub, 'EdgeCollabUnificati{}{}{}.txt'.format('{}', '{}', tag))
+  pftAutCollabUnificati  = join(celaborati, sub, 'AutoriCollabUnificati{}{}{}.txt'.format('{}', '{}', tag))
+  pftAutNumNome = join(celaborati, sub, 'AutoriCollabIdNumNome{}{}.txt'.format('{}', tag))
+  pftPaj = join(celaborati, sub, 'AutoriEdgeCollab{}{}.paj'.format('{}', tag))
+  pftEdgeGephi  = join(celaborati, sub, 'EdgeUnificatiGephi{}{}{}.tsv'.format('{}', '{}', tag))
+  pftAutGephi   = join(celaborati, sub, 'AutoriUnificatiGephi{}{}{}.tsv'.format('{}', '{}', tag))
+  pfAffPad = join(celaborati, sub, 'AffiliationPadovaPadua.txt'.format())
+  pfAutPad = join(celaborati, sub, 'AutoriPadovanichehannoscrittopaper.txt'.format())
+
+  maxhops = 2
+  strRegAff = 'pad(ov|u)a'
+  regAff = re.compile(strRegAff, re.IGNORECASE)
+
+  sceltePadova = ['_tutti', '_padovani']
   scelteUnione = ['_nomi', '_distanza']
   scelteComunita = ['_girmneu', '_altromodo']
 
-  print('Inizio l\'esplorazione totale {}{}{}'.format(sub, '' if sub=='' else ' ', tag))
+  # print('Chiamo con \n\t{}'.format())
+
+  print('Inizio l\'esplorazione totale {} {} {}'.format(celaborati, sub, tag))
   start = timer()
 
   # in pfPersone ho una lista di nomi del dipartimento
   # estraggo gli IDautDEI corrispondenti (anche alle abbreviazioni)
+  print('\nChiamo estraiIDautoriMulti con\n\t{}\n\t{}\n\t{}'.format(pfPersone, pfAuthorRAW, pfAutoriID))
   estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID)
   lap1 = timer()
   print 'completato estraiIDautoriMulti in {}'.format(lap1 - start)
 
+  # AutoriID come se fossero estratti dall'intero file Authors.txt
+  # PFAUTORIIDPERTEST = join(celaborati, sub, 'AutoriID_FULLTEST.txt'.format())
+  # pfAutoriID = PFAUTORIIDPERTEST
+
   # estraggo i paper scritti da questi IDautDEI
-  estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPapAutAff)
+  pfPAAtut = pftPapAutAff.format(sceltePadova[0])
+  print('\nChiamo estraiPapAutAffDEImulti con \n\t{}\n\t{}\n\t{}'.format( pfAutoriID, pfPapAutAffRAW, pfPAAtut))
+  estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPAAtut)
   lap2 = timer()
   print 'completato estraiPapAutAffDEImulti in {}'.format(lap2-lap1)
 
+  # estraggo le affiliation padovane
+  print('\nChiamo estraiAffPadovaneVeloce con \n\t{}\n\t{}\n\t{}'.format( pfAffRAW, pfAffPad, strRegAff))
+  estraiAffPadovaneVeloce(pfAffRAW, pfAffPad, regAff)
+  lap225 = timer()
+  print('completato estraiAffPadovaneVeloce in {}'.format(lap225 - lap2) )
+
+  # PapAutAff come se fossero estratti dal file completo
+  # PFTPAATUTPERTEST = join(celaborati, sub, 'PapAutAff{}{}.txt'.format('{}', '_FULLTEST'))
+  # pftPapAutAff = PFTPAATUTPERTEST
+
   # estraggo i paper con affiliation padovana
-  estraiPaperPadovaniCompleti(pfPapAutAff, pfAffPad, pfAutoriID, pfPapPad, pfAutPad)
+  pfPAAtut = pftPapAutAff.format(sceltePadova[0])
+  pfPAApad = pftPapAutAff.format(sceltePadova[1])
+  print('\nChiamo estraiPaperPadovaniCompleti con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfPAAtut, pfAffPad, pfAutoriID, pfPAApad, pfAutPad ))
+  estraiPaperPadovaniCompleti(pfPAAtut, pfAffPad, pfAutoriID, pfPAApad, pfAutPad)
   lap25 = timer()
   print('completato estraiPaperPadovaniCompleti in {}'.format(lap25 - lap2) )
 
-  # # for papers, edges, autori in [lista di (paper, edges, autori)]
-  # for strada in ['_tutti', '_padovani']:
-    # paper = 'PapAutAff{}.txt'.format(strada)
-    # creaEdgeCollab(paper, edge)
-# '''
-  # estraggo gli EdgeCollab
-  creaEdgeCollab(pfPapAutAff, pfEdgeCollab)
-  lap3 = timer()
-  print 'completato creaEdgeCollab in {}'.format(lap3-lap2)
+  for sp in sceltePadova:
+    print('\nInizio {}'.format(sp))
+    pfPAA = pftPapAutAff.format(sp)
+    pfEdgeCollab = pftEdgeCollab.format(sp)
+    pfAutCollab = pftAutCollab.format(sp)
 
-  # estraggo gli AutoriCollab
-  estraiAutoriCollab(pfAutoriID, pfEdgeCollab, pfAutCollab)
-  lap4 = timer()
-  print 'completato estraiAutoriCollab in {}'.format(lap4-lap3)
+    # creo gli edge ed estraggo gli autori
+    print('\nChiamo creaEdgeCollab con \n\t{}\n\t{}'.format( pfPAA, pfEdgeCollab))
+    creaEdgeCollab(pfPAA, pfEdgeCollab)
+    print('\nChiamo estraiAutoriCollab con \n\t{}\n\t{}\n\t{}'.format( pfAutoriID, pfEdgeCollab, pfAutCollab))
+    estraiAutoriCollab(pfAutoriID, pfEdgeCollab, pfAutCollab)
 
-  # # estraggo gli EdgeCollabPadovani
-  # creaEdgeCollab(pfPapPad, pfEdgeCollabPadovani)
-  # lap43 = timer()
-  # print('completato creaEdgeCollab per i padovani')
-#
-  # # estraggo gli AutoriCollabPadovani
-  # estraiAutoriCollab(pfAutoriID, pfEdgeCollabPadovani, pfAutPadovani)
-  # print('completato estraiAutoriCollab per i padovani')
-# '''
+    # collasso i nomi basandomi su nomi ed abbreviazioni
+    pfEdgeCollabUnificati = pftEdgeCollabUnificati.format(sp, scelteUnione[0])
+    pfAutCollabUnificati = pftAutCollabUnificati.format(sp, scelteUnione[0])
+    print('\nChiamo collassaNodiAmpi con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati))
+    collassaNodiAmpi(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati)
+
+    # formatto i dati per SNAP
+    pfPaj = pftPaj.format(sp)
+    pfAutNumNome = pftAutNumNome.format(sp)
+    print('\nChiamo preparaPerSNAP con \n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome) )
+    preparaPerSNAP(pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome)
+
+    # collasso i nomi basandomi sulle distanze
+    pfEdgeCollabUnificati = pftEdgeCollabUnificati.format(sp, scelteUnione[1])
+    pfAutCollabUnificati = pftAutCollabUnificati.format(sp, scelteUnione[1])
+    print('\nChiamo collassaNodiShortPath con \n\t{}\n\t{}\n\t{}\n\t{}\n\tDistanza massima tra autori {}'.format( pfAutNumNome, pfPaj, pfEdgeCollabUnificati, pfAutCollabUnificati, maxhops) )
+    collassaNodiShortPath(pfAutNumNome, pfPaj, pfEdgeCollabUnificati, pfAutCollabUnificati, maxhops)
+
+
+    for su in scelteUnione:
+      pfEdgeCollabUnificati = pftEdgeCollabUnificati.format(sp, su)
+      pfAutCollabUnificati = pftAutCollabUnificati.format(sp, su)
+      pfEdgeGephi = pftEdgeGephi.format(sp, su)
+      pfAutGephi = pftAutGephi.format(sp, su)
+      print('\nChiamo preparaPerGephi con \n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollabUnificati, pfAutCollabUnificati, pfEdgeGephi, pfAutGephi))
+      preparaPerGephi( pfEdgeCollabUnificati, pfAutCollabUnificati, pfEdgeGephi, pfAutGephi)
+
+
+
+  '''
   ##collasso i nodi
   collassaNodiAmpi(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati)
   lap5 = timer()
@@ -777,7 +839,7 @@ def esplorazioneTotale():
   preparaPerGephi(pfEdgeCollabUnificati, pfAutCollabUnificati, pfEdgeGephi, pfAutGephi)
   lap6 = timer()
   print 'completato preparaPerGephi in {}'.format(lap6-lap5)
-
+  '''
   end = timer()
   print('Completata l\'esplorazione in {} s'.format(end-start) )
 
