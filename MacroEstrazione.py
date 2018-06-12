@@ -702,6 +702,7 @@ def esplorazioneTotale():
   from CollassaNodiShortPathSort import collassaNodiShortPath
   from Verifiche_Test.PreparaPerGephi import preparaPerGephi
   from Verifiche_Test.PreparaPerSNAP import preparaPerSNAP
+  # from DisegnaGrafoGT import disegnaGrafo
 
   ctesi = abspath(join(__file__, '..', '..') )
   celaborati = join(ctesi, 'authorship-network', 'Versione4_Totale')
@@ -712,8 +713,8 @@ def esplorazioneTotale():
   pfAuthorRAW = join(cfileRAW, 'Authors.txt')
   pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations.txt')
   pfAffRAW = join(cfileRAW, 'Affiliations.txt')
-  # pfAuthorRAW = join(cfileRAW, 'Authors1000000.txt')
-  # pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations5000000.txt')
+  pfAuthorRAW = join(cfileRAW, 'Authors1000000.txt')
+  pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations5000000.txt')
 
   tag = '_DEI'
   # pfPersone    = join(celaborati, sub, 'PersoneNomi{}.txt'.format(tag))
@@ -732,10 +733,13 @@ def esplorazioneTotale():
   pftAutCollab  = join(celaborati, sub, 'AutoriCollab{}{}.txt'.format('{}', tag))
   pftEdgeCollabUnificati = join(celaborati, sub, 'EdgeCollabUnificati{}{}{}.txt'.format('{}', '{}', tag))
   pftAutCollabUnificati  = join(celaborati, sub, 'AutoriCollabUnificati{}{}{}.txt'.format('{}', '{}', tag))
-  pftAutNumNome = join(celaborati, sub, 'AutoriCollabIdNumNome{}{}.txt'.format('{}', tag))
-  pftPaj = join(celaborati, sub, 'AutoriEdgeCollab{}{}.paj'.format('{}', tag))
+  pftAutNumNome = join(celaborati, sub, 'AutoriCollabIdNumNome{}{}{}.txt'.format('{}', '{}', tag))
+  pftPaj = join(celaborati, sub, 'AutoriEdgeCollab{}{}{}.paj'.format('{}', '{}', tag))
+  pftGT = join(celaborati, sub, 'AutoriEdgeCollab{}{}{}_GT.tsv'.format('{}', '{}', tag))
   pftEdgeGephi  = join(celaborati, sub, 'EdgeUnificatiGephi{}{}{}.tsv'.format('{}', '{}', tag))
   pftAutGephi   = join(celaborati, sub, 'AutoriUnificatiGephi{}{}{}.tsv'.format('{}', '{}', tag))
+  pftGrafoOut = join(celaborati, sub, 'Grafo{}{}{}.pdf'.format('{}', '{}', tag))
+  pftClassi = join(celaborati, sub, 'Comunita{}{}{}.tsv'.format('{}', '{}', tag))
   pfAffPad = join(celaborati, sub, 'AffiliationPadovaPadua.txt'.format())
   pfAutPad = join(celaborati, sub, 'AutoriPadovanichehannoscrittopaper.txt'.format())
 
@@ -760,8 +764,8 @@ def esplorazioneTotale():
   print 'completato estraiIDautoriMulti in {}'.format(lap1 - start)
 
   # AutoriID come se fossero estratti dall'intero file Authors.txt
-  # PFAUTORIIDPERTEST = join(celaborati, sub, 'AutoriID_FULLTEST.txt'.format())
-  # pfAutoriID = PFAUTORIIDPERTEST
+  PFAUTORIIDPERTEST = join(celaborati, sub, 'AutoriID_FULLTEST.txt'.format())
+  pfAutoriID = PFAUTORIIDPERTEST
 
   # estraggo i paper scritti da questi IDautDEI
   pfPAAtut = pftPapAutAff.format(sceltePadova[0])
@@ -777,8 +781,8 @@ def esplorazioneTotale():
   print('completato estraiAffPadovaneVeloce in {}'.format(lap225 - lap2) )
 
   # PapAutAff come se fossero estratti dal file completo
-  # PFTPAATUTPERTEST = join(celaborati, sub, 'PapAutAff{}{}.txt'.format('{}', '_FULLTEST'))
-  # pftPapAutAff = PFTPAATUTPERTEST
+  PFTPAATUTPERTEST = join(celaborati, sub, 'PapAutAff{}{}.txt'.format('{}', '_FULLTEST'))
+  pftPapAutAff = PFTPAATUTPERTEST
 
   # estraggo i paper con affiliation padovana
   pfPAAtut = pftPapAutAff.format(sceltePadova[0])
@@ -806,11 +810,12 @@ def esplorazioneTotale():
     print('\nChiamo collassaNodiAmpi con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati))
     collassaNodiAmpi(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati)
 
-    # formatto i dati per SNAP
-    pfPaj = pftPaj.format(sp)
-    pfAutNumNome = pftAutNumNome.format(sp)
-    print('\nChiamo preparaPerSNAP con \n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome) )
-    preparaPerSNAP(pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome)
+    # formatto i dati per SNAP e per GT
+    pfPaj = pftPaj.format(sp, '')
+    pfAutNumNome = pftAutNumNome.format(sp, '')
+    pfGT = pftGT.format(sp, '')
+    print('\nChiamo preparaPerSNAP con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome, pfGT) )
+    preparaPerSNAP(pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome, pfGT)
 
     # collasso i nomi basandomi sulle distanze
     pfEdgeCollabUnificati = pftEdgeCollabUnificati.format(sp, scelteUnione[1])
@@ -820,6 +825,7 @@ def esplorazioneTotale():
 
 
     for su in scelteUnione:
+      # preparo per Gephi
       pfEdgeCollabUnificati = pftEdgeCollabUnificati.format(sp, su)
       pfAutCollabUnificati = pftAutCollabUnificati.format(sp, su)
       pfEdgeGephi = pftEdgeGephi.format(sp, su)
@@ -827,23 +833,28 @@ def esplorazioneTotale():
       print('\nChiamo preparaPerGephi con \n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollabUnificati, pfAutCollabUnificati, pfEdgeGephi, pfAutGephi))
       preparaPerGephi( pfEdgeCollabUnificati, pfAutCollabUnificati, pfEdgeGephi, pfAutGephi)
 
+      # preparo per GT
+      pfPaj = pftPaj.format(sp, su)
+      pfAutNumNome = pftAutNumNome.format(sp, su)
+      pfGT = pftGT.format(sp, su)
+      print('\nChiamo preparaPerSNAP con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome, pfGT) )
+      preparaPerSNAP(pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome, pfGT)
+
+      # disegno i grafi
+      try:
+        from DisegnaGrafoGT import disegnaGrafo
+      except ImportError:
+        print('Ti serve graph_tool, usa Linux')
+      except:
+        raise
+      pfGrafoOut = pftGrafoOut.format(sp, su)
+      pfClassi = pftClassi.format(sp, su)
+      print('\nChiamo disegnaGrafo con \n\t{}\n\t{}\n\t{}'.format(pfGT, pfGrafoOut, pfClassi) )
+      disegnaGrafo(pfGT, pfGrafoOut, pfClassi)
 
 
-  '''
-  ##collasso i nodi
-  collassaNodiAmpi(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati)
-  lap5 = timer()
-  print 'completato collassaNodiAmpi in {}'.format(lap5-lap4)
-
-  ##preparo per gephi
-  preparaPerGephi(pfEdgeCollabUnificati, pfAutCollabUnificati, pfEdgeGephi, pfAutGephi)
-  lap6 = timer()
-  print 'completato preparaPerGephi in {}'.format(lap6-lap5)
-  '''
   end = timer()
   print('Completata l\'esplorazione in {} s'.format(end-start) )
-
-
 
 
 if __name__ == '__main__':
@@ -859,14 +870,4 @@ if __name__ == '__main__':
   # collassaNodiIteratoSolo()
   # multiGiugno()
   esplorazioneTotale()
-else:
-  pass
-
-
-
-
-
-
-
-
 
