@@ -704,18 +704,19 @@ def esplorazioneTotale():
   from Verifiche_Test.PreparaPerSNAP import preparaPerSNAP
   from AnalizzaSnap import analizzaGirvanNewman
   from MergeComSito import comunitaMergeAnalizza
+  from GraficaFrequenze import graficaFrequenzePerSito, graficaFrequenzePerGenerate
 
   ctesi = abspath(join(__file__, '..', '..') )
   celaborati = join(ctesi, 'authorship-network', 'Versione4_Totale')
-  sub = 'Quarta'
+  sub = 'Quinta'
 
   if not os.path.exists(join(celaborati, sub)): os.makedirs(join(celaborati, sub))
   cfileRAW   = join(ctesi, 'FileRAW')
   pfAuthorRAW = join(cfileRAW, 'Authors.txt')
   pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations.txt')
   pfAffRAW = join(cfileRAW, 'Affiliations.txt')
-  pfAuthorRAW = join(cfileRAW, 'Authors1000000.txt')
-  pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations5000000.txt')
+  # pfAuthorRAW = join(cfileRAW, 'Authors1000000.txt')
+  # pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations5000000.txt')
 
   tag = '_DEI'
   # pfPersone    = join(celaborati, sub, 'PersoneNomi{}.txt'.format(tag))
@@ -744,6 +745,7 @@ def esplorazioneTotale():
   pftClassi = join(celaborati, sub, 'Comunita{}{}{}{}.tsv'.format('{}', '{}', '{}', tag))
   pftMerge = join(celaborati, sub, 'AutoriMergeComunita{}{}{}{}.tsv'.format('{}', '{}', '{}', tag))
   pftFreq = join(celaborati, sub, 'ComunitaMergeFrequenza{}{}{}{}.tsv'.format('{}', '{}', '{}', tag))
+  pftGrafico = join(celaborati, sub, 'Grafico{}{}{}{}{}.pdf'.format('{}', '{}', '{}', '{}', tag))
   pfAffPad = join(celaborati, sub, 'AffiliationPadovaPadua.txt'.format())
   pfAutPad = join(celaborati, sub, 'AutoriPadovanichehannoscrittopaper.txt'.format())
 
@@ -753,8 +755,9 @@ def esplorazioneTotale():
 
   sceltePadova = ['_tutti', '_padovani']
   scelteUnione = ['_nomi', '_distanza']
-  scelteComunita = ['_girvneu'] # , '_blockmodel'] # _blk lo aggiungo solo se GT funziona
+  scelteComunita = ['_girvnew'] # , '_blockmodel'] # _blk lo aggiungo solo se GT funziona
   blockmodel = '_blockmodel'
+  scelteGrafico = ['_sito', '_generate']
 
   # print('Chiamo con \n\t{}'.format())
 
@@ -769,8 +772,8 @@ def esplorazioneTotale():
   print 'completato estraiIDautoriMulti in {}'.format(lap1 - start)
 
   # AutoriID come se fossero estratti dall'intero file Authors.txt
-  PFAUTORIIDPERTEST = join(celaborati, sub, 'AutoriID_FULLTEST.txt'.format())
-  pfAutoriID = PFAUTORIIDPERTEST
+  # PFAUTORIIDPERTEST = join(celaborati, sub, 'AutoriID_FULLTEST.txt'.format())
+  # pfAutoriID = PFAUTORIIDPERTEST
 
   # estraggo i paper scritti da questi IDautDEI
   pfPAAtut = pftPapAutAff.format(sceltePadova[0])
@@ -786,8 +789,8 @@ def esplorazioneTotale():
   print('completato estraiAffPadovaneVeloce in {}'.format(lap225 - lap2) )
 
   # PapAutAff come se fossero estratti dal file completo
-  PFTPAATUTPERTEST = join(celaborati, sub, 'PapAutAff{}{}.txt'.format('{}', '_FULLTEST'))
-  pftPapAutAff = PFTPAATUTPERTEST
+  # PFTPAATUTPERTEST = join(celaborati, sub, 'PapAutAff{}{}.txt'.format('{}', '_FULLTEST'))
+  # pftPapAutAff = PFTPAATUTPERTEST
 
   # estraggo i paper con affiliation padovana
   pfPAAtut = pftPapAutAff.format(sceltePadova[0])
@@ -884,6 +887,12 @@ def esplorazioneTotale():
         pfFreq = pftFreq.format(sp, su, sc) # 'FrequenzaMergeComunita_padovani_distanza.tsv'
 
         comunitaMergeAnalizza(pfClassi, pfAbbreviate, pfMerge, pfFreq)
+
+        pfGrafico = pftGrafico.format(sp, su, sc, scelteGrafico[0])
+        # print('\nChiamo graficaFrequenzePerSito con \n\t{}\n\t{}'.format(pfFreq, pfGrafico) )
+        graficaFrequenzePerSito(pfFreq, pfGrafico)
+        pfGrafico = pftGrafico.format(sp, su, sc, scelteGrafico[1])
+        graficaFrequenzePerGenerate(pfFreq, pfGrafico)
 
 
   end = timer()
