@@ -50,7 +50,7 @@ def disegnaGrafo(pfGT, pfOut, pfClassi):
 
   state = minimize_blockmodel_dl(g)
   com = state.get_blocks()
-  print('numero di comunita {}'.format(max(com.a)))
+  print('Numero di comunita minimize_blockmodel_dl {}'.format(max(com.a)))
 
   for e in g.edges():
     if deg[e.source()] > deg[e.target()]:

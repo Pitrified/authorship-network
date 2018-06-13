@@ -702,11 +702,12 @@ def esplorazioneTotale():
   from CollassaNodiShortPathSort import collassaNodiShortPath
   from Verifiche_Test.PreparaPerGephi import preparaPerGephi
   from Verifiche_Test.PreparaPerSNAP import preparaPerSNAP
-  # from DisegnaGrafoGT import disegnaGrafo
+  from AnalizzaSnap import analizzaGirvanNewman
+  from MergeComSito import comunitaMergeAnalizza
 
   ctesi = abspath(join(__file__, '..', '..') )
   celaborati = join(ctesi, 'authorship-network', 'Versione4_Totale')
-  sub = 'Terza'
+  sub = 'Quarta'
 
   if not os.path.exists(join(celaborati, sub)): os.makedirs(join(celaborati, sub))
   cfileRAW   = join(ctesi, 'FileRAW')
@@ -719,6 +720,7 @@ def esplorazioneTotale():
   tag = '_DEI'
   # pfPersone    = join(celaborati, sub, 'PersoneNomi{}.txt'.format(tag))
   pfPersone    = join(celaborati, 'PersoneNomi{}.txt'.format(tag))
+  pfAbbreviate = join(celaborati, 'PersoneNomiComunitaAbbreviate{}.txt'.format(tag))
   pfAutoriID   = join(celaborati, sub, 'AutoriID{}.txt'.format(tag))
   # pfPapAutAff  = join(celaborati, sub, 'PapAutAff{}.txt'.format(tag))
   # pfEdgeCollab = join(celaborati, sub, 'EdgeCollab{}.txt'.format(tag))
@@ -738,8 +740,10 @@ def esplorazioneTotale():
   pftGT = join(celaborati, sub, 'AutoriEdgeCollab{}{}{}_GT.tsv'.format('{}', '{}', tag))
   pftEdgeGephi  = join(celaborati, sub, 'EdgeUnificatiGephi{}{}{}.tsv'.format('{}', '{}', tag))
   pftAutGephi   = join(celaborati, sub, 'AutoriUnificatiGephi{}{}{}.tsv'.format('{}', '{}', tag))
-  pftGrafoOut = join(celaborati, sub, 'Grafo{}{}{}.pdf'.format('{}', '{}', tag))
-  pftClassi = join(celaborati, sub, 'Comunita{}{}{}.tsv'.format('{}', '{}', tag))
+  pftGrafoOut = join(celaborati, sub, 'Grafo{}{}{}{}.pdf'.format('{}', '{}', '{}', tag))
+  pftClassi = join(celaborati, sub, 'Comunita{}{}{}{}.tsv'.format('{}', '{}', '{}', tag))
+  pftMerge = join(celaborati, sub, 'AutoriMergeComunita{}{}{}{}.tsv'.format('{}', '{}', '{}', tag))
+  pftFreq = join(celaborati, sub, 'ComunitaMergeFrequenza{}{}{}{}.tsv'.format('{}', '{}', '{}', tag))
   pfAffPad = join(celaborati, sub, 'AffiliationPadovaPadua.txt'.format())
   pfAutPad = join(celaborati, sub, 'AutoriPadovanichehannoscrittopaper.txt'.format())
 
@@ -749,7 +753,8 @@ def esplorazioneTotale():
 
   sceltePadova = ['_tutti', '_padovani']
   scelteUnione = ['_nomi', '_distanza']
-  scelteComunita = ['_girmneu', '_altromodo']
+  scelteComunita = ['_girvneu'] # , '_blockmodel'] # _blk lo aggiungo solo se GT funziona
+  blockmodel = '_blockmodel'
 
   # print('Chiamo con \n\t{}'.format())
 
@@ -758,7 +763,7 @@ def esplorazioneTotale():
 
   # in pfPersone ho una lista di nomi del dipartimento
   # estraggo gli IDautDEI corrispondenti (anche alle abbreviazioni)
-  print('\nChiamo estraiIDautoriMulti con\n\t{}\n\t{}\n\t{}'.format(pfPersone, pfAuthorRAW, pfAutoriID))
+  # print('\nChiamo estraiIDautoriMulti con\n\t{}\n\t{}\n\t{}'.format(pfPersone, pfAuthorRAW, pfAutoriID))
   estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID)
   lap1 = timer()
   print 'completato estraiIDautoriMulti in {}'.format(lap1 - start)
@@ -769,13 +774,13 @@ def esplorazioneTotale():
 
   # estraggo i paper scritti da questi IDautDEI
   pfPAAtut = pftPapAutAff.format(sceltePadova[0])
-  print('\nChiamo estraiPapAutAffDEImulti con \n\t{}\n\t{}\n\t{}'.format( pfAutoriID, pfPapAutAffRAW, pfPAAtut))
+  # print('\nChiamo estraiPapAutAffDEImulti con \n\t{}\n\t{}\n\t{}'.format( pfAutoriID, pfPapAutAffRAW, pfPAAtut))
   estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPAAtut)
   lap2 = timer()
   print 'completato estraiPapAutAffDEImulti in {}'.format(lap2-lap1)
 
   # estraggo le affiliation padovane
-  print('\nChiamo estraiAffPadovaneVeloce con \n\t{}\n\t{}\n\t{}'.format( pfAffRAW, pfAffPad, strRegAff))
+  # print('\nChiamo estraiAffPadovaneVeloce con \n\t{}\n\t{}\n\t{}'.format( pfAffRAW, pfAffPad, strRegAff))
   estraiAffPadovaneVeloce(pfAffRAW, pfAffPad, regAff)
   lap225 = timer()
   print('completato estraiAffPadovaneVeloce in {}'.format(lap225 - lap2) )
@@ -787,7 +792,7 @@ def esplorazioneTotale():
   # estraggo i paper con affiliation padovana
   pfPAAtut = pftPapAutAff.format(sceltePadova[0])
   pfPAApad = pftPapAutAff.format(sceltePadova[1])
-  print('\nChiamo estraiPaperPadovaniCompleti con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfPAAtut, pfAffPad, pfAutoriID, pfPAApad, pfAutPad ))
+  # print('\nChiamo estraiPaperPadovaniCompleti con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfPAAtut, pfAffPad, pfAutoriID, pfPAApad, pfAutPad ))
   estraiPaperPadovaniCompleti(pfPAAtut, pfAffPad, pfAutoriID, pfPAApad, pfAutPad)
   lap25 = timer()
   print('completato estraiPaperPadovaniCompleti in {}'.format(lap25 - lap2) )
@@ -799,62 +804,86 @@ def esplorazioneTotale():
     pfAutCollab = pftAutCollab.format(sp)
 
     # creo gli edge ed estraggo gli autori
-    print('\nChiamo creaEdgeCollab con \n\t{}\n\t{}'.format( pfPAA, pfEdgeCollab))
+    # print('\nChiamo creaEdgeCollab con \n\t{}\n\t{}'.format( pfPAA, pfEdgeCollab))
     creaEdgeCollab(pfPAA, pfEdgeCollab)
-    print('\nChiamo estraiAutoriCollab con \n\t{}\n\t{}\n\t{}'.format( pfAutoriID, pfEdgeCollab, pfAutCollab))
+    # print('\nChiamo estraiAutoriCollab con \n\t{}\n\t{}\n\t{}'.format( pfAutoriID, pfEdgeCollab, pfAutCollab))
     estraiAutoriCollab(pfAutoriID, pfEdgeCollab, pfAutCollab)
 
     # collasso i nomi basandomi su nomi ed abbreviazioni
     pfEdgeCollabUnificati = pftEdgeCollabUnificati.format(sp, scelteUnione[0])
     pfAutCollabUnificati = pftAutCollabUnificati.format(sp, scelteUnione[0])
-    print('\nChiamo collassaNodiAmpi con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati))
+    # print('\nChiamo collassaNodiAmpi con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati))
     collassaNodiAmpi(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati)
 
     # formatto i dati per SNAP e per GT
     pfPaj = pftPaj.format(sp, '')
     pfAutNumNome = pftAutNumNome.format(sp, '')
     pfGT = pftGT.format(sp, '')
-    print('\nChiamo preparaPerSNAP con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome, pfGT) )
+    # print('\nChiamo preparaPerSNAP con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome, pfGT) )
     preparaPerSNAP(pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome, pfGT)
 
     # collasso i nomi basandomi sulle distanze
     pfEdgeCollabUnificati = pftEdgeCollabUnificati.format(sp, scelteUnione[1])
     pfAutCollabUnificati = pftAutCollabUnificati.format(sp, scelteUnione[1])
-    print('\nChiamo collassaNodiShortPath con \n\t{}\n\t{}\n\t{}\n\t{}\n\tDistanza massima tra autori {}'.format( pfAutNumNome, pfPaj, pfEdgeCollabUnificati, pfAutCollabUnificati, maxhops) )
+    # print('\nChiamo collassaNodiShortPath con \n\t{}\n\t{}\n\t{}\n\t{}\n\tDistanza massima tra autori {}'.format( pfAutNumNome, pfPaj, pfEdgeCollabUnificati, pfAutCollabUnificati, maxhops) )
     collassaNodiShortPath(pfAutNumNome, pfPaj, pfEdgeCollabUnificati, pfAutCollabUnificati, maxhops)
 
 
     for su in scelteUnione:
+      print('\nInizio {} {}'.format(sp, su))
       # preparo per Gephi
       pfEdgeCollabUnificati = pftEdgeCollabUnificati.format(sp, su)
       pfAutCollabUnificati = pftAutCollabUnificati.format(sp, su)
       pfEdgeGephi = pftEdgeGephi.format(sp, su)
       pfAutGephi = pftAutGephi.format(sp, su)
-      print('\nChiamo preparaPerGephi con \n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollabUnificati, pfAutCollabUnificati, pfEdgeGephi, pfAutGephi))
+      # print('\nChiamo preparaPerGephi con \n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollabUnificati, pfAutCollabUnificati, pfEdgeGephi, pfAutGephi))
       preparaPerGephi( pfEdgeCollabUnificati, pfAutCollabUnificati, pfEdgeGephi, pfAutGephi)
 
-      # preparo per GT
+      # preparo per GT e SNAP
       pfPaj = pftPaj.format(sp, su)
       pfAutNumNome = pftAutNumNome.format(sp, su)
       pfGT = pftGT.format(sp, su)
-      print('\nChiamo preparaPerSNAP con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome, pfGT) )
+      # print('\nChiamo preparaPerSNAP con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome, pfGT) )
       preparaPerSNAP(pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome, pfGT)
 
+      # con pIPajek genero comunita, ho il file pfPaj pronto da mangiare
+      # pfPaj = ce l'ho gia'
+      # pfAINN = # e' pfAutNumNome # ID e Numero e Nome
+      pfClassi = pftClassi.format(sp, su, scelteComunita[0]) # file com di SNAP
+      lapgns = timer()
+      # print('\nChiamo analizzaGirvanNewman con \n\t{}\n\t{}\n\t{}'.format(pfPaj, pfAutNumNome, pfClassi) )
+      analizzaGirvanNewman(pfPaj, pfAutNumNome, pfClassi)
+      lapgne = timer()
+      print('Completato analizzaGirvanNewman in {}'.format(lapgne - lapgns) )
+
       # disegno i grafi
+      # TODO potrei colorarli con le varie comunita generate nei vari modi
       try:
         from DisegnaGrafoGT import disegnaGrafo
+        # blockmodel = '_blockmodel'
+        if blockmodel not in scelteComunita:
+          scelteComunita.append(blockmodel)
+        pfGrafoOut = pftGrafoOut.format(sp, su, blockmodel)
+        pfClassi = pftClassi.format(sp, su, blockmodel)
+        lapgts = timer()
+        # print('\nChiamo disegnaGrafo con \n\t{}\n\t{}\n\t{}'.format(pfGT, pfGrafoOut, pfClassi) )
+        disegnaGrafo(pfGT, pfGrafoOut, pfClassi)
+        lapgte = timer()
+        print('Completato disegnaGrafo in {}'.format(lapgte - lapgts) )
       except ImportError:
         print('Ti serve graph_tool, usa Linux')
       except:
         raise
-      pfGrafoOut = pftGrafoOut.format(sp, su)
-      pfClassi = pftClassi.format(sp, su)
-      print('\nChiamo disegnaGrafo con \n\t{}\n\t{}\n\t{}'.format(pfGT, pfGrafoOut, pfClassi) )
-      disegnaGrafo(pfGT, pfGrafoOut, pfClassi)
-
-      # con pIPajek genero comunita, ho il file pfPaj pronto da mangiare
 
       # analizzo le frequenze delle comunita generate da SNAP e da GT
+      for sc in scelteComunita:
+        print('Inizio {} {} {}'.format(sp, su, sc) )
+  # pfAbbreviate = 'PersoneNomiComunitaAbbreviate{}.txt'.format(tag)
+        pfClassi = pftClassi.format(sp, su, sc) # 'AutoriCollabClasse_padovani_distanza.tsv'
+        pfMerge = pftMerge.format(sp, su, sc) # 'AutoriCollabClasseMergeComunita_padovani_distanza.tsv'
+        pfFreq = pftFreq.format(sp, su, sc) # 'FrequenzaMergeComunita_padovani_distanza.tsv'
+
+        comunitaMergeAnalizza(pfClassi, pfAbbreviate, pfMerge, pfFreq)
 
 
   end = timer()

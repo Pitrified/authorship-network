@@ -20,7 +20,7 @@ def analizzaGirvanNewman(pfPaj, pfAINN, pfMod):
       dMod.update({nodo:classe})
     classe += 1
     # print('')
-  # print('Numero di comunita: {}'.format(classe+1) )
+  print('Numero di comunita analizzaGirvanNewman: {}'.format(classe+1) )
 
   dNum = {}
   with open(pfAINN, 'rb') as fAINN:
