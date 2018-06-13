@@ -12,6 +12,10 @@
 *.tsv
 *.pyc
 
+*.html
+*.pdf
+*.gephi
+
 *~
 
 # .gitignore
