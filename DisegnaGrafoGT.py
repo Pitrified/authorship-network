@@ -46,7 +46,7 @@ def disegnaGrafo(pfGT, pfOut, pfClassi):
   # deg.a = 1 * (log(deg.a) * 0.2 + 0.4)
   degoriginale = g.degree_property_map('total', e_weight)
   e_norm = g.new_edge_property('float')
-  e_norm.a = 2 * (sqrt(e_weight.a) * 0.2 + 0.4)
+  e_norm.a = 2 * (sqrt(e_weight.a) * 0.2 + 0.1)
 
   state = minimize_blockmodel_dl(g)
   com = state.get_blocks()

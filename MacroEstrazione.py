@@ -852,6 +852,10 @@ def esplorazioneTotale():
       print('\nChiamo disegnaGrafo con \n\t{}\n\t{}\n\t{}'.format(pfGT, pfGrafoOut, pfClassi) )
       disegnaGrafo(pfGT, pfGrafoOut, pfClassi)
 
+      # con pIPajek genero comunita, ho il file pfPaj pronto da mangiare
+
+      # analizzo le frequenze delle comunita generate da SNAP e da GT
+
 
   end = timer()
   print('Completata l\'esplorazione in {} s'.format(end-start) )
