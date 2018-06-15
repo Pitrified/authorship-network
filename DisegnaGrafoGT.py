@@ -58,6 +58,27 @@ def disegnaGrafo(pfGT, pfOut, pfClassi):
     else:
       e_color[e] = com[e.target()]
 
+  pos = sfdp_layout(g, eweight=e_weight,
+              # p=8,
+              K = 10000,
+              C = 1.6,
+              )
+  graph_draw(g, pos=pos,
+             vertex_size=deg,
+             vertex_text=v_nome,
+             vertex_text_position = 1,
+             vertex_font_size=5,
+             # vertex_color=com,
+             vertex_fill_color=com,
+             edge_pen_width=e_norm,
+             edge_text=e_text,
+             edge_font_size=5,
+             edge_color=e_color,
+             output_size=(1500, 1500), output=pfOut.format(''), # tutto il grafo
+             )
+
+  lc = label_largest_component(g)
+  g.set_vertex_filter(lc)
 
   pos = sfdp_layout(g, eweight=e_weight,
               # p=8,
@@ -75,7 +96,8 @@ def disegnaGrafo(pfGT, pfOut, pfClassi):
              edge_text=e_text,
              edge_font_size=5,
              edge_color=e_color,
-             output_size=(1500, 1500), output=pfOut)
+             output_size=(1500, 1500), output=pfOut.format('_gc'), # solo componente centrale
+             )
 
   with open(pfClassi, 'wb') as fClassi:
     for v in g.vertices():

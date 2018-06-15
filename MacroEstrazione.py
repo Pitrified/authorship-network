@@ -708,15 +708,15 @@ def esplorazioneTotale():
 
   ctesi = abspath(join(__file__, '..', '..') )
   celaborati = join(ctesi, 'authorship-network', 'Versione4_Totale')
-  sub = 'Quinta'
+  sub = 'Sesta'
 
   if not os.path.exists(join(celaborati, sub)): os.makedirs(join(celaborati, sub))
   cfileRAW   = join(ctesi, 'FileRAW')
   pfAuthorRAW = join(cfileRAW, 'Authors.txt')
   pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations.txt')
   pfAffRAW = join(cfileRAW, 'Affiliations.txt')
-  # pfAuthorRAW = join(cfileRAW, 'Authors1000000.txt')
-  # pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations5000000.txt')
+  pfAuthorRAW = join(cfileRAW, 'Authors1000000.txt')
+  pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations5000000.txt')
 
   tag = '_DEI'
   # pfPersone    = join(celaborati, sub, 'PersoneNomi{}.txt'.format(tag))
@@ -761,7 +761,7 @@ def esplorazioneTotale():
 
   # print('Chiamo con \n\t{}'.format())
 
-  print('Inizio l\'esplorazione totale {} {} {}'.format(celaborati, sub, tag))
+  print('Inizio l\'esplorazione totale {} {}'.format(join(celaborati, sub), tag))
   start = timer()
 
   # in pfPersone ho una lista di nomi del dipartimento
@@ -772,8 +772,8 @@ def esplorazioneTotale():
   print 'completato estraiIDautoriMulti in {}'.format(lap1 - start)
 
   # AutoriID come se fossero estratti dall'intero file Authors.txt
-  # PFAUTORIIDPERTEST = join(celaborati, sub, 'AutoriID_FULLTEST.txt'.format())
-  # pfAutoriID = PFAUTORIIDPERTEST
+  PFAUTORIIDPERTEST = join(celaborati, 'AutoriID_FULLTEST.txt'.format())
+  pfAutoriID = PFAUTORIIDPERTEST
 
   # estraggo i paper scritti da questi IDautDEI
   pfPAAtut = pftPapAutAff.format(sceltePadova[0])
@@ -789,8 +789,8 @@ def esplorazioneTotale():
   print('completato estraiAffPadovaneVeloce in {}'.format(lap225 - lap2) )
 
   # PapAutAff come se fossero estratti dal file completo
-  # PFTPAATUTPERTEST = join(celaborati, sub, 'PapAutAff{}{}.txt'.format('{}', '_FULLTEST'))
-  # pftPapAutAff = PFTPAATUTPERTEST
+  PFTPAATUTPERTEST = join(celaborati, 'PapAutAff{}{}.txt'.format('{}', '_FULLTEST'))
+  pftPapAutAff = PFTPAATUTPERTEST
 
   # estraggo i paper con affiliation padovana
   pfPAAtut = pftPapAutAff.format(sceltePadova[0])
@@ -855,7 +855,7 @@ def esplorazioneTotale():
       pfClassi = pftClassi.format(sp, su, scelteComunita[0]) # file com di SNAP
       lapgns = timer()
       # print('\nChiamo analizzaGirvanNewman con \n\t{}\n\t{}\n\t{}'.format(pfPaj, pfAutNumNome, pfClassi) )
-      analizzaGirvanNewman(pfPaj, pfAutNumNome, pfClassi)
+      # analizzaGirvanNewman(pfPaj, pfAutNumNome, pfClassi)
       lapgne = timer()
       print('Completato analizzaGirvanNewman in {}'.format(lapgne - lapgns) )
 
@@ -866,7 +866,7 @@ def esplorazioneTotale():
         # blockmodel = '_blockmodel'
         if blockmodel not in scelteComunita:
           scelteComunita.append(blockmodel)
-        pfGrafoOut = pftGrafoOut.format(sp, su, blockmodel)
+        pfGrafoOut = pftGrafoOut.format(sp, su, '{}{}'.format(blockmodel, '{}'))
         pfClassi = pftClassi.format(sp, su, blockmodel)
         lapgts = timer()
         # print('\nChiamo disegnaGrafo con \n\t{}\n\t{}\n\t{}'.format(pfGT, pfGrafoOut, pfClassi) )
