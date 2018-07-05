@@ -17,7 +17,7 @@
 \usepackage{booktabs}%en­hances the qual­ity of ta­bles
 \usepackage{caption}%to cus­tomise the cap­tions in float­ing en­vi­ron­ments like fig­ure and ta­ble
 \usepackage{subfig}%ma­nip­u­la­tion and ref­er­ence of small or ‘sub’ fig­ures and ta­bles within a sin­gle fig­ure or ta­ble en­vi­ron­ment
-\usepackage{eurosym}%The Euro­pean cur­rency sym­bol for the Euro 
+\usepackage{eurosym}%The Euro­pean cur­rency sym­bol for the Euro
 \usepackage{siunitx}%tante cose sulle unità di misura
 \usepackage{calligra}%cal­li­graphic font
 \usepackage{verbatim}
@@ -48,11 +48,20 @@
 \begin{document}
 
 %::::::::::::::::::::::::::DEFINIZIONI DI COMANDI::::::::::::::::::::::::::::::::::::::::::::::::::::
-\newcommand{\whitePage}{\cleardoublepage}%fa una pagina bianca e fa in modo che la successiva sia un pagina destra
+\newcommand{\whitePage}{\cleardoublepage} % pagina bianca e rende la successiva una pagina destra
 
-\newcommand{\HRule}{\rule{\linewidth}{0.6mm}} % Defines a new command for the horizontal lines, change thickness here
+\newcommand{\HRule}{\rule{\linewidth}{0.6mm}} % command for the horizontal lines, change thickness here
+
+\newcommand*{\eupgrave}{\MakeUppercase{è}} % maiuscola è accentata
 %fine comandi
 %::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+
+%::::::::::::::::::::::::::IMPOSTAZIONI GLOBALI::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% \setlist(nosep)
+%::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
 
 %::::::::::::::::::::::::::::::::TITLE PAGE::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 \begin{titlepage}
@@ -65,7 +74,7 @@
 \textsc{\Large Corso di laurea triennale in Ingegneria dell'Informazione}\\[0.5cm]
 
 \noindent\rule{\textwidth}{0.6pt}\\[0.4cm]
-{ \Large{\bfseries DEI authorship network}}\\[0.4cm]
+{ \Large{\bfseries Analisi di una rete di autori di pubblicazioni scientifiche}}\\[0.4cm]
 \noindent\rule{\textwidth}{0.6pt}\\[1cm]
 
 \includegraphics[height=4cm]{img/unipd-bn}\\[1cm]
@@ -85,9 +94,9 @@ Pietro Maria \textsc{Nobili} % Your name
 \begin{minipage}{0.5\textwidth}
 \begin{flushright} \large
 \emph{Relatore:} \\
-Prof. Cinzia \textsc{Pizzi} \\% Supervisor's Name
+Prof.ssa Cinzia \textsc{Pizzi} \\% Supervisor's Name
 \emph{Correlatore:} \\
-Dr. Mattia \textsc{Samory} % Supervisor's Name
+Dott. Mattia \textsc{Samory} % Supervisor's Name
 \end{flushright}
 \end{minipage}\\[2cm]
 
@@ -122,29 +131,124 @@ Dr. Mattia \textsc{Samory} % Supervisor's Name
 \newpage
 \pagenumbering{arabic}
 \setcounter{page}{1}
-\section*{Sommario} \label{sommario} % the asterisk is to remove the numbering
-\addcontentsline{toc}{chapter}{Sommario} % we put the asterisk so we add it manually to the toc
-% qua ci sara' un glorioso sommario
+\section*{Abstract} \label{abstract} % the asterisk is to remove the numbering
+\addcontentsline{toc}{chapter}{Abstract} % we put the asterisk so we add it manually to the toc
+% qua ci sara' un glorioso abstract
+È stato generato un grafo delle pubblicazioni del DEI. 
+
+Sono stati cercati cluster nel grafo.
+
+% TODO spezzettare le parole in un abstract è orribile
+Sono stati confrontati con la struttura delle comunità del dipartimento.
+
+
+% \whitePage
+\section*{Introduzione} \label{introduzione}
+\addcontentsline{toc}{chapter}{Introduzione} % we put the asterisk so we add it manually to the toc
+Breve descrizione del community detection e della sua importanza, in generale e nel caso particolare delle comunità di autori di pubblicazioni scientifiche.
+
+Presentazione della struttura della tesi.
+
 
 
 \whitePage
-\chapter{Introduzione} \label{cap:introduzione}
+\chapter{Community detection} \label{cap:comdet}
 
-\section{Gli autori - i grafi - gli studi gia' esistenti} \label{sec:storia}
+\section{Studi precedenti} \label{sec:storia}
+Descrizione della community detection.
+
+Descrizione della bibliografia attuale sui grafi di coautori.
+
+\section{Metodi usati} \label{sec:metodi}
+Che metodi vengono usati per generare le comunità.
+
+\subsection{Girvan–Newman} \label{subsec:gn}
+Descrizione metodo GN.
+
+\subsection{Blockmodel} \label{subsec:bn}
+Descrizione metodo blockmodel.
+
+\subsection{Clauset-Newman-Moore} \label{subsec:cnm}
+Descrizione metodo Clauset-Newman-Moore se implementato.
 
 
-\section{Database microsoft} \label{sec:msr}
 
-
-\whitePage	
+\whitePage
 \chapter{Estrazione dati} \label{cap:estrazione}
+
+\section{Struttura database microsoft} \label{sec:msr}
+Il database è formato da vari file in plain-text che contengono i record di Autori, Paper e Affiliation.
+
+\section{Processo di estrazione} \label{sec:processo}
+%\subsection{Approccio iniziale} \label{subsec:primo}
+
+Parto da una lista di nomi, in parte etichettati.
+
+Estraggo gli ID autori.
+
+Estraggo terne ID paper-autore-affiliation.
+
+Creo gli edge.
+
+Questo è un grafo, ma ha dei difetti:
+\begin{itemize}[noitemsep, topsep=0pt]
+\item
+Vengono estratti gli ID di autori omonimi
+\item
+Allo stesso autore sono accoppiati più ID autore
+\end{itemize}
+
+\subsection{Filtro di autori per affiliation} \label{ssc:padovani}
+Per risolvere il primo problema:
+
+Il set di ID autori estratto viene filtrato, tenendo solo gli ID autore che hanno almeno un paper con affiliation padovana.
+
+Molti autori spuri vengono eliminati.
+
+\subsection{Unione di ID autore in singoli nodi} \label{ssc:collassa}
+Per risolvere il secondo problema, si propongono due modi:
+\subsubsection{Per nome} \label{ssc:nomi}
+I nodi con nomi uguali o abbreviazioni l'uno dell'altro sono considerati un unico nodo.
+
+
+\subsubsection{Per distanza} \label{ssc:nomi}
+Il metodo per nomi
+%taggalo
+introduce un errore potenzialmente molto grave, nomi come Michele Zorzi e Mattia Zorzi vengono confusi e considerati un unico nodo. Nella lista di nomi considerata questo succede solo nel caso citato, ma in dataset più ampi i falsi positivi aumentano considerevolmente. Si tenta di risolvere questo problema considerando unici due nodi in base alla distanza minima che hanno nel grafo.
+
+I nodi con nomi uguali o abbreviazioni l'uno dell'altro sono considerati un unico nodo solo se sono anche vicini nel grafo: si calcola il cammino minimo tra i nodi e li si unisce se è di lunghezza minore di x
+
+TODO Il valore ottimo di x sarebbe bello scoprirlo sperimentalmente
+
+
+%\subsection{Secondo approccio} \label{subsec:secondo}
+
+
+\whitePage
+\chapter{Troubleshooting} \label{cap:trouble}
+Il grafo generato presenta ancora delle carenze.
+
+La lista di partenza include gli afferenti DEI attuali, mentre il database è del 2015. Questo comporta la mancanza di professori, non più a Padova, che avevano ruolo di aggregatore di una comunità.
+
+TODO inserire il nome di Apostolico nella lista di partenza e valutare i cambiamenti
+
+Un modo proposto per includere i nomi mancanti è: estrarre gli ID autore; estrarre i paper-aut-aff; da questa lista di paper estrarre tutti gli ID autore; potenzialmente ridurre i paper (e gli autori) estratt in base alle affiliation; iterare il processo con la nuova lista di autori.
+
+In questo modo si estraggono anche troppe comunità, una singola collaborazione con un dipartimento esterno comporta alle iterazioni successive l'inclusione di molti autori di quel dipartimento. Un modo per risolvere il problema è, alla fine delle iterazioni e della creazione dei cluster, considerare solo quelli che contengono almeno un nome che era nella lista originale: in questo modo dipartimenti esterni, anche se connessi al grafo, non vengono inclusi.
+
 
 
 \whitePage
 \chapter{Risultati} \label{cap:risultati}
+Descrizione della v-measure
+
+Presentazione dei valori di v-measure per i vari grafi e commenti.
 
 
+
+\whitePage
 \chapter{Conclusioni} \label{cap:conclusioni}
+Partendo da una lista di nomi di un dipartimento si può estrarre un grafo che lo rappresenti? Le comunità generate rispecchiano quelle reali?
 
 %%% OBBLIGATORIA:
 
