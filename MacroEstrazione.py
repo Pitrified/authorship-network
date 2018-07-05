@@ -26,7 +26,7 @@ def esplorazioneTotale():
 
   ctesi = abspath(join(__file__, '..', '..') )
   celaborati = join(ctesi, 'authorship-network', 'Versione4_Totale')
-  sub = 'Settima'
+  sub = 'Ottava'
 
   if not os.path.exists(join(celaborati, sub)): os.makedirs(join(celaborati, sub))
   cfileRAW   = join(ctesi, 'FileRAW')
