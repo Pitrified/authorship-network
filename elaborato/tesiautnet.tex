@@ -1,0 +1,163 @@
+%&TeX spellcheck = it_IT
+\documentclass[12pt,a4paper,twoside]{report}
+\usepackage{geometry}%to cus­tomize page lay­out
+\usepackage[italian]{babel}%man­ages cul­tur­ally-de­ter­mined ty­po­graph­i­cal (and other) rules, and hy­phen­ation pat­terns
+\usepackage[T1]{fontenc}%perchè faccia per bene i caratteri accentati nell'output
+\usepackage[utf8]{inputenc}%perchè riconosca i caratteri accentati nel sorgente tex
+\usepackage[hyphens]{url}%per inserire url
+\usepackage{fancyhdr}%per header e foooter
+\usepackage{graphicx}%per le immagini
+\usepackage{wrapfig}%to wrap images with text
+%\usepackage{epsfig}
+\usepackage{amsthm}
+\usepackage{listings}%per inserie codice sorgente
+\usepackage{xcolor}%colori! :D
+\usepackage{amsmath}%per formule matematiche
+\usepackage{amssymb} %simboli matematici
+\usepackage{booktabs}%en­hances the qual­ity of ta­bles
+\usepackage{caption}%to cus­tomise the cap­tions in float­ing en­vi­ron­ments like fig­ure and ta­ble
+\usepackage{subfig}%ma­nip­u­la­tion and ref­er­ence of small or ‘sub’ fig­ures and ta­bles within a sin­gle fig­ure or ta­ble en­vi­ron­ment
+\usepackage{eurosym}%The Euro­pean cur­rency sym­bol for the Euro 
+\usepackage{siunitx}%tante cose sulle unità di misura
+\usepackage{calligra}%cal­li­graphic font
+\usepackage{verbatim}
+\usepackage{indentfirst}%Indent first paragraph after section header
+\usepackage{microtype}%fa diventare i font più belli
+\usepackage{lmodern}%fontbelli
+\usepackage{braket}%parentesi
+\usepackage{mathtools}%to en­hance the ap­pear­ance of doc­u­ments con­tain­ing a lot of math­e­mat­ics
+\usepackage{mathrsfs}  %per fare le lettere calligrafiche
+\usepackage{bm}%define \bm{} that makes the argument bold
+\usepackage{empheq}%markup per le formule di amsmath
+\usepackage{pstricks}%macros for gen­er­at­ing PostScript that is us­able with most TeX macro for­mats
+\usepackage{emptypage}%toglie il numero di pagina alle pahine create con clearpage e cleardoublepage
+\usepackage{todonotes}
+\usepackage{textcomp}%per il simbolo dei gradi
+\usepackage{enumitem}%per controllare gli spazi nelle liste
+
+%fine pacchetti
+
+%:::::::::::::::::::::IMPOSTAZIONI::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+\geometry{a4paper,top=85pt,bottom=85pt,left=127pt,right=127pt} %imposto la geometria del documento
+\captionsetup{tableposition=top,figureposition=bottom,font=small}  %impostazione dei caption di immagini e tabelle
+
+%::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+\begin{document}
+
+%::::::::::::::::::::::::::DEFINIZIONI DI COMANDI::::::::::::::::::::::::::::::::::::::::::::::::::::
+\newcommand{\whitePage}{\cleardoublepage}%fa una pagina bianca e fa in modo che la successiva sia un pagina destra
+
+\newcommand{\HRule}{\rule{\linewidth}{0.6mm}} % Defines a new command for the horizontal lines, change thickness here
+%fine comandi
+%::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+%::::::::::::::::::::::::::::::::TITLE PAGE::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\begin{titlepage}
+
+
+
+\center  % Center everything on the page
+
+\textsc{\Large \\[4.5cm]Università degli Studi di Padova}\\[1.5cm]
+\textsc{\Large Corso di laurea triennale in Ingegneria dell'Informazione}\\[0.5cm]
+
+\noindent\rule{\textwidth}{0.6pt}\\[0.4cm]
+{ \Large{\bfseries DEI authorship network}}\\[0.4cm]
+\noindent\rule{\textwidth}{0.6pt}\\[1cm]
+
+\includegraphics[height=4cm]{img/unipd-bn}\\[1cm]
+
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Laureando:}\\
+Pietro Maria \textsc{Nobili} % Your name
+\end{flushleft}
+\begin{flushleft} \large
+\emph{Matricola:}\\
+1067941 % Your number
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.5\textwidth}
+\begin{flushright} \large
+\emph{Relatore:} \\
+Prof. Cinzia \textsc{Pizzi} \\% Supervisor's Name
+\emph{Correlatore:} \\
+Dr. Mattia \textsc{Samory} % Supervisor's Name
+\end{flushright}
+\end{minipage}\\[2cm]
+
+
+{\large 18 Luglio 2018}\\
+{\large Anno Accademico 2017/2018}\\[3cm] % Date, change the \today to a set date if you want to be precise
+
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+%::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+\whitePage
+
+%::::::::::::::::::::::::::::::::::INDEX:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+\pagenumbering{Roman}
+\tableofcontents
+
+%::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+
+%::::::::::::::::::::::::::::::::::THE REAL CONTENT::::::::::::::::::::::::::::::::::::::::::::::::::
+
+\whitePage
+
+
+
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\section*{Sommario} \label{sommario} % the asterisk is to remove the numbering
+\addcontentsline{toc}{chapter}{Sommario} % we put the asterisk so we add it manually to the toc
+% qua ci sara' un glorioso sommario
+
+
+\whitePage
+\chapter{Introduzione} \label{cap:introduzione}
+
+\section{Gli autori - i grafi - gli studi gia' esistenti} \label{sec:storia}
+
+
+\section{Database microsoft} \label{sec:msr}
+
+
+\whitePage	
+\chapter{Estrazione dati} \label{cap:estrazione}
+
+
+\whitePage
+\chapter{Risultati} \label{cap:risultati}
+
+
+\chapter{Conclusioni} \label{cap:conclusioni}
+
+%%% OBBLIGATORIA:
+
+
+%::::::::::::::::::::::::::::::::::BIBLIOGRAFIA::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+\nocite{*} % visto che non ho citato niente serve per non offendere bibtex
+\bibliographystyle{plainurl}
+% sarebbe bello usare bibtex ma non funziona, o forse non lo so usare
+% vedremo di imparare
+\bibliography{tesiautnet} %%% nome file(s)
+
+
+\end{document}
+
+%::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
