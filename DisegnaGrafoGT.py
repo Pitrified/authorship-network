@@ -6,8 +6,9 @@ from numpy import sqrt, log
 
 def disegnaGrafo(pfGT, pfOut, pfClassi):
   g = Graph(directed=False)
-  v_nome = g.new_vertex_property('string')
   v_id = g.new_vertex_property('string')
+  v_nome = g.new_vertex_property('string')
+  v_label = g.new_vertex_property('string')
   # e_weight = g.new_edge_property('int')
   e_weight = g.new_edge_property('float')
   e_text = g.new_edge_property('string')
@@ -52,11 +53,16 @@ def disegnaGrafo(pfGT, pfOut, pfClassi):
   com = state.get_blocks()
   print('Numero di comunita minimize_blockmodel_dl {}'.format(max(com.a)))
 
+  # estetica grafo
   for e in g.edges():
     if deg[e.source()] > deg[e.target()]:
       e_color[e] = com[e.source()]
     else:
       e_color[e] = com[e.target()]
+  for v in g.vertices():
+    if degoriginale[v] > 20:
+      v_label[v] = v_nome[v].title()
+
 
   pos = sfdp_layout(g, eweight=e_weight,
               # p=8,
@@ -65,7 +71,7 @@ def disegnaGrafo(pfGT, pfOut, pfClassi):
               )
   graph_draw(g, pos=pos,
              vertex_size=deg,
-             vertex_text=v_nome,
+             vertex_text=v_label,
              vertex_text_position = 1,
              vertex_font_size=5,
              # vertex_color=com,
@@ -87,7 +93,7 @@ def disegnaGrafo(pfGT, pfOut, pfClassi):
               )
   graph_draw(g, pos=pos,
              vertex_size=deg,
-             vertex_text=v_nome,
+             vertex_text=v_label,
              vertex_text_position = 1,
              vertex_font_size=5,
              # vertex_color=com,
