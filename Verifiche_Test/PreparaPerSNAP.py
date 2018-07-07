@@ -43,8 +43,9 @@ def preparaPerSNAP(pfEdge, pfAut, pfPaj, pfAutNum, pfGT):
         idNum1 = dIDaut[id1][0]
         # fPaj.write(dIDaut[pezzi[0]][0]+'\t'   )
         # fPaj.write(dIDaut[id0][0]+'\t'+dIDaut[id1][0]+'\t'+str(peso)+'\r\n')
-        fPaj.write(`idNum0`+' '+`idNum1`+' '+peso+'\r\n')
-        fGT.write('{}\t{}\t{}\r\n'.format(idNum0-1, idNum1-1, peso) )
+        if id0 != id1:
+          fPaj.write(`idNum0`+' '+`idNum1`+' '+peso+'\r\n')
+          fGT.write('{}\t{}\t{}\r\n'.format(idNum0-1, idNum1-1, peso) )
 
 
 if __name__ == '__main__':

@@ -95,6 +95,8 @@ Pietro Maria \textsc{Nobili} % Your name
 \begin{flushright} \large
 \emph{Relatore:} \\
 Prof.ssa Cinzia \textsc{Pizzi} \\% Supervisor's Name
+\end{flushright}
+\begin{flushright} \large
 \emph{Correlatore:} \\
 Dott. Mattia \textsc{Samory} % Supervisor's Name
 \end{flushright}
@@ -134,7 +136,7 @@ Dott. Mattia \textsc{Samory} % Supervisor's Name
 \section*{Abstract} \label{abstract} % the asterisk is to remove the numbering
 \addcontentsline{toc}{chapter}{Abstract} % we put the asterisk so we add it manually to the toc
 % qua ci sara' un glorioso abstract
-È stato generato un grafo delle pubblicazioni del DEI. 
+È stato generato un grafo delle pubblicazioni del DEI.
 
 Sono stati cercati cluster nel grafo.
 
@@ -195,13 +197,15 @@ Questo è un grafo, ma ha dei difetti:
 \item
 Vengono estratti gli ID di autori omonimi
 \item
-Allo stesso autore sono accoppiati più ID autore
+Allo stesso autore (una persona fisica) sono accoppiati più ID autore
 \end{itemize}
 
 \subsection{Filtro di autori per affiliation} \label{ssc:padovani}
 Per risolvere il primo problema:
 
 Il set di ID autori estratto viene filtrato, tenendo solo gli ID autore che hanno almeno un paper con affiliation padovana.
+
+Scarto quelli che non hanno mai affiliation padovana.
 
 Molti autori spuri vengono eliminati.
 
@@ -232,7 +236,7 @@ La lista di partenza include gli afferenti DEI attuali, mentre il database è de
 
 TODO inserire il nome di Apostolico nella lista di partenza e valutare i cambiamenti
 
-Un modo proposto per includere i nomi mancanti è: estrarre gli ID autore; estrarre i paper-aut-aff; da questa lista di paper estrarre tutti gli ID autore; potenzialmente ridurre i paper (e gli autori) estratt in base alle affiliation; iterare il processo con la nuova lista di autori.
+Un modo proposto per includere i nomi mancanti è: estrarre gli ID autore; estrarre i paper-aut-aff; da questa lista di paper estrarre tutti gli ID autore; potenzialmente ridurre i paper (e gli autori) estratti in base alle affiliation (anche solo del DEI e non di tutta Padova); iterare il processo con la nuova lista di autori.
 
 In questo modo si estraggono anche troppe comunità, una singola collaborazione con un dipartimento esterno comporta alle iterazioni successive l'inclusione di molti autori di quel dipartimento. Un modo per risolvere il problema è, alla fine delle iterazioni e della creazione dei cluster, considerare solo quelli che contengono almeno un nome che era nella lista originale: in questo modo dipartimenti esterni, anche se connessi al grafo, non vengono inclusi.
 

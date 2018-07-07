@@ -18,7 +18,7 @@ def esplorazioneTotale():
   from CollassaNodiShortPathSort import collassaNodiShortPath
   from Verifiche_Test.PreparaPerGephi import preparaPerGephi
   from Verifiche_Test.PreparaPerSNAP import preparaPerSNAP
-  from AnalizzaSnap import analizzaGirvanNewman
+  from AnalizzaSnap import analizzaGirvanNewman, analizzaClausetNewmanMoore
   from MergeComSito import comunitaMergeAnalizza
   from GraficaFrequenze import graficaFrequenzePerSito, graficaFrequenzePerGenerate
   from sklearn.metrics import homogeneity_completeness_v_measure
@@ -26,7 +26,7 @@ def esplorazioneTotale():
 
   ctesi = abspath(join(__file__, '..', '..') )
   celaborati = join(ctesi, 'authorship-network', 'Versione4_Totale')
-  sub = 'Ottava'
+  sub = 'Nona'
 
   if not os.path.exists(join(celaborati, sub)): os.makedirs(join(celaborati, sub))
   cfileRAW   = join(ctesi, 'FileRAW')
@@ -74,7 +74,7 @@ def esplorazioneTotale():
 
   sceltePadova = ['_tutti', '_padovani']
   scelteUnione = ['_nomi', '_distanza']
-  scelteComunita = ['_girvnew'] # , '_blockmodel'] # _blk lo aggiungo solo se GT funziona
+  scelteComunita = ['_girvnew', '_clanemo'] # , '_blockmodel'] # _blk lo aggiungo solo se GT funziona
   blockmodel = '_blockmodel'
   scelteGrafico = ['_sito', '_generate']
   validation = {}
@@ -166,8 +166,8 @@ def esplorazioneTotale():
       pfPaj = pftPaj.format(sp, su)
       pfAutNumNome = pftAutNumNome.format(sp, su)
       pfGT = pftGT.format(sp, su)
-      # print('\nChiamo preparaPerSNAP con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome, pfGT) )
-      preparaPerSNAP(pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome, pfGT)
+      # print('\nChiamo preparaPerSNAP con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollabUnificati, pfAutCollabUnificati, pfPaj, pfAutNumNome, pfGT) )
+      preparaPerSNAP(pfEdgeCollabUnificati, pfAutCollabUnificati, pfPaj, pfAutNumNome, pfGT)
 
       # con pIPajek genero comunita, ho il file pfPaj pronto da mangiare
       # pfPaj = ce l'ho gia'
@@ -175,9 +175,16 @@ def esplorazioneTotale():
       pfClassi = pftClassi.format(sp, su, scelteComunita[0]) # file com di SNAP
       lapgns = timer()
       # print('\nChiamo analizzaGirvanNewman con \n\t{}\n\t{}\n\t{}'.format(pfPaj, pfAutNumNome, pfClassi) )
-      # analizzaGirvanNewman(pfPaj, pfAutNumNome, pfClassi)
+      analizzaGirvanNewman(pfPaj, pfAutNumNome, pfClassi)
       lapgne = timer()
       print('Completato analizzaGirvanNewman in {}'.format(lapgne - lapgns) )
+
+      pfClassi = pftClassi.format(sp, su, scelteComunita[1]) # file com di SNAP
+      lapgns = timer()
+      # print('\nChiamo analizzaClausetNewmanMoore con \n\t{}\n\t{}\n\t{}'.format(pfPaj, pfAutNumNome, pfClassi) )
+      analizzaClausetNewmanMoore(pfPaj, pfAutNumNome, pfClassi)
+      lapgne = timer()
+      print('Completato analizzaClausetNewmanMoore in {}'.format(lapgne - lapgns) )
 
       # disegno i grafi
       # TODO potrei colorarli con le varie comunita generate nei vari modi
@@ -190,7 +197,7 @@ def esplorazioneTotale():
         pfClassi = pftClassi.format(sp, su, blockmodel)
         lapgts = timer()
         # print('\nChiamo disegnaGrafo con \n\t{}\n\t{}\n\t{}'.format(pfGT, pfGrafoOut, pfClassi) )
-        # disegnaGrafo(pfGT, pfGrafoOut, pfClassi)
+        disegnaGrafo(pfGT, pfGrafoOut, pfClassi)
         lapgte = timer()
         print('Completato disegnaGrafo in {}'.format(lapgte - lapgts) )
       except ImportError:

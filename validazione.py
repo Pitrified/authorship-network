@@ -51,8 +51,8 @@ def aggregaValidazione(pftValidation, validation):
   names = [x for x in range(len(values))]
   # names = ['group_a', 'group_b', 'group_c']
   # values = [1, 10, 100]
-  print(type(names[0]))
-  print(type(values[0]))
+  # print(type(names[0]))
+  # print(type(values[0]))
   plt.bar(names, values, color=colors)
 
   fig.savefig(pfValidation)

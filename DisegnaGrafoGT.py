@@ -60,7 +60,7 @@ def disegnaGrafo(pfGT, pfOut, pfClassi):
     else:
       e_color[e] = com[e.target()]
   for v in g.vertices():
-    if degoriginale[v] > 20:
+    if degoriginale[v] > -20:
       v_label[v] = v_nome[v].title()
 
 
