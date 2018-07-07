@@ -4,7 +4,7 @@ from graph_tool.all import *
 from random import randint
 from numpy import sqrt, log
 
-def disegnaGrafo(pfGT, pfOut, pfClassi):
+def disegnaGrafo(pfGT, pfOut, pfClassi, isgc=False):
   g = Graph(directed=False)
   v_id = g.new_vertex_property('string')
   v_nome = g.new_vertex_property('string')
@@ -14,6 +14,7 @@ def disegnaGrafo(pfGT, pfOut, pfClassi):
   e_text = g.new_edge_property('string')
   e_color = g.new_edge_property('int')
 
+  # carico il grafo
   with open(pfGT, 'rb') as fPaj:
     line = fPaj.readline().rstrip()
     N = int(line.split(' ')[1])
@@ -39,6 +40,15 @@ def disegnaGrafo(pfGT, pfOut, pfClassi):
       if wei > 5:
         e_text[e] = wei
 
+  # partiziono il grafo secondo blockmodel
+  state = minimize_blockmodel_dl(g)
+  com = state.get_blocks()
+  print('Numero di comunita minimize_blockmodel_dl {}'.format(max(com.a)))
+  with open(pfClassi, 'wb') as fClassi:
+    for v in g.vertices():
+      fClassi.write('{}\t{}\t{}\r\n'.format(v_id[v], v_nome[v], com[v]) )
+
+  # disegno il grafo
   deg = g.degree_property_map('total', e_weight)
   # deg = g.degree_property_map("in")
   # deg.a = 4 * (sqrt(deg.a) * 0.5 + 0.4)
@@ -48,10 +58,6 @@ def disegnaGrafo(pfGT, pfOut, pfClassi):
   degoriginale = g.degree_property_map('total', e_weight)
   e_norm = g.new_edge_property('float')
   e_norm.a = 2 * (sqrt(e_weight.a) * 0.2 + 0.1)
-
-  state = minimize_blockmodel_dl(g)
-  com = state.get_blocks()
-  print('Numero di comunita minimize_blockmodel_dl {}'.format(max(com.a)))
 
   # estetica grafo
   for e in g.edges():
@@ -83,31 +89,29 @@ def disegnaGrafo(pfGT, pfOut, pfClassi):
              output_size=(1500, 1500), output=pfOut.format(''), # tutto il grafo
              )
 
-  lc = label_largest_component(g)
-  g.set_vertex_filter(lc)
+  if not isgc:      # se NON e' una componente centrale, la disegno
+    lc = label_largest_component(g)
+    g.set_vertex_filter(lc)
 
-  pos = sfdp_layout(g, eweight=e_weight,
-              # p=8,
-              K = 10000,
-              C = 1.6,
-              )
-  graph_draw(g, pos=pos,
-             vertex_size=deg,
-             vertex_text=v_label,
-             vertex_text_position = 1,
-             vertex_font_size=5,
-             # vertex_color=com,
-             vertex_fill_color=com,
-             edge_pen_width=e_norm,
-             edge_text=e_text,
-             edge_font_size=5,
-             edge_color=e_color,
-             output_size=(1500, 1500), output=pfOut.format('_gc'), # solo componente centrale
-             )
+    pos = sfdp_layout(g, eweight=e_weight,
+                # p=8,
+                K = 10000,
+                C = 1.6,
+                )
+    graph_draw(g, pos=pos,
+               vertex_size=deg,
+               vertex_text=v_label,
+               vertex_text_position = 1,
+               vertex_font_size=5,
+               # vertex_color=com,
+               vertex_fill_color=com,
+               edge_pen_width=e_norm,
+               edge_text=e_text,
+               edge_font_size=5,
+               edge_color=e_color,
+               output_size=(1500, 1500), output=pfOut.format('_gc'), # solo componente centrale
+               )
 
-  with open(pfClassi, 'wb') as fClassi:
-    for v in g.vertices():
-      fClassi.write('{}\t{}\t{}\r\n'.format(v_id[v], v_nome[v], com[v]) )
 
   # nodes properties:
   # font_size, size, fill_color, color

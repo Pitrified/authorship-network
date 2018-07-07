@@ -17,7 +17,7 @@ def esplorazioneTotale():
   from CollassaNodiAmpi import collassaNodiAmpi
   from CollassaNodiShortPathSort import collassaNodiShortPath
   from Verifiche_Test.PreparaPerGephi import preparaPerGephi
-  from Verifiche_Test.PreparaPerSNAP import preparaPerSNAP
+  from Verifiche_Test.PreparaPerSNAP import preparaPerSNAP, preparaGC
   from AnalizzaSnap import analizzaGirvanNewman, analizzaClausetNewmanMoore
   from MergeComSito import comunitaMergeAnalizza
   from GraficaFrequenze import graficaFrequenzePerSito, graficaFrequenzePerGenerate
@@ -26,7 +26,7 @@ def esplorazioneTotale():
 
   ctesi = abspath(join(__file__, '..', '..') )
   celaborati = join(ctesi, 'authorship-network', 'Versione4_Totale')
-  sub = 'Nona'
+  sub = 'Decima'
 
   if not os.path.exists(join(celaborati, sub)): os.makedirs(join(celaborati, sub))
   cfileRAW   = join(ctesi, 'FileRAW')
@@ -50,22 +50,31 @@ def esplorazioneTotale():
   # pfAutGephi   = join(celaborati, sub, 'AutoriUnificatiGephi{}.tsv'.format(tag))
 
   pftPapAutAff = join(celaborati, sub, 'PapAutAff{}{}.txt'.format('{}', tag))
-  pftEdgeCollab = join(celaborati, sub, 'EdgeCollab{}{}.txt'.format('{}', tag))
-  pftAutCollab  = join(celaborati, sub, 'AutoriCollab{}{}.txt'.format('{}', tag))
-  pftEdgeCollabUnificati = join(celaborati, sub, 'EdgeCollabUnificati{}{}{}.txt'.format('{}', '{}', tag))
-  pftAutCollabUnificati  = join(celaborati, sub, 'AutoriCollabUnificati{}{}{}.txt'.format('{}', '{}', tag))
-  pftAutNumNome = join(celaborati, sub, 'AutoriCollabIdNumNome{}{}{}.txt'.format('{}', '{}', tag))
-  pftPaj = join(celaborati, sub, 'AutoriEdgeCollab{}{}{}.paj'.format('{}', '{}', tag))
-  pftGT = join(celaborati, sub, 'AutoriEdgeCollab{}{}{}_GT.tsv'.format('{}', '{}', tag))
-  pftEdgeGephi  = join(celaborati, sub, 'EdgeUnificatiGephi{}{}{}.tsv'.format('{}', '{}', tag))
-  pftAutGephi   = join(celaborati, sub, 'AutoriUnificatiGephi{}{}{}.tsv'.format('{}', '{}', tag))
+  subautedge = 'AutoriEdge'
+  if not os.path.exists(join(celaborati, sub, subautedge) ): os.makedirs(join(celaborati, sub, subautedge))
+  pftEdgeCollab = join(celaborati, sub, subautedge, 'EdgeCollab{}{}.txt'.format('{}', tag))
+  pftAutCollab  = join(celaborati, sub, subautedge, 'AutoriCollab{}{}.txt'.format('{}', tag))
+  pftEdgeCollabUnificati = join(celaborati, sub, subautedge, 'EdgeCollabUnificati{}{}{}.txt'.format('{}', '{}', tag))
+  pftAutCollabUnificati  = join(celaborati, sub, subautedge, 'AutoriCollabUnificati{}{}{}.txt'.format('{}', '{}', tag))
+  pftAutNumNome = join(celaborati, sub, subautedge, 'AutoriCollabIdNumNome{}{}{}.txt'.format('{}', '{}', tag))
+  pftAutNumNomeGC = join(celaborati, sub, subautedge, 'AutoriCollabIdNumNome{}{}_GC{}.txt'.format('{}', '{}', tag))
+  pftPaj = join(celaborati, sub, subautedge, 'AutoriEdgeCollab{}{}{}.paj'.format('{}', '{}', tag))
+  pftPajGC = join(celaborati, sub, subautedge, 'AutoriEdgeCollab{}{}_GC{}.paj'.format('{}', '{}', tag))
+  pftGT = join(celaborati, sub, subautedge, 'AutoriEdgeCollab{}{}{}_GT.tsv'.format('{}', '{}', tag))
+  pftGTGC = join(celaborati, sub, subautedge, 'AutoriEdgeCollab{}{}_GC{}_GT.tsv'.format('{}', '{}', tag))
+  pftEdgeGephi  = join(celaborati, sub, subautedge, 'EdgeUnificatiGephi{}{}{}.tsv'.format('{}', '{}', tag))
+  pftAutGephi   = join(celaborati, sub, subautedge, 'AutoriUnificatiGephi{}{}{}.tsv'.format('{}', '{}', tag))
   pftGrafoOut = join(celaborati, sub, 'Grafo{}{}{}{}.pdf'.format('{}', '{}', '{}', tag))
-  pftClassi = join(celaborati, sub, 'Comunita{}{}{}{}.tsv'.format('{}', '{}', '{}', tag))
-  pftMerge = join(celaborati, sub, 'AutoriMergeComunita{}{}{}{}.tsv'.format('{}', '{}', '{}', tag))
-  pftFreq = join(celaborati, sub, 'ComunitaMergeFrequenza{}{}{}{}.tsv'.format('{}', '{}', '{}', tag))
-  pftGrafico = join(celaborati, sub, 'Grafico{}{}{}{}{}.pdf'.format('{}', '{}', '{}', '{}', tag))
+  subcom = 'Comunita'
+  if not os.path.exists(join(celaborati, sub, subcom) ): os.makedirs(join(celaborati, sub, subcom))
+  pftClassi = join(celaborati, sub, subcom, 'Comunita{}{}{}{}.tsv'.format('{}', '{}', '{}', tag))
+  pftMerge = join(celaborati, sub, subautedge, 'AutoriMergeComunita{}{}{}{}.tsv'.format('{}', '{}', '{}', tag))
+  pftFreq = join(celaborati, sub, subcom, 'ComunitaMergeFrequenza{}{}{}{}.tsv'.format('{}', '{}', '{}', tag))
+  subgrafici = 'Grafici'
+  if not os.path.exists(join(celaborati, sub, subgrafici) ): os.makedirs(join(celaborati, sub, subgrafici))
+  pftGrafico = join(celaborati, sub, subgrafici, 'Grafico{}{}{}{}{}.pdf'.format('{}', '{}', '{}', '{}', tag))
   pfAffPad = join(celaborati, sub, 'AffiliationPadovaPadua.txt'.format())
-  pfAutPad = join(celaborati, sub, 'AutoriPadovanichehannoscrittopaper.txt'.format())
+  pfAutPad = join(celaborati, sub, subautedge, 'AutoriPadovanichehannoscrittopaper.txt'.format())
   pftValidation = join(celaborati, sub, 'Validation{}.{}'.format(tag, '{}'))
 
   maxhops = 2
@@ -74,8 +83,9 @@ def esplorazioneTotale():
 
   sceltePadova = ['_tutti', '_padovani']
   scelteUnione = ['_nomi', '_distanza']
-  scelteComunita = ['_girvnew', '_clanemo'] # , '_blockmodel'] # _blk lo aggiungo solo se GT funziona
+  scelteComunita = ['_girvnew', '_GC_girvnew', '_clanemo', '_GC_clanemo'] # , '_blockmodel'] # _blk lo aggiungo solo se GT funziona
   blockmodel = '_blockmodel'
+  blockmodelGC = '_GC_blockmodel'
   scelteGrafico = ['_sito', '_generate']
   validation = {}
 
@@ -169,20 +179,30 @@ def esplorazioneTotale():
       # print('\nChiamo preparaPerSNAP con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollabUnificati, pfAutCollabUnificati, pfPaj, pfAutNumNome, pfGT) )
       preparaPerSNAP(pfEdgeCollabUnificati, pfAutCollabUnificati, pfPaj, pfAutNumNome, pfGT)
 
+      # estraggo la componente centrale
+      pfPajGC = pftPajGC.format(sp, su)
+      pfAutNumNomeGC = pftAutNumNomeGC.format(sp, su)
+      pfGTGC = pftGTGC.format(sp, su)
+      preparaGC(pfPaj, pfAutNumNome, pfPajGC, pfAutNumNomeGC, pfGTGC)
+
       # con pIPajek genero comunita, ho il file pfPaj pronto da mangiare
       # pfPaj = ce l'ho gia'
       # pfAINN = # e' pfAutNumNome # ID e Numero e Nome
       pfClassi = pftClassi.format(sp, su, scelteComunita[0]) # file com di SNAP
+      pfClassiGC = pftClassi.format(sp, su, scelteComunita[1])
       lapgns = timer()
       # print('\nChiamo analizzaGirvanNewman con \n\t{}\n\t{}\n\t{}'.format(pfPaj, pfAutNumNome, pfClassi) )
       analizzaGirvanNewman(pfPaj, pfAutNumNome, pfClassi)
+      analizzaGirvanNewman(pfPajGC, pfAutNumNomeGC, pfClassiGC)
       lapgne = timer()
       print('Completato analizzaGirvanNewman in {}'.format(lapgne - lapgns) )
 
-      pfClassi = pftClassi.format(sp, su, scelteComunita[1]) # file com di SNAP
+      pfClassi = pftClassi.format(sp, su, scelteComunita[2]) # file com di SNAP
+      pfClassiGC = pftClassi.format(sp, su, scelteComunita[3]) # file com di SNAP
       lapgns = timer()
       # print('\nChiamo analizzaClausetNewmanMoore con \n\t{}\n\t{}\n\t{}'.format(pfPaj, pfAutNumNome, pfClassi) )
       analizzaClausetNewmanMoore(pfPaj, pfAutNumNome, pfClassi)
+      analizzaClausetNewmanMoore(pfPajGC, pfAutNumNomeGC, pfClassiGC)
       lapgne = timer()
       print('Completato analizzaClausetNewmanMoore in {}'.format(lapgne - lapgns) )
 
@@ -193,11 +213,15 @@ def esplorazioneTotale():
         # blockmodel = '_blockmodel'
         if blockmodel not in scelteComunita:
           scelteComunita.append(blockmodel)
+          scelteComunita.append(blockmodelGC)
         pfGrafoOut = pftGrafoOut.format(sp, su, '{}{}'.format(blockmodel, '{}'))
         pfClassi = pftClassi.format(sp, su, blockmodel)
+        pfGrafoOutGC = pftGrafoOut.format(sp, su, '{}{}'.format(blockmodelGC, '{}'))
+        pfClassiGC = pftClassi.format(sp, su, blockmodelGC)
         lapgts = timer()
         # print('\nChiamo disegnaGrafo con \n\t{}\n\t{}\n\t{}'.format(pfGT, pfGrafoOut, pfClassi) )
         disegnaGrafo(pfGT, pfGrafoOut, pfClassi)
+        disegnaGrafo(pfGTGC, pfGrafoOutGC, pfClassiGC, isgc=True)
         lapgte = timer()
         print('Completato disegnaGrafo in {}'.format(lapgte - lapgts) )
       except ImportError:

@@ -4,6 +4,7 @@
 from os import getcwd
 from os.path import dirname
 from os.path import join
+import snap
 
 def preparaPerSNAP(pfEdge, pfAut, pfPaj, pfAutNum, pfGT):
   # with open(pfPaj, 'wb') as fPaj, with open(pfEdge, 'rb') as fEdge,
@@ -47,6 +48,53 @@ def preparaPerSNAP(pfEdge, pfAut, pfPaj, pfAutNum, pfGT):
           fPaj.write(`idNum0`+' '+`idNum1`+' '+peso+'\r\n')
           fGT.write('{}\t{}\t{}\r\n'.format(idNum0-1, idNum1-1, peso) )
 
+def preparaGC(pfPaj, pfAutNum, pfPajGC, pfAutNumGC, pfGTGC):
+  with open(pfPaj, 'rb') as fPaj, open(pfAutNum, 'rb') as fAutNum:
+    dNum = {}
+    for line in fAutNum:
+      ID, num, nome = line.rstrip().split('\t')
+      num = int(num)
+      dNum[num] = [ID, nome]
+    dVecchiNuovi = {}
+    dNuoviVecchi = {}
+    with open(pfPajGC, 'wb') as fPajGC, open(pfAutNumGC, 'wb') as fAutNumGC, open(pfGTGC, 'wb') as fGTGC:
+      g = snap.LoadPajek(snap.PUNGraph, pfPaj)
+      gc = snap.GetMxWcc(g)
+      # for n in gc.Nodes(): print(n.GetId())
+      # print(gc.GetNodes())
+      # print([x.GetId() for x in gc.Nodes() ] )
+      # print([(x.GetSrcNId(), x.GetDstNId() ) for x in gc.Edges() ] )
+
+      nuovo = 1
+      for vecchio in gc.Nodes():
+        dVecchiNuovi[vecchio.GetId()] = nuovo
+        dNuoviVecchi[nuovo] = vecchio.GetId()
+        nuovo += 1
+      fPajGC.write('*Vertices {}\r\n'.format( len(dNuoviVecchi) ) )
+      fGTGC.write('*Vertices {}\r\n'.format( len(dNuoviVecchi) ) )
+      for i in range(1, len(dNuoviVecchi)+1):
+        idnome = dNum[dNuoviVecchi[i]]
+        fPajGC.write('{} "{}"\r\n'.format(i, idnome[1]) )
+        fGTGC.write('{}\t{}\t{}\r\n'.format(i-1, idnome[1], idnome[0] ) )
+        fAutNumGC.write('{}\t{}\t{}\r\n'.format(idnome[0], i, idnome[1] ) )
+
+      fPajGC.write('*Edges\r\n')
+      fGTGC.write('*Edges\r\n')
+      line = fPaj.readline()
+      while line != '*Edges\r\n': line = fPaj.readline()
+      for line in fPaj:
+        vsrc, vdst, peso = line.rstrip().split()
+        vsrc = int(vsrc)
+        vdst = int(vdst)
+        if vsrc in dVecchiNuovi and vdst in dVecchiNuovi:
+          nsrc = dVecchiNuovi[vsrc]
+          ndst = dVecchiNuovi[vdst]
+          fPajGC.write('{} {} {}\r\n'.format(nsrc, ndst, peso) )
+          fGTGC.write('{}\t{}\t{}\r\n'.format(nsrc-1, ndst-1, peso) )
+
+
+
+
 
 if __name__ == '__main__':
   print 'This program is preparaPerSNAP, being run by itself'
@@ -72,8 +120,18 @@ if __name__ == '__main__':
   # for pf in [pfEdge, pfAut, pfAutNum, pfPaj]: print pf
   nGT = 'CollabGT'
   pfGT = join(pardir, celaborati, 'AutoriEdge{}GT.tsv'.format(nGT))
-  preparaPerSNAP(pfEdge, pfAut, pfPaj, pfAutNum, pfGT)
+  # preparaPerSNAP(pfEdge, pfAut, pfPaj, pfAutNum, pfGT)
+
+
+  celaborati = 'Versione4_Totale'
+  pfPaj = join(pardir, celaborati, 'Nona', 'AutoriEdgeCollab_tutti_distanza_DEI.paj')
+  pfAutNum = join(pardir, celaborati, 'Nona', 'AutoriCollabIdNumNome_tutti_distanza_DEI.txt')
+  pfPajGC = join(pardir, celaborati, 'Nona', 'AutoriEdgeCollab_tutti_distanza_DEI_GIANTCOMP.txt')
+  pfAutNumGC = join(pardir, celaborati, 'Nona', 'AutoriCollabIdNumNome_tutti_distanza_DEI_GIANTCOMP.txt')
+  pfGTGC = join(pardir, celaborati, 'Nona', 'AutoriEdgeCollab_tutti_distanza_DEI_GT_GIANTCOMP.txt')
+
+  preparaGC(pfPaj, pfAutNum, pfPajGC, pfAutNumGC, pfGTGC)
+
+
+
   print 'finitoPPSsolo'
-else:
-  pass
-  # print 'I am preparaPerSNAP, being imported from another module'
