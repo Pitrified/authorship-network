@@ -9,7 +9,7 @@ def creaAbbreviazioni(nome):
   if len(tocchi) == 0:
     print('Nome vuoto molto male')
   elif len(tocchi) == 1:
-    return [nome, nome[0]]
+    return [nome+' ', nome[0]+' ']
   else:
     nt = len(tocchi)# - 1
     ip = product(range(2), repeat=nt)
@@ -34,7 +34,7 @@ def abbreviaComunitaUnipd(pfPersone, pfAbbreviate):
       # print(pezzi)
       abbr = creaAbbreviazioni(pezzi[0])
       for a in abbr:
-        fAbbreviate.write('{} {}\t{}\r\n'.format(a, pezzi[1], pezzi[2]))
+        fAbbreviate.write('{}{}\t{}\r\n'.format(a, pezzi[1], pezzi[2]))
 
 
 if __name__ == '__main__':
@@ -45,6 +45,6 @@ if __name__ == '__main__':
   if not exists(join(celaborati, sub)): makedirs(join(celaborati, sub))
   tag = 'GIU'
   pfPersone = join(celaborati, sub, 'PersoneNomiComunita{}.txt'.format(tag))
-  pfAbbreviate = join(celaborati, sub, 'PersoneNomiComunitaAbbreviate{}.txt'.format(tag))
+  pfAbbreviate = join(celaborati, sub, 'PersoneNomiComunitaAbbreviateGIUSTE{}.txt'.format(tag))
 
   abbreviaComunitaUnipd(pfPersone, pfAbbreviate)

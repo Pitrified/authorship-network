@@ -25,14 +25,15 @@ def esplorazioneTotale():
   from validazione import getComClu, aggregaValidazione
 
   ctesi = abspath(join(__file__, '..', '..') )
-  celaborati = join(ctesi, 'authorship-network', 'Versione4_Totale')
-  sub = 'Decima'
+  celaborati = join(ctesi, 'authorship-network', 'Versione5')
+  sub = 'Prima'
 
   if not os.path.exists(join(celaborati, sub)): os.makedirs(join(celaborati, sub))
   cfileRAW   = join(ctesi, 'FileRAW')
   pfAuthorRAW = join(cfileRAW, 'Authors.txt')
   pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations.txt')
   pfAffRAW = join(cfileRAW, 'Affiliations.txt')
+  # TEST
   pfAuthorRAW = join(cfileRAW, 'Authors1000000.txt')
   pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations5000000.txt')
 
@@ -101,7 +102,7 @@ def esplorazioneTotale():
   lap1 = timer()
   print 'completato estraiIDautoriMulti in {}'.format(lap1 - start)
 
-  # AutoriID come se fossero estratti dall'intero file Authors.txt
+  # AutoriID come se fossero estratti dall'intero file Authors.txt TEST
   PFAUTORIIDPERTEST = join(celaborati, 'AutoriID_FULLTEST.txt'.format())
   pfAutoriID = PFAUTORIIDPERTEST
 
@@ -118,7 +119,7 @@ def esplorazioneTotale():
   lap225 = timer()
   print('completato estraiAffPadovaneVeloce in {}'.format(lap225 - lap2) )
 
-  # PapAutAff come se fossero estratti dal file completo
+  # PapAutAff come se fossero estratti dal file completo TEST
   PFTPAATUTPERTEST = join(celaborati, 'PapAutAff{}{}.txt'.format('{}', '_FULLTEST'))
   pftPapAutAff = PFTPAATUTPERTEST
 

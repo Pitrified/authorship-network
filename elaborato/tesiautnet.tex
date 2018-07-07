@@ -34,6 +34,10 @@
 \usepackage{todonotes}
 \usepackage{textcomp}%per il simbolo dei gradi
 \usepackage{enumitem}%per controllare gli spazi nelle liste
+\usepackage{pbox}%per fare celle con più linee nelle tabelle
+\usepackage{placeins}%con \FloatBarrier mette il testo dopo le cose float
+\usepackage{longtable}%per tabelle che vanno da una pagina all'altra
+\usepackage[final]{pdfpages}%per importare pdf
 
 %fine pacchetti
 
@@ -41,6 +45,7 @@
 
 \geometry{a4paper,top=85pt,bottom=85pt,left=127pt,right=127pt} %imposto la geometria del documento
 \captionsetup{tableposition=top,figureposition=bottom,font=small}  %impostazione dei caption di immagini e tabelle
+%\DeclareCaptionFormat{elaborazione}{#1#2#3\par}
 
 %::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -167,6 +172,8 @@ Che metodi vengono usati per generare le comunità.
 \subsection{Girvan–Newman} \label{subsec:gn}
 Descrizione metodo GN.
 
+Nella libreria SNAP di Stanford \cite{snapnets}
+
 \subsection{Blockmodel} \label{subsec:bn}
 Descrizione metodo blockmodel.
 
@@ -178,37 +185,161 @@ Descrizione metodo Clauset-Newman-Moore se implementato.
 \whitePage
 \chapter{Estrazione dati} \label{cap:estrazione}
 
-\section{Struttura database microsoft} \label{sec:msr}
-Il database è formato da vari file in plain-text che contengono i record di Autori, Paper e Affiliation.
+\section{Struttura database Microsoft} \label{sec:msr}
+% https://academic.microsoft.com/#/faq
+% https://dl.acm.org/citation.cfm?doid=2740908.2742839
+% citato da qua
+Il database da cui sono stati estratti i dati è il Microsoft Academic Graph \cite{Sinha:2015:OMA:2740908.2742839}, che contiene informazioni relative a pubblicazioni scientifiche, autori, istituzioni accademiche, riviste, conferenze e settori di studio. I record presenti nei file forniscono le relazioni tra queste entità.
+
+Il database è composto da undici file di testo che contengono un record per riga, con i campi separati da tabulazione.
+
+Per il lavoro oggetto di questa tesi sono stati utilizzati in particolare quattro file del database, la cui struttura è illustrata nella tabella \ref{table:msrstruttura}.
+
+L'ultimo aggiornamento del database disponibile risale all'agosto 2015.
+\begin{center}
+%\begin{table}
+%\begin{tabular}{| l | l |}
+\begin{longtable}{| l | l |}
+\hline
+Nome file&
+Campi\\
+(Numero record)&\\
+\hline
+Authors.txt&Author ID\\
+(123.017.489)&Author Name\\
+\hline
+PaperAuthorAffiliations.txt&Paper ID\\
+(325.498.063)&Author ID\\
+&Affiliation ID\\
+&Original affiliation name\\
+&Normalized affiliation name\\
+&Author sequence number\\
+\hline
+Affiliations.txt&Affiliation ID\\
+(2.719.436)&Affiliation name\\
+\hline
+Papers.txt&Paper ID\\
+(122.695.085)&Original paper title\\
+&Normalized paper title\\
+&Paper publish year\\
+&Paper publish date\\
+&Paper Document Object Identifier (DOI)\\
+&Original venue name\\
+&Normalized venue name\\
+&Journal ID mapped to venue name\\
+&Conference series ID mapped to venue name\\
+&Paper rank\\
+\hline
+%\end{tabular}
+\caption{Struttura del database}
+\label{table:msrstruttura}
+\end{longtable}
+%\end{table}
+\end{center}
+\FloatBarrier
 
 \section{Processo di estrazione} \label{sec:processo}
 %\subsection{Approccio iniziale} \label{subsec:primo}
+Dal sito di dipartimento (\url{http://www.dei.unipd.it/lista-docenti}) sono stati estratti i nomi degli attuali afferenti DEI, includendo Docenti, Assegnisti di ricerca, Collaboratori di ricerca e Dottorandi.
 
-Parto da una lista di nomi, in parte etichettati.
+La lista ottenuta comprende 379 autori.
+% TODO non fare il pezzente e scrivi quanti hanno l'etichetta
+Dove presente, è stato estratto il Settore Scientifico Disciplinare dell'afferente, che ha fornito la partizione in classi utilizzata come rifermento alla fine dell'elaborazione dei dati.
 
-Estraggo gli ID autori.
+I nomi propri degli autori sono stati abbreviati in tutte le possibili combinazioni per rispecchiare la struttura del database Microsoft, ed è stato creato un file con la struttura seguente:
+\begin{center}
+\captionof{table}{PersoneComunitaDEI.txt}
+\begin{minipage}{0.90\textwidth}
+\begin{verbatim}
+a a pietracaprina            INF/01 - INFORMATICA
+a alberto pietracaprina	     INF/01 - INFORMATICA
+andrea a pietracaprina	      INF/01 - INFORMATICA
+andrea alberto pietracaprina	INF/01 - INFORMATICA
+...
 
-Estraggo terne ID paper-autore-affiliation.
+\end{verbatim}
+\end{minipage}
+\end{center}
 
-Creo gli edge.
+Utilizzando questa lista di nomi ed abbreviazioni, sono stati estratti dal file \textit{Authors.txt} le coppie (ID autore, nome autore), che risultano essere 8.135, con una media di 21,5 ID per nome.
 
-Questo è un grafo, ma ha dei difetti:
+Con il set di ID autori ottenuto, sono stati estratti dal file \textit{PaperAuthorAffiliations.txt} i record relativi ai paper, nella forma (ID paper, ID autore, ID affiliation), per un totale di 62.291 paper.
+
+Dalla lista così ottenuta, non necessariamente ordinata, sono stati creati gli edge fra ID autore, che sono poi stati aggregati creando una edge list pesata, come indicato in \ref{tab:creazioneedge}
+\begin{center}
+
+% TODO mettere caption degli esempietti senza tabella
+%\captionof{elaborazione}{Creazione edge}
+%Creazione edge
+\captionof{table}{Creazione edge}
+\label{tab:creazioneedge}
+\begin{minipage}{0.40\textwidth}
+\begin{verbatim}
+IDpaper1  IDautore1
+IDpaper1  IDautore2
+IDpaper1  IDautore3
+IDpaper2  IDautore2
+IDpaper2  IDautore3
+\end{verbatim}
+\end{minipage}
+\begin{minipage}{0.075\textwidth}
+$\rightarrow$
+\end{minipage}
+\begin{minipage}{0.40\textwidth}
+\begin{verbatim}
+IDautore1  IDautore2  1
+IDautore1  IDautore3  1
+IDautore2  IDautore3  2
+\end{verbatim}
+\end{minipage}
+\end{center}
+A partire da questi edge è stato generato il primo grafo che rappresenta la rete degli autori.
+% TODO riscrivila
+Questo metodo di creazione del grafo, che considera le collaborazioni tra autori, riduce a 778 il set di ID autori per un totale di 287 nomi univoci. Il grafo è formato da 1.830 edge con 7.803 di peso totale.
+
+
+% Questo è il grafo ... TODO label e caption e posizionamento civile
+\begin{minipage}{1.4\textwidth}
+%[width=\textwidth]
+\includepdf{img/GrafoCollaborazioni.pdf}
+\captionof{figure}{Grafo collaborazioni}
+\label{img:grafoprimo}
+\end{minipage}
+\clearpage
+
+\subsubsection{Analisi della prima estrazione}\label{ssc:analisiuno}
+
+I due problemi principali di questo processo emergono al momento dell'estrazione degli ID autore dal file \textit{Authors.txt}:
 \begin{itemize}[noitemsep, topsep=0pt]
 \item
-Vengono estratti gli ID di autori omonimi
+Vengono selezionati anche gli ID riferiti ad autori omonimi, non affiliati al DEI.
 \item
-Allo stesso autore (una persona fisica) sono accoppiati più ID autore
+Ad un singolo autore DEI sono associati più ID autore.
 \end{itemize}
 
-\subsection{Filtro di autori per affiliation} \label{ssc:padovani}
-Per risolvere il primo problema:
+%::::PADOVANI::::
+\subsection{Filtro degli autori per affiliation} \label{ssc:padovani}
+Il primo problema è già in parte risolto dal metodo di creazione del grafo, che considera solo gli ID autori che hanno almeno una collaborazione con un altro ID nel set. In questo modo più del 90\% degli ID viene filtrato.
 
-Il set di ID autori estratto viene filtrato, tenendo solo gli ID autore che hanno almeno un paper con affiliation padovana.
+È stato quindi sviluppato un secondo metodo più fine di estrazione dei dati che, considerando le affiliation dei paper, esclude gli ID autore che non hanno mai pubblicato un paper a Padova, che viene illustrato di seguito.
 
-Scarto quelli che non hanno mai affiliation padovana.
+\begin{itemize}[noitemsep, topsep=0pt]
+\item[--]
+Dal file \textit{Affiliations.txt} si estrae la lista delle affiliation in cui risulta nel nome un match all'espressione regolare ``$pad(ov|u)a$''.
+% TODO usare un set di affiliation solo di dipartimento (circa 300) è troppo poco
+\item[--]
+Dalla lista di terne (ID paper, ID autore, ID affiliation) si mantengono solo quelle in cui l'ID affiliation compare nel set di affiliation padovane appena estratte.
+\item[--]
+Dalle terne selezionate, si estrae un set di ID autori che hanno pubblicato almeno un paper con affiliation padovana.
+\item[--] % TODO meglio - più punti
+Si estraggono i paper scritti da questi ID autore e si procede alla generazione degli edge pesati.
+\end{itemize}
 
-Molti autori spuri vengono eliminati.
+Applicando questo metodo, gli ID autore si riducono a 306, relativi a 201 nomi univoci. Il grafo generato include 850 edge con un peso totale di 5.195.
 
+% TODO mostra grafo padovani
+
+%::::COLLASSANODI::::
 \subsection{Unione di ID autore in singoli nodi} \label{ssc:collassa}
 Per risolvere il secondo problema, si propongono due modi:
 \subsubsection{Per nome} \label{ssc:nomi}
@@ -254,17 +385,17 @@ Presentazione dei valori di v-measure per i vari grafi e commenti.
 \chapter{Conclusioni} \label{cap:conclusioni}
 Partendo da una lista di nomi di un dipartimento si può estrarre un grafo che lo rappresenti? Le comunità generate rispecchiano quelle reali?
 
+
 %%% OBBLIGATORIA:
 
 
 %::::::::::::::::::::::::::::::::::BIBLIOGRAFIA::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-\nocite{*} % visto che non ho citato niente serve per non offendere bibtex
+% \nocite{*} % visto che non ho citato niente serve per non offendere bibtex
 \bibliographystyle{plainurl}
 % sarebbe bello usare bibtex ma non funziona, o forse non lo so usare
 % vedremo di imparare
 \bibliography{tesiautnet} %%% nome file(s)
-
 
 \end{document}
 
