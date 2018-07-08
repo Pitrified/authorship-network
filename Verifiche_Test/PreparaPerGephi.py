@@ -4,6 +4,7 @@
 from os import getcwd
 from os.path import dirname
 from os.path import join
+from os.path import abspath
 
 def preparaPerGephi(pfEdge, pfAut, pfEdgeGephi, pfAutGephi):
   with open(pfEdge, 'rb') as fEdge:
@@ -23,16 +24,21 @@ def preparaPerGephi(pfEdge, pfAut, pfEdgeGephi, pfAutGephi):
 if __name__ == '__main__':
   print 'This program is PreparaPerGephi, being run by itself'
   #PATH TO FILES
-  pardir = dirname(dirname(__file__)) # dir(file)=aut/ver; dd(f)=aut
+  pardir = abspath(dirname(dirname(__file__) ) ) # dir(file)=aut/ver; dd(f)=aut
   # print pardir
-  celaborati = 'Versione3_Multi'
-  nEdge = 'EdgeCollabUnifShortPath2'
-  pfEdge = join(pardir, celaborati, nEdge+'.txt')
-  # print pfEdge
-  pfEdgeGephi = join(pardir, celaborati, nEdge+'AaaGephi.tsv')
-  nAut = 'AutoriCollabUnifShortPath2'
-  pfAut = join(pardir, celaborati, nAut+'.txt')
-  pfAutGephi = join(pardir, celaborati, nAut+'AaaGephi.tsv')
+  celaborati = join('elaborato', 'DatiGrafiElaborato')
+  tag = '_DEI'
+
+  pftEdgeCollab = join(pardir, celaborati, 'EdgeCollab_padovani{{}}{}.{{}}'.format(tag))
+  pftAutCollab  = join(pardir, celaborati, 'AutoriCollab_padovani{{}}{}.{{}}'.format(tag))
+  pftEdgeCollab = join(pardir, celaborati, 'EdgeCollab_tutti{{}}{}.{{}}'.format(tag))
+  pftAutCollab  = join(pardir, celaborati, 'AutoriCollab_tutti{{}}{}.{{}}'.format(tag))
+  # print(pftEdgeCollab, pftAutCollab)
+  pfEdge = pftEdgeCollab.format('', 'txt')
+  pfAut = pftAutCollab.format('', 'txt')
+  pfEdgeGephi = pftEdgeCollab.format('_Gephi', 'tsv')
+  pfAutGephi = pftAutCollab.format('_Gephi', 'tsv')
+
   preparaPerGephi(pfEdge, pfAut, pfEdgeGephi, pfAutGephi)
   print 'finitoPPGsolo'
 else:

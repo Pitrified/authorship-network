@@ -193,12 +193,14 @@ Il database da cui sono stati estratti i dati è il Microsoft Academic Graph \ci
 
 Il database è composto da undici file di testo che contengono un record per riga, con i campi separati da tabulazione.
 
-Per il lavoro oggetto di questa tesi sono stati utilizzati in particolare quattro file del database, la cui struttura è illustrata nella tabella \ref{table:msrstruttura}.
+Per il lavoro oggetto di questa tesi sono stati utilizzati in particolare quattro file del database, la cui struttura è illustrata nella tabella \ref{table:msrstruttura1}.
 
 L'ultimo aggiornamento del database disponibile risale all'agosto 2015.
 \begin{center}
 %\begin{table}
 %\begin{tabular}{| l | l |}
+\captionof{table}{Struttura del database}
+\label{table:msrstruttura1}
 \begin{longtable}{| l | l |}
 \hline
 Nome file&
@@ -231,8 +233,8 @@ Papers.txt&Paper ID\\
 &Paper rank\\
 \hline
 %\end{tabular}
-\caption{Struttura del database}
-\label{table:msrstruttura}
+%\caption{Struttura del database}
+%\label{table:msrstruttura}
 \end{longtable}
 %\end{table}
 \end{center}
@@ -298,14 +300,22 @@ A partire da questi edge è stato generato il primo grafo che rappresenta la ret
 Questo metodo di creazione del grafo, che considera le collaborazioni tra autori, riduce a 778 il set di ID autori per un totale di 287 nomi univoci. Il grafo è formato da 1.830 edge con 7.803 di peso totale.
 
 
-% Questo è il grafo ... TODO label e caption e posizionamento civile
-\begin{minipage}{1.4\textwidth}
-%[width=\textwidth]
-\includepdf{img/GrafoCollaborazioni.pdf}
+\centerline{
+\begin{minipage}{1.45\textwidth}
+\setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
+\fbox{\includegraphics[page=1,scale=0.60]{img/GrafoCollaborazioni.pdf}}
 \captionof{figure}{Grafo collaborazioni}
 \label{img:grafoprimo}
 \end{minipage}
-\clearpage
+}
+
+%\begin{minipage}{1.4\textwidth}
+%%[width=\textwidth]
+%\includepdf{img/GrafoCollaborazioni.pdf}
+%\captionof{figure}{Grafo collaborazioni}
+%\label{img:grafoprimo}
+%\end{minipage}
+%\clearpage
 
 \subsubsection{Analisi della prima estrazione}\label{ssc:analisiuno}
 
@@ -321,13 +331,14 @@ Ad un singolo autore DEI sono associati più ID autore.
 \subsection{Filtro degli autori per affiliation} \label{ssc:padovani}
 Il primo problema è già in parte risolto dal metodo di creazione del grafo, che considera solo gli ID autori che hanno almeno una collaborazione con un altro ID nel set. In questo modo più del 90\% degli ID viene filtrato.
 
-È stato quindi sviluppato un secondo metodo più fine di estrazione dei dati che, considerando le affiliation dei paper, esclude gli ID autore che non hanno mai pubblicato un paper a Padova, che viene illustrato di seguito.
+È stato sviluppato un secondo metodo di estrazione dei dati che esclude gli ID autore se non hanno mai pubblicato un paper a Padova, considerando le informazioni sulle affiliation dei paper, come viene illustrato di seguito.
 
 \begin{itemize}[noitemsep, topsep=0pt]
 \item[--]
 Dal file \textit{Affiliations.txt} si estrae la lista delle affiliation in cui risulta nel nome un match all'espressione regolare ``$pad(ov|u)a$''.
 % TODO usare un set di affiliation solo di dipartimento (circa 300) è troppo poco
 \item[--]
+% TODO richiamare la lista di terne
 Dalla lista di terne (ID paper, ID autore, ID affiliation) si mantengono solo quelle in cui l'ID affiliation compare nel set di affiliation padovane appena estratte.
 \item[--]
 Dalle terne selezionate, si estrae un set di ID autori che hanno pubblicato almeno un paper con affiliation padovana.
@@ -338,9 +349,19 @@ Si estraggono i paper scritti da questi ID autore e si procede alla generazione 
 Applicando questo metodo, gli ID autore si riducono a 306, relativi a 201 nomi univoci. Il grafo generato include 850 edge con un peso totale di 5.195.
 
 % TODO mostra grafo padovani
+\centerline{
+\begin{minipage}{1.10\textwidth}
+\setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
+\fbox{\includegraphics[page=1,scale=0.40]{img/GrafoPadovani_GC.pdf}}
+\captionof{figure}{Grafo Padovani}
+\label{img:grafopad}
+\end{minipage}
+}
 
 %::::COLLASSANODI::::
 \subsection{Unione di ID autore in singoli nodi} \label{ssc:collassa}
+% TODO esempio di qualcuno
+Per risolvere il secondo problema insorto nell'estrazione dei dati, sono state seguite due vie alternative fra loro.
 Per risolvere il secondo problema, si propongono due modi:
 \subsubsection{Per nome} \label{ssc:nomi}
 I nodi con nomi uguali o abbreviazioni l'uno dell'altro sono considerati un unico nodo.
@@ -356,7 +377,7 @@ I nodi con nomi uguali o abbreviazioni l'uno dell'altro sono considerati un unic
 TODO Il valore ottimo di x sarebbe bello scoprirlo sperimentalmente
 
 
-%\subsection{Secondo approccio} \label{subsec:secondo}
+% TODO scropri cosa fanno i self loop
 
 
 \whitePage
