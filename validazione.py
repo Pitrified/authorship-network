@@ -41,6 +41,7 @@ def aggregaValidazione(pftValidation, validation):
   pfValidation = pftValidation.format('pdf')
   fig, ax = plt.subplots()
   colors = Set3[12]
+  colors = Set3[7]
   ax.set_xlabel('Tipologia di esplorazione')
   ax.set_ylabel('V-measure')
   ax.set_title('V-measure delle partizioni')
@@ -48,12 +49,14 @@ def aggregaValidazione(pftValidation, validation):
   # names = sorted( [x for x in validation if re.search(x, 'noNone')])
   names = sorted(validation)
   values = [float(validation[x][2]) for x in names]
-  names = [x for x in range(len(values))]
+  ind = [x for x in range(len(values))]
   # names = ['group_a', 'group_b', 'group_c']
   # values = [1, 10, 100]
   # print(type(names[0]))
   # print(type(values[0]))
-  plt.bar(names, values, color=colors)
+  plt.bar(ind, values, color=colors)
+  print(names)
+  plt.xticks(ind, names, rotation='vertical')
 
   fig.savefig(pfValidation)
 
