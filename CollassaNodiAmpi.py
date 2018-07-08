@@ -16,12 +16,14 @@ def trovaSostituto(id, dAutori):
 def trovaNome(abbreviato, dPersone):
   """
   cerca l'abbreviato nei set del dizionario e restituisce l'entry del set in cui lo trovi
-  eve sempre trovare il nome
+  deve sempre trovare il nome
+  dPersone sono solo nomi NON abbreviati
+  m zorzi non sai a chi viene associato, a mattia o a michele
   """
   #if abbreviato in lconflitti: return abbreviato  #non restituisce la forma estesa
   for entry in dPersone:
     #printType(dPersone[entry])
-    if abbreviato == entry:         #abbreviato era gia' il nome esteso
+    if abbreviato == entry:         # abbreviato era gia' il nome esteso
       return entry
     if abbreviato in dPersone[entry]:
       #print dPersone[entry]
@@ -38,13 +40,13 @@ def collassaNodiAmpi(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati
   #a rossi-> aldo rossi
   #m rossi-> michele rossi
   """
-  dPersone = {}                       #dizionario persone con abbreviazioni
+  dPersone = {}                       # dizionario persone con abbreviazioni
   with open(pfPersone, 'rb') as fPersone:
     for line in fPersone:
       line = line.rstrip()
-      dPersone.update({line:set()})
+      dPersone.update({line:set()})   # a ciascun nome associo set di abbreviazioni
       pz = line.split()
-      #print(pz, " ", len(pz))
+      # print(pz, " ", len(pz))
       if len(pz)==2:
         dPersone[line].add(pz[0][0]+" "+pz[1])
       elif len(pz)==3:
@@ -62,23 +64,23 @@ def collassaNodiAmpi(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati
       elif len(pz)==6:
         dPersone[line].add(pz[0][0]+" "+pz[1][0]+" "+pz[2][0]+" "+pz[3][0]+" "+pz[4][0]+" "+pz[5])
 
-  dAutori = {}  #{nome:[IDaut,IDaut,...,IDaut]}
-  dIdAutori = {}  #{IDaut:nome}
+  dAutori = {}    # {nome:[IDaut,IDaut,...,IDaut]}
+  dIdAutori = {}  # {IDaut:nome}
   with open(pfAutCollab, 'rb') as fAutCollab:
     for line in fAutCollab:
-      pezzi = line.rstrip().split('\t')    #pezzi[0] id; pezzi[1] nome senza \n
+      pezzi = line.rstrip().split('\t')     # pezzi[0] id; pezzi[1] nome senza \r\n
 
-      nome =  trovaNome(pezzi[1], dPersone)       #trovo il nome completo
+      nome =  trovaNome(pezzi[1], dPersone) # trovo il nome completo
 
       if not dAutori.has_key(nome):
-        dAutori.update({nome:[]})       #creo una lista vuota per la chiave nome
+        dAutori.update({nome:[]})           # creo una lista vuota per la chiave nome
 
-      #print "Nome:",nome,"Pezzi[1]",pezzi[1]
-      if nome == pezzi[1]:              #il nome era gia' completo
-        dAutori[nome].insert(0, pezzi[0])   #inserisco il nome all'inizio della lista
-        #print "Metto in cima lalala"
-      else:                             #era un nome abbreviato
-        dAutori[nome].append(pezzi[0])  #aggiungo l'IDaut (relativo ad un abbreviazione) alla fine della lista
+      # print "Nome:",nome,"Pezzi[1]",pezzi[1]
+      if nome == pezzi[1]:                  # il nome era gia' completo
+        dAutori[nome].insert(0, pezzi[0])   # inserisco il nome all'inizio della lista
+        # print "Metto in cima lalala"      # tengo per primi ID relativi a nomi completi
+      else:                                 # era un nome abbreviato
+        dAutori[nome].append(pezzi[0])      # aggiungo l'IDaut (relativo ad un abbreviazione) alla fine della lista
 
       dIdAutori.update({pezzi[0]:pezzi[1]})
 

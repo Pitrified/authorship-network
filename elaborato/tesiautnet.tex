@@ -16,7 +16,7 @@
 \usepackage{amssymb} %simboli matematici
 \usepackage{booktabs}%en­hances the qual­ity of ta­bles
 \usepackage{caption}%to cus­tomise the cap­tions in float­ing en­vi­ron­ments like fig­ure and ta­ble
-\usepackage{subfig}%ma­nip­u­la­tion and ref­er­ence of small or ‘sub’ fig­ures and ta­bles within a sin­gle fig­ure or ta­ble en­vi­ron­ment
+\usepackage{subfig}%manipulation and ref­er­ence of small or ‘sub’ fig­ures and ta­bles within a sin­gle fig­ure or ta­ble en­vi­ron­ment
 \usepackage{eurosym}%The Euro­pean cur­rency sym­bol for the Euro
 \usepackage{siunitx}%tante cose sulle unità di misura
 \usepackage{calligra}%cal­li­graphic font
@@ -38,6 +38,8 @@
 \usepackage{placeins}%con \FloatBarrier mette il testo dopo le cose float
 \usepackage{longtable}%per tabelle che vanno da una pagina all'altra
 \usepackage[final]{pdfpages}%per importare pdf
+\usepackage{tkz-graph}
+
 
 %fine pacchetti
 
@@ -140,7 +142,7 @@ Dott. Mattia \textsc{Samory} % Supervisor's Name
 \setcounter{page}{1}
 \section*{Abstract} \label{abstract} % the asterisk is to remove the numbering
 \addcontentsline{toc}{chapter}{Abstract} % we put the asterisk so we add it manually to the toc
-% qua ci sara' un glorioso abstract
+% qua ci sarà un glorioso abstract
 È stato generato un grafo delle pubblicazioni del DEI.
 
 Sono stati cercati cluster nel grafo.
@@ -152,7 +154,9 @@ Sono stati confrontati con la struttura delle comunità del dipartimento.
 % \whitePage
 \section*{Introduzione} \label{introduzione}
 \addcontentsline{toc}{chapter}{Introduzione} % we put the asterisk so we add it manually to the toc
-Breve descrizione del community detection e della sua importanza, in generale e nel caso particolare delle comunità di autori di pubblicazioni scientifiche.
+
+Breve descrizione del community detection e della sua importanza, in generale e nel caso particolare
+delle comunità di autori di pubblicazioni scientifiche.
 
 Presentazione della struttura della tesi.
 
@@ -178,7 +182,10 @@ Nella libreria SNAP di Stanford \cite{snapnets}
 Descrizione metodo blockmodel.
 
 \subsection{Clauset-Newman-Moore} \label{subsec:cnm}
-Descrizione metodo Clauset-Newman-Moore se implementato.
+Descrizione metodo Clauset-Newman-Moore.
+
+\subsection{Louvain} \label{subsec:lou}
+Descrizione metodo Louvain se implementato.
 
 
 
@@ -186,14 +193,18 @@ Descrizione metodo Clauset-Newman-Moore se implementato.
 \chapter{Estrazione dati} \label{cap:estrazione}
 
 \section{Struttura database Microsoft} \label{sec:msr}
-% https://academic.microsoft.com/#/faq
-% https://dl.acm.org/citation.cfm?doid=2740908.2742839
-% citato da qua
-Il database da cui sono stati estratti i dati è il Microsoft Academic Graph \cite{Sinha:2015:OMA:2740908.2742839}, che contiene informazioni relative a pubblicazioni scientifiche, autori, istituzioni accademiche, riviste, conferenze e settori di studio. I record presenti nei file forniscono le relazioni tra queste entità.
+% https://academic.microsoft.com/#/faq https://dl.acm.org/citation.cfm?doid=2740908.2742839 citato
+% da qua
+Il database da cui sono stati estratti i dati è il Microsoft Academic Graph
+\cite{Sinha:2015:OMA:2740908.2742839}, che contiene informazioni relative a pubblicazioni
+scientifiche, autori, istituzioni accademiche, riviste, conferenze e settori di studio. I record
+presenti nei file forniscono le relazioni tra queste entità.
 
-Il database è composto da undici file di testo che contengono un record per riga, con i campi separati da tabulazione.
+Il database è composto da undici file di testo che contengono un record per riga, con i campi
+separati da tabulazione.
 
-Per il lavoro oggetto di questa tesi sono stati utilizzati in particolare quattro file del database, la cui struttura è illustrata nella tabella \ref{table:msrstruttura1}.
+Per il lavoro oggetto di questa tesi sono stati utilizzati in particolare quattro file del database,
+la cui struttura è illustrata nella tabella \ref{table:msrstruttura1}.
 
 L'ultimo aggiornamento del database disponibile risale all'agosto 2015.
 \begin{center}
@@ -242,13 +253,18 @@ Papers.txt&Paper ID\\
 
 \section{Processo di estrazione} \label{sec:processo}
 %\subsection{Approccio iniziale} \label{subsec:primo}
-Dal sito di dipartimento (\url{http://www.dei.unipd.it/lista-docenti}) sono stati estratti i nomi degli attuali afferenti DEI, includendo Docenti, Assegnisti di ricerca, Collaboratori di ricerca e Dottorandi.
+Dal sito di dipartimento (\url{http://www.dei.unipd.it/lista-docenti}) sono stati estratti i nomi
+degli attuali afferenti DEI, includendo Docenti, Assegnisti di ricerca, Collaboratori di ricerca e
+Dottorandi.
 
 La lista ottenuta comprende 379 autori.
 % TODO non fare il pezzente e scrivi quanti hanno l'etichetta
-Dove presente, è stato estratto il Settore Scientifico Disciplinare dell'afferente, che ha fornito la partizione in classi utilizzata come rifermento alla fine dell'elaborazione dei dati.
+Dove presente, è stato estratto il Settore Scientifico Disciplinare dell'afferente, che ha fornito
+la partizione in classi utilizzata come rifermento alla fine dell'elaborazione dei dati.
 
-I nomi propri degli autori sono stati abbreviati in tutte le possibili combinazioni per rispecchiare la struttura del database Microsoft, ed è stato creato un file con la struttura seguente:
+I nomi propri degli autori sono stati abbreviati in tutte le possibili combinazioni per rispecchiare
+la struttura del database Microsoft, ed è stato creato un file con la struttura seguente:
+
 \begin{center}
 \captionof{table}{PersoneComunitaDEI.txt}
 \begin{minipage}{0.90\textwidth}
@@ -263,11 +279,16 @@ andrea alberto pietracaprina	INF/01 - INFORMATICA
 \end{minipage}
 \end{center}
 
-Utilizzando questa lista di nomi ed abbreviazioni, sono stati estratti dal file \textit{Authors.txt} le coppie (ID autore, nome autore), che risultano essere 8.135, con una media di 21,5 ID per nome.
+Utilizzando questa lista di nomi ed abbreviazioni, sono stati estratti dal file \textit{Authors.txt}
+le coppie (ID autore, nome autore), che risultano essere 8.135, con una media di 21,5 ID per nome.
 
-Con il set di ID autori ottenuto, sono stati estratti dal file \textit{PaperAuthorAffiliations.txt} i record relativi ai paper, nella forma (ID paper, ID autore, ID affiliation), per un totale di 62.291 paper.
+Con il set di ID autori ottenuto, sono stati estratti dal file \textit{PaperAuthorAffiliations.txt}
+i record relativi ai paper, nella forma (ID paper, ID autore, ID affiliation), per un totale di
+62.291 paper.
 
-Dalla lista così ottenuta, non necessariamente ordinata, sono stati creati gli edge fra ID autore, che sono poi stati aggregati creando una edge list pesata, come indicato in \ref{tab:creazioneedge}
+Dalla lista così ottenuta, non necessariamente ordinata, sono stati creati gli edge fra ID autore,
+che sono poi stati aggregati creando una edge list pesata, come indicato in \ref{tab:creazioneedge}
+
 \begin{center}
 
 % TODO mettere caption degli esempietti senza tabella
@@ -305,7 +326,7 @@ Questo metodo di creazione del grafo, che considera le collaborazioni tra autori
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
 \fbox{\includegraphics[page=1,scale=0.60]{img/GrafoCollaborazioni.pdf}}
 \captionof{figure}{Grafo collaborazioni}
-\label{img:grafoprimo}
+\label{img:grafotutti}
 \end{minipage}
 }
 
@@ -319,7 +340,9 @@ Questo metodo di creazione del grafo, che considera le collaborazioni tra autori
 
 \subsubsection{Analisi della prima estrazione}\label{ssc:analisiuno}
 
-I due problemi principali di questo processo emergono al momento dell'estrazione degli ID autore dal file \textit{Authors.txt}:
+I due problemi principali di questo processo emergono al momento dell'estrazione degli ID autore dal
+file \textit{Authors.txt}:
+
 \begin{itemize}[noitemsep, topsep=0pt]
 \item
 Vengono selezionati anche gli ID riferiti ad autori omonimi, non affiliati al DEI.
@@ -329,9 +352,13 @@ Ad un singolo autore DEI sono associati più ID autore.
 
 %::::PADOVANI::::
 \subsection{Filtro degli autori per affiliation} \label{ssc:padovani}
-Il primo problema è già in parte risolto dal metodo di creazione del grafo, che considera solo gli ID autori che hanno almeno una collaborazione con un altro ID nel set. In questo modo più del 90\% degli ID viene filtrato.
+Il primo problema è già in parte risolto dal metodo di creazione del grafo, che considera solo gli
+ID autori che hanno almeno una collaborazione con un altro ID nel set. In questo modo più del 90\%
+degli ID viene filtrato.
 
-È stato sviluppato un secondo metodo di estrazione dei dati che esclude gli ID autore se non hanno mai pubblicato un paper a Padova, considerando le informazioni sulle affiliation dei paper, come viene illustrato di seguito.
+È stato sviluppato un secondo metodo di estrazione dei dati che esclude gli ID autore se non hanno
+mai pubblicato un paper a Padova, considerando le informazioni sulle affiliation dei paper, come
+viene illustrato di seguito.
 
 \begin{itemize}[noitemsep, topsep=0pt]
 \item[--]
@@ -348,7 +375,6 @@ Si estraggono i paper scritti da questi ID autore e si procede alla generazione 
 
 Applicando questo metodo, gli ID autore si riducono a 306, relativi a 201 nomi univoci. Il grafo generato include 850 edge con un peso totale di 5.195.
 
-% TODO mostra grafo padovani
 \centerline{
 \begin{minipage}{1.10\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
@@ -358,39 +384,200 @@ Applicando questo metodo, gli ID autore si riducono a 306, relativi a 201 nomi u
 \end{minipage}
 }
 
-%::::COLLASSANODI::::
+%::::::::::::::::::::::::::::::::::COLLASSANODI::::::::::::::::::::::::::::::::::::::::::::::::::::::
 \subsection{Unione di ID autore in singoli nodi} \label{ssc:collassa}
 % TODO esempio di qualcuno
-Per risolvere il secondo problema insorto nell'estrazione dei dati, sono state seguite due vie alternative fra loro.
-Per risolvere il secondo problema, si propongono due modi:
-\subsubsection{Per nome} \label{ssc:nomi}
-I nodi con nomi uguali o abbreviazioni l'uno dell'altro sono considerati un unico nodo.
+Per risolvere il secondo problema insorto nell'estrazione dei dati, per cui ad una singola persona
+fisica, effettivamente affiliata al DEI, possono essere associati più ID autore, sono state seguite
+due vie alternative fra loro.
 
+Il primo metodo tiene conto solo dei nomi associati ai nodi del grafo, il secondo metodo sfrutta la
+struttura del grafo per stabilire se due nodi siano riferiti alla stessa persona.
 
-\subsubsection{Per distanza} \label{ssc:nomi}
-Il metodo per nomi
-%taggalo
-introduce un errore potenzialmente molto grave, nomi come Michele Zorzi e Mattia Zorzi vengono confusi e considerati un unico nodo. Nella lista di nomi considerata questo succede solo nel caso citato, ma in dataset più ampi i falsi positivi aumentano considerevolmente. Si tenta di risolvere questo problema considerando unici due nodi in base alla distanza minima che hanno nel grafo.
+% I grafi precedentemente generati vengono rielaborati
 
-I nodi con nomi uguali o abbreviazioni l'uno dell'altro sono considerati un unico nodo solo se sono anche vicini nel grafo: si calcola il cammino minimo tra i nodi e li si unisce se è di lunghezza minore di x
+\subsubsection{Per nome} \label{ssc:nomi} % questo label è inutile
 
-TODO Il valore ottimo di x sarebbe bello scoprirlo sperimentalmente
+I grafi precedentemente generati vengono rielaborati, ipotizzando che nodi con nomi uguali o le cui
+abbreviazioni sono uguali possano essere considerati un unico nodo.
 
+In questo modo ``\textit{a alberto pietracaprina}'' viene associato a ``\textit{a a
+pietracaprina}'' ma anche a ``\textit{andrea a pietracaprina}'' come pure a ``\textit{andrea alberto
+pietracaprina}''.
 
-% TODO scropri cosa fanno i self loop
+I nodi del grafo in figura \ref{img:grafotutti} si riducono da 778 a 199. Gli edge scendono da 1830
+a 661, mantenendo lo stesso peso totale di 7.803.
 
+\centerline{
+\begin{minipage}{1.10\textwidth}
+\setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
+\fbox{\includegraphics[page=1,scale=0.37]{img/GrafoTuttiUnificati_nome.pdf}}
+\captionof{figure}{Grafo collaborazioni unificati per nome}
+\label{img:grafotuttinome}
+\end{minipage}
+}
+
+I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 158. Gli edge scendono da 850 a
+463, mantenendo il peso totale di 5.195.
+
+\centerline{
+\begin{minipage}{1.10\textwidth}
+\setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
+\fbox{\includegraphics[page=1,scale=0.37]{img/GrafoPadovaniUnificati_nome.pdf}}
+\captionof{figure}{Grafo Padovani unificati per nome}
+\label{img:grafopadnome}
+\end{minipage}
+}
+
+\subsubsection{Per distanza} \label{ssc:distanza}
+
+Il metodo che considera i nomi precedentemente descritto introduce una criticità nel caso un cui due
+autori abbiano un nome che viene abbreviato nello stesso modo.
+Questo fa sì che più persone vengano assimilate erroneamente in un unico nodo.
+
+Nei dati che sono stati trattati questo succede solo nel caso di ``\textit{Mattia Zorzi}'' e
+``\textit{Michele Zorzi}'', che si abbreviano entrambi in ``\textit{m zorzi}''.
+
+In dataset più ampi oppure relativi a comunità che anche se ristrette presentano una bassa
+variabilità dei cognomi, il fenomeno dei falsi positivi incide in maniera molto più marcata sulla
+veridicità del grafo.
+
+Nel secondo metodo sviluppato per unificare i nodi, viene richiesta un'ulteriore condizione per
+considerare due nodi come relativi alla stessa persona fisica. Oltre a verificare la corrispondenza
+delle abbreviazioni dei nomi si calcola anche la distanza minima tra i due nodi nel grafo. Se questa
+distanza è minore di una certa soglia, i due nodi vengono unificati. Questo processo può essere
+iterato più volte, per sfruttare le informazioni ottenute nei passi precedenti.
+
+\begin{center}
+\captionof*{table}{Prima iterazione unione nodi con distanza minima minore di 2}
+\begin{minipage}{0.40\textwidth}
+\begin{tikzpicture}
+\GraphInit[vstyle=Normal]
+%\draw[help lines] (0,0) grid (4,3);
+\Vertex[L=D]{d1} % par défaut x = 0 et y = 0
+\Vertex[x=1 , y=1.5, L=A]{a2}
+\Vertex[x=0 , y=3, L=C]{c1}
+\Vertex[x=2 , y=0, L=A]{a1}
+\Vertex[x=2 , y=3, L=B]{b1}
+\Vertex[x=3 , y=1.5, L=A]{a3}
+\Vertex[x=4 , y=3, L=C]{c2}
+\Edge[label=3](c1)(a2)
+\Edge[label=8](a3)(c2)
+\SetUpEdge[style={ultra thick},color=red]
+\Edge[label=6](d1)(a1)
+\Edge[label=7](d1)(a2)
+\SetUpEdge[style={ultra thick},color=cyan]
+\Edge[label=1](a2)(b1)
+\Edge[label=2](b1)(a3)
+\end{tikzpicture}
+\end{minipage}
+\begin{minipage}{0.075\textwidth}
+$\rightarrow$
+\end{minipage}
+\begin{minipage}{0.40\textwidth}
+\begin{tikzpicture}
+\GraphInit[vstyle=Normal]
+\Vertex[L=D]{d1} % par défaut x = 0 et y = 0
+\Vertex[x=2 , y=1.5, L=A]{a2}
+\Vertex[x=0 , y=3, L=C]{c1}
+\Vertex[x=2 , y=3, L=B]{b1}
+\Vertex[x=4 , y=3, L=C]{c2}
+\Edge[label=13](d1)(a2)
+\Edge[label=3](a2)(b1)
+\Edge[label=3](c1)(a2)
+\Edge[label=8](a2)(c2)
+\end{tikzpicture}
+\end{minipage}
+\end{center}
+
+\begin{center}
+\captionof*{table}{Seconda iterazione unione nodi con distanza minima minore di 2}
+\begin{minipage}{0.40\textwidth}
+\begin{tikzpicture}
+\GraphInit[vstyle=Normal]
+\Vertex[L=D]{d1} % par défaut x = 0 et y = 0
+\Vertex[x=2 , y=1.5, L=A]{a2}
+\Vertex[x=0 , y=3, L=C]{c1}
+\Vertex[x=2 , y=3, L=B]{b1}
+\Vertex[x=4 , y=3, L=C]{c2}
+\Edge[label=13](d1)(a2)
+\Edge[label=3](a2)(b1)
+\SetUpEdge[style={ultra thick},color=orange]
+\Edge[label=3](c1)(a2)
+\Edge[label=8](a2)(c2)
+\end{tikzpicture}
+\end{minipage}
+\begin{minipage}{0.075\textwidth}
+$\rightarrow$
+\end{minipage}
+\begin{minipage}{0.40\textwidth}
+\begin{tikzpicture}
+\GraphInit[vstyle=Normal]
+\Vertex[L=D]{d1} % par défaut x = 0 et y = 0
+\Vertex[x=2 , y=1.5, L=A]{a2}
+\Vertex[x=0.8 , y=3, L=C]{c1}
+\Vertex[x=3.2 , y=3, L=B]{b1}
+\Edge[label=13](d1)(a2)
+\Edge[label=11](c1)(a2)
+\Edge[label=3](a2)(b1)
+\end{tikzpicture}
+\end{minipage}
+\end{center}
+
+I valori ottimi di soglia e numero di iterazioni sono stati calcolati sperimentalmente e risultano
+000 e 000.
+
+\clearpage % grafica da fare alla fine
+
+I nodi del grafo in figura \ref{img:grafotutti} si riducono da 778 a 000. Gli edge scendono da 1830
+a 000, mantenendo lo stesso peso totale di 7.803.
+
+\centerline{
+\begin{minipage}{1.10\textwidth}
+\setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
+\fbox{\includegraphics[page=1,scale=0.37]{img/GrafoTuttiUnificati_distanza.pdf}}
+\captionof{figure}{Grafo collaborazioni unificati per distanza}
+\label{img:grafotuttidistanza}
+\end{minipage}
+}
+
+I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 000. Gli edge scendono da 850 a
+000, mantenendo il peso totale di 5.195.
+
+\centerline{
+\begin{minipage}{1.10\textwidth}
+\setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
+\fbox{\includegraphics[page=1,scale=0.37]{img/GrafoPadovaniUnificati_distanza.pdf}}
+\captionof{figure}{Grafo Padovani unificati per distanza}
+\label{img:grafopaddistanza}
+\end{minipage}
+}
+
+% TODO mostra tabella o grafico dei confronti delle iterazioni varie
+
+% \subsubsection
+% TODO scopri cosa fanno i self loop
 
 \whitePage
 \chapter{Troubleshooting} \label{cap:trouble}
 Il grafo generato presenta ancora delle carenze.
 
-La lista di partenza include gli afferenti DEI attuali, mentre il database è del 2015. Questo comporta la mancanza di professori, non più a Padova, che avevano ruolo di aggregatore di una comunità.
+La lista di partenza include gli afferenti DEI attuali, mentre il database è del 2015. Questo
+comporta la mancanza di professori, non più a Padova, che avevano ruolo di aggregatore di una
+comunità.
 
 TODO inserire il nome di Apostolico nella lista di partenza e valutare i cambiamenti
 
-Un modo proposto per includere i nomi mancanti è: estrarre gli ID autore; estrarre i paper-aut-aff; da questa lista di paper estrarre tutti gli ID autore; potenzialmente ridurre i paper (e gli autori) estratti in base alle affiliation (anche solo del DEI e non di tutta Padova); iterare il processo con la nuova lista di autori.
+Un modo proposto per includere i nomi mancanti è: estrarre gli ID autore; estrarre i paper-aut-aff;
+da questa lista di paper estrarre tutti gli ID autore; potenzialmente ridurre i paper (e gli autori)
+estratti in base alle affiliation (anche solo del DEI e non di tutta Padova); iterare il processo
+con la nuova lista di autori.
 
-In questo modo si estraggono anche troppe comunità, una singola collaborazione con un dipartimento esterno comporta alle iterazioni successive l'inclusione di molti autori di quel dipartimento. Un modo per risolvere il problema è, alla fine delle iterazioni e della creazione dei cluster, considerare solo quelli che contengono almeno un nome che era nella lista originale: in questo modo dipartimenti esterni, anche se connessi al grafo, non vengono inclusi.
+In questo modo si estraggono anche troppe comunità, una singola collaborazione con un dipartimento
+esterno comporta alle iterazioni successive l'inclusione di molti autori di quel dipartimento. Un
+modo per risolvere il problema è, alla fine delle iterazioni e della creazione dei cluster,
+considerare solo quelli che contengono almeno un nome che era nella lista originale: in questo modo
+dipartimenti esterni, anche se connessi al grafo, non vengono inclusi.
 
 
 
@@ -405,6 +592,8 @@ Presentazione dei valori di v-measure per i vari grafi e commenti.
 \whitePage
 \chapter{Conclusioni} \label{cap:conclusioni}
 Partendo da una lista di nomi di un dipartimento si può estrarre un grafo che lo rappresenti? Le comunità generate rispecchiano quelle reali?
+
+TODO se vuoi fallo su matematica e mostra un grafo con qualche valore di v-measure
 
 
 %%% OBBLIGATORIA:

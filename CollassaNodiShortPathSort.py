@@ -145,7 +145,7 @@ def collassaNodiShortPath(pfAutINN, pfDatiPaj, pfEdgeUnif, pfAutUnif, maxhops):
           if posA <> posB: del sdc[posB]
       # if len(sdc) > 1: print 'len {} sdc {}'.format(len(sdc), sdc)
     tsdc.extend(sdc)
-  print 'lenfreq {}'.format(lenfreq)
+  # print 'lenfreq {}'.format(lenfreq)
 
   autUniti = {} # {nomelungo: [set(num da collassare), IDlungo, numlungo]}
   for s in tsdc:
