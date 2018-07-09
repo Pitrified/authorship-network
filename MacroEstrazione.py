@@ -16,6 +16,7 @@ def esplorazioneTotale():
   from EstraiAutoriCollab import estraiAutoriCollab
   from CollassaNodiAmpi import collassaNodiAmpi
   from CollassaNodiShortPathSort import collassaNodiShortPath
+  from CollassaNodiEdge import collassaNodiEdge
   from Verifiche_Test.PreparaPerGephi import preparaPerGephi
   from Verifiche_Test.PreparaPerSNAP import preparaPerSNAP, preparaGC
   from AnalizzaSnap import analizzaGirvanNewman, analizzaClausetNewmanMoore
@@ -26,7 +27,7 @@ def esplorazioneTotale():
 
   ctesi = abspath(join(__file__, '..', '..') )
   celaborati = join(ctesi, 'authorship-network', 'Versione5')
-  sub = 'Prima'
+  sub = 'Quinta'
 
   if not os.path.exists(join(celaborati, sub)): os.makedirs(join(celaborati, sub))
   cfileRAW   = join(ctesi, 'FileRAW')
@@ -83,7 +84,7 @@ def esplorazioneTotale():
   regAff = re.compile(strRegAff, re.IGNORECASE)
 
   sceltePadova = ['_tutti', '_padovani']
-  scelteUnione = ['_nomi', '_distanza']
+  scelteUnione = ['_nomi', '_distanza', '_edge']
   scelteComunita = ['_girvnew', '_GC_girvnew', '_clanemo', '_GC_clanemo'] # , '_blockmodel'] # _blk lo aggiungo solo se GT funziona
   blockmodel = '_blockmodel'
   blockmodelGC = '_GC_blockmodel'
@@ -162,6 +163,11 @@ def esplorazioneTotale():
     # print('\nChiamo collassaNodiShortPath con \n\t{}\n\t{}\n\t{}\n\t{}\n\tDistanza massima tra autori {}'.format( pfAutNumNome, pfPaj, pfEdgeCollabUnificati, pfAutCollabUnificati, maxhops) )
     collassaNodiShortPath(pfAutNumNome, pfPaj, pfEdgeCollabUnificati, pfAutCollabUnificati, maxhops)
 
+    # collasso i nomi basandomi sugli edge
+    pfEdgeCollabUnificati = pftEdgeCollabUnificati.format(sp, scelteUnione[2])
+    pfAutCollabUnificati = pftAutCollabUnificati.format(sp, scelteUnione[2])
+    # print('\nChiamo collassaNodiEdge con \n\t{}\n\t{}\n\t{}\n\t{}\n\t'.format(  pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati) )
+    collassaNodiEdge(pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati)
 
     for su in scelteUnione:
       print('\nInizio {} {}'.format(sp, su))
@@ -259,7 +265,6 @@ def esplorazioneTotale():
 
   end = timer()
   print('Completata l\'esplorazione in {} s'.format(end-start) )
-
 
 if __name__ == '__main__':
   esplorazioneTotale()

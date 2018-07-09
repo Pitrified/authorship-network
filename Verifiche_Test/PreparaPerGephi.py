@@ -26,7 +26,8 @@ if __name__ == '__main__':
   #PATH TO FILES
   pardir = abspath(dirname(dirname(__file__) ) ) # dir(file)=aut/ver; dd(f)=aut
   print pardir
-  celaborati = join('elaborato', 'DatiGrafiElaborato')
+  # celaborati = join('elaborato', 'DatiGrafiElaborato')
+  celaborati = join('Versione5', 'Quinta')
   tag = '_DEI'
 
   pftEdgeCollab = join(pardir, celaborati, 'EdgeCollabUnificati_padovani{{}}{}.{{}}'.format(tag))
