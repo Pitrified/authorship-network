@@ -26,17 +26,21 @@ if __name__ == '__main__':
   #PATH TO FILES
   pardir = abspath(dirname(dirname(__file__) ) ) # dir(file)=aut/ver; dd(f)=aut
   print pardir
-  # celaborati = join('elaborato', 'DatiGrafiElaborato')
-  celaborati = join('Versione5', 'Quinta')
+  celaborati = join('elaborato', 'DatiGrafiElaborato')
+  # celaborati = join('Versione5', 'Quinta')
   tag = '_DEI'
 
   pftEdgeCollab = join(pardir, celaborati, 'EdgeCollabUnificati_padovani{{}}{}.{{}}'.format(tag))
   pftAutCollab  = join(pardir, celaborati, 'AutoriCollabUnificati_padovani{{}}{}.{{}}'.format(tag))
-  pftEdgeCollab = join(pardir, celaborati, 'EdgeCollabUnificati_tutti{{}}{}.{{}}'.format(tag))
-  pftAutCollab  = join(pardir, celaborati, 'AutoriCollabUnificati_tutti{{}}{}.{{}}'.format(tag))
+  # pftEdgeCollab = join(pardir, celaborati, 'EdgeCollabUnificati_tutti{{}}{}.{{}}'.format(tag))
+  # pftAutCollab  = join(pardir, celaborati, 'AutoriCollabUnificati_tutti{{}}{}.{{}}'.format(tag))
+  # pftEdgeCollab = join(pardir, celaborati, 'EdgeCollab_tutti{{}}{}.{{}}'.format(tag))
+  # pftAutCollab  = join(pardir, celaborati, 'AutoriCollab_tutti{{}}{}.{{}}'.format(tag))
   # print(pftEdgeCollab, pftAutCollab)
   nd = '_nomi'
   nd = '_distanza'
+  nd = ''
+  nd = '_2_3'
   pfEdge = pftEdgeCollab.format('{}'.format(nd), 'txt')
   pfAut = pftAutCollab.format('{}'.format(nd), 'txt')
   pfEdgeGephi = pftEdgeCollab.format('{}_Gephi'.format(nd), 'tsv')

@@ -27,7 +27,9 @@ def esplorazioneTotale():
 
   ctesi = abspath(join(__file__, '..', '..') )
   celaborati = join(ctesi, 'authorship-network', 'Versione5')
-  sub = 'Quinta'
+  sub = 'Apostolico'
+  TEST = False
+  # TEST = True
 
   if not os.path.exists(join(celaborati, sub)): os.makedirs(join(celaborati, sub))
   cfileRAW   = join(ctesi, 'FileRAW')
@@ -35,13 +37,16 @@ def esplorazioneTotale():
   pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations.txt')
   pfAffRAW = join(cfileRAW, 'Affiliations.txt')
   # TEST
-  pfAuthorRAW = join(cfileRAW, 'Authors1000000.txt')
-  pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations5000000.txt')
+  if TEST:
+    pfAuthorRAW = join(cfileRAW, 'Authors1000000.txt')
+    pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations5000000.txt')
 
   tag = '_DEI'
   # pfPersone    = join(celaborati, sub, 'PersoneNomi{}.txt'.format(tag))
   pfPersone    = join(celaborati, 'PersoneNomi{}.txt'.format(tag))
   pfAbbreviate = join(celaborati, 'PersoneNomiComunitaAbbreviate{}.txt'.format(tag))
+  pfPersone    = join(celaborati, 'PersoneNomi_apostolico{}.txt'.format(tag))
+  pfAbbreviate = join(celaborati, 'PersoneNomiComunitaAbbreviate_apostolico{}.txt'.format(tag))
   pfAutoriID   = join(celaborati, sub, 'AutoriID{}.txt'.format(tag))
   # pfPapAutAff  = join(celaborati, sub, 'PapAutAff{}.txt'.format(tag))
   # pfEdgeCollab = join(celaborati, sub, 'EdgeCollab{}.txt'.format(tag))
@@ -98,14 +103,15 @@ def esplorazioneTotale():
 
   # in pfPersone ho una lista di nomi del dipartimento
   # estraggo gli IDautDEI corrispondenti (anche alle abbreviazioni)
-  # print('\nChiamo estraiIDautoriMulti con\n\t{}\n\t{}\n\t{}'.format(pfPersone, pfAuthorRAW, pfAutoriID))
+  print('\nChiamo estraiIDautoriMulti con\n\t{}\n\t{}\n\t{}'.format(pfPersone, pfAuthorRAW, pfAutoriID))
   estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID)
   lap1 = timer()
   print 'completato estraiIDautoriMulti in {}'.format(lap1 - start)
 
   # AutoriID come se fossero estratti dall'intero file Authors.txt TEST
-  PFAUTORIIDPERTEST = join(celaborati, 'AutoriID_FULLTEST.txt'.format())
-  pfAutoriID = PFAUTORIIDPERTEST
+  if TEST:
+    PFAUTORIIDPERTEST = join(celaborati, 'AutoriID_FULLTEST.txt'.format())
+    pfAutoriID = PFAUTORIIDPERTEST
 
   # estraggo i paper scritti da questi IDautDEI
   pfPAAtut = pftPapAutAff.format(sceltePadova[0])
@@ -121,8 +127,9 @@ def esplorazioneTotale():
   print('completato estraiAffPadovaneVeloce in {}'.format(lap225 - lap2) )
 
   # PapAutAff come se fossero estratti dal file completo TEST
-  PFTPAATUTPERTEST = join(celaborati, 'PapAutAff{}{}.txt'.format('{}', '_FULLTEST'))
-  pftPapAutAff = PFTPAATUTPERTEST
+  if TEST:
+    PFTPAATUTPERTEST = join(celaborati, 'PapAutAff{}{}.txt'.format('{}', '_FULLTEST'))
+    pftPapAutAff = PFTPAATUTPERTEST
 
   # estraggo i paper con affiliation padovana
   pfPAAtut = pftPapAutAff.format(sceltePadova[0])
@@ -144,10 +151,26 @@ def esplorazioneTotale():
     # print('\nChiamo estraiAutoriCollab con \n\t{}\n\t{}\n\t{}'.format( pfAutoriID, pfEdgeCollab, pfAutCollab))
     estraiAutoriCollab(pfAutoriID, pfEdgeCollab, pfAutCollab)
 
+    # disegno i grafi non collassati
+    try:
+      from DisegnaGrafoGT import disegnaGrafo
+      nosu = '_nonuniti'
+      pfPaj = pftPaj.format(sp, nosu)
+      pfAutNumNome = pftAutNumNome.format(sp, nosu)
+      pfGT = pftGT.format(sp, nosu)
+      preparaPerSNAP(pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome, pfGT)
+      pfGrafoOut = pftGrafoOut.format(sp, nosu, '{}{}'.format(blockmodel, '{}'))
+      pfClassi = pftClassi.format(sp, nosu, blockmodel)
+      disegnaGrafo(pfGT, pfGrafoOut, pfClassi)
+    except ImportError:
+      print('Ti serve graph_tool, usa Linux')
+    except:
+      raise
+
     # collasso i nomi basandomi su nomi ed abbreviazioni
     pfEdgeCollabUnificati = pftEdgeCollabUnificati.format(sp, scelteUnione[0])
     pfAutCollabUnificati = pftAutCollabUnificati.format(sp, scelteUnione[0])
-    # print('\nChiamo collassaNodiAmpi con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati))
+    print('\nChiamo collassaNodiAmpi con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati))
     collassaNodiAmpi(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati)
 
     # formatto i dati per SNAP e per GT
@@ -166,7 +189,7 @@ def esplorazioneTotale():
     # collasso i nomi basandomi sugli edge
     pfEdgeCollabUnificati = pftEdgeCollabUnificati.format(sp, scelteUnione[2])
     pfAutCollabUnificati = pftAutCollabUnificati.format(sp, scelteUnione[2])
-    # print('\nChiamo collassaNodiEdge con \n\t{}\n\t{}\n\t{}\n\t{}\n\t'.format(  pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati) )
+    # print('\nChiamo collassaNodiEdge con \n\t{}\n\t{}\n\t{}\n\t{}\n\t'.format( pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati) )
     collassaNodiEdge(pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati)
 
     for su in scelteUnione:

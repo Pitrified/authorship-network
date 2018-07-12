@@ -1,6 +1,9 @@
 #! python2
 
 import os
+from os.path import abspath
+from os.path import dirname
+from os.path import join
 import multiprocessing as mp
 from timeit import default_timer as timer
 import traceback
@@ -83,6 +86,7 @@ def estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID):
   # print 'pfPersone:{}\tpfAuthorRAW:{}\tpfAutoriID:{}'.format(pfPersone, pfAuthorRAW, pfAutoriID)
   # popolo il set
   sPersone = creaSetAbbreviazioni(pfPersone)
+  # print(sPersone)
   # print 'abbreviazioni {}'.format(len(sPersone))
 
   # cerco i nomi nel set
@@ -117,9 +121,6 @@ def estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID):
 
   pool.close()
 
-
-
-
 if __name__ == '__main__':
   print 'This program is EstraiIDAutoriDEIampiMulti, being run by itself'
 
@@ -132,6 +133,17 @@ if __name__ == '__main__':
   # pfAuthorRAW = '..\FileRAW\Authors1000.txt'
   pfAuthorRAW = '..\FileRAW\Authors.txt'
   # pfAuthorRAW = '../FileRAW/Authors.txt'
+
+  ctesi = abspath(join(__file__, '..', '..') )
+  celaborati = join(ctesi, 'authorship-network', 'Versione5')
+  sub = 'ApostolicoSingolo'
+  tag = '_DEI'
+  if not os.path.exists(join(celaborati, sub)): os.makedirs(join(celaborati, sub))
+  cfileRAW   = join(ctesi, 'FileRAW')
+  pfAuthorRAW = join(cfileRAW, 'Authors.txt')
+  pfPersone = join(celaborati, 'PersoneNomi_apostolico{}.txt'.format(tag))
+  pfAutoriID = join(celaborati, sub, 'AutoriID{}.txt'.format(tag))
+  print('\nChiamo estraiIDautoriMulti con\n\t{}\n\t{}\n\t{}'.format(pfPersone, pfAuthorRAW, pfAutoriID))
 
   start = timer()
   estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID)

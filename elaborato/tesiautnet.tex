@@ -524,30 +524,34 @@ $\rightarrow$
 \end{minipage}
 \end{center}
 
-I valori ottimi di soglia e numero di iterazioni sono stati calcolati sperimentalmente e risultano
-000 e 000.
+I valori ottimi di soglia e numero di iterazioni sono stati cercati sperimentalmente, ma non è
+emersa dai risultati una coppia di valori migliore in maniera rilevante rispetto alle altre.
+Ispezionando manualmente il grafo, si è constatato che ID autore riferiti alla stessa persona
+risultano generalmente distanti 2. Il procedimento è stato ripetuto tre volte, in modo da sfruttare
+le informazioni generate nei passi predecenti. Dopo questo numero di iterazioni il grafo raggiunge
+quasi una situazione di stabilità.
 
-\clearpage % grafica da fare alla fine
+%\clearpage % grafica da fare alla fine
 
-I nodi del grafo in figura \ref{img:grafotutti} si riducono da 778 a 000. Gli edge scendono da 1830
-a 000, mantenendo lo stesso peso totale di 7.803.
+I nodi del grafo in figura \ref{img:grafotutti} si riducono da 778 a 336. Gli edge scendono da 1830
+a 634, mantenendo lo stesso peso totale di 7.803.
 
 \centerline{
-\begin{minipage}{1.10\textwidth}
+\begin{minipage}{1.20\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
-\fbox{\includegraphics[page=1,scale=0.37]{img/GrafoTuttiUnificati_distanza.pdf}}
+\fbox{\includegraphics[page=1,scale=0.47]{img/GrafoTuttiDistanza23.pdf}}
 \captionof{figure}{Grafo collaborazioni unificati per distanza}
 \label{img:grafotuttidistanza}
 \end{minipage}
 }
 
-I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 000. Gli edge scendono da 850 a
-000, mantenendo il peso totale di 5.195.
+I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 173. Gli edge scendono da 850 a
+439, mantenendo il peso totale di 5.195.
 
 \centerline{
-\begin{minipage}{1.10\textwidth}
+\begin{minipage}{1.00\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
-\fbox{\includegraphics[page=1,scale=0.37]{img/GrafoPadovaniUnificati_distanza.pdf}}
+\fbox{\includegraphics[page=1,scale=0.37]{img/GrafoPadovaniDistanza23.pdf}}
 \captionof{figure}{Grafo Padovani unificati per distanza}
 \label{img:grafopaddistanza}
 \end{minipage}
@@ -555,30 +559,138 @@ I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 000. Gli edge
 
 % TODO mostra tabella o grafico dei confronti delle iterazioni varie
 
-% \subsubsection
-% TODO scopri cosa fanno i self loop
+\clearpage % grafica da fare alla fine
+
+\subsubsection{Per nodi adiacenti} \label{ssc:edge}
+Osservando i grafi generati senza unire i nodi, si nota la presenza di un elevato numero di
+componenti sconnesse formate da 2-4 autori, che sono principalmente effettivi collaboratori tra
+loro. È stato sviluppato un metodo di deduplicazione dei nodi che si basa sulle collaborazioni tra
+coppie di autori.
+
+Per ogni edge si estraggono i nomi relativi agli estremi, se due edge hanno gli estremi con i nomi
+coincidenti, si considerano le coppie di nodi come relative alla stessa persona.
+
+\begin{center}
+\captionof*{table}{Unione dei nodi per coppie di nodi adiacenti}
+\begin{minipage}{0.40\textwidth}
+\begin{tikzpicture}
+\GraphInit[vstyle=Normal]
+\Vertex[L=B]{b1} % par défaut x = 0 et y = 0
+\Vertex[x=2 , y=1.5, L=A]{a2}
+\Vertex[x=0.5 , y=1.5, L=A]{a1}
+\Vertex[x=2.5 , y=3, L=C]{c1}
+\Vertex[x=1.5 , y=0, L=B]{b2}
+\Vertex[x=4 , y=3, L=C]{c2}
+\Edge[label=2](b2)(a2)
+\Edge[label=3](a1)(b1)
+\Edge[label=4](c1)(a2)
+\Edge[label=6](a2)(c2)
+\SetUpEdge[style={dashed},color=orange]
+\Edge(b1)(b2)
+\Edge(a1)(a2)
+\Edge(c1)(c2)
+\end{tikzpicture}
+\end{minipage}
+\begin{minipage}{0.075\textwidth}
+$\rightarrow$
+\end{minipage}
+\begin{minipage}{0.40\textwidth}
+\begin{tikzpicture}
+\GraphInit[vstyle=Normal]
+\Vertex[L=B]{b1} % par défaut x = 0 et y = 0
+\Vertex[x=2 , y=1.5, L=A]{a2}
+\Vertex[x=4 , y=3, L=C]{c1}
+\Edge[label=10](c1)(a2)
+\Edge[label=5](a2)(b1)
+\end{tikzpicture}
+\end{minipage}
+\end{center}
+
+I nodi del grafo in figura \ref{img:grafotutti} si riducono da 778 a 313. Gli edge scendono da 1830
+a 615, mantenendo lo stesso peso totale di 7.803.
+
+\centerline{
+\begin{minipage}{1.05\textwidth}
+\setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
+\fbox{\includegraphics[page=1,scale=0.43]{img/GrafoTuttiEdge.pdf}}
+\captionof{figure}{Grafo collaborazioni unificati per coppie di nodi adiacenti}
+\label{img:grafotuttiedge}
+\end{minipage}
+}
+
+\clearpage % grafica da fare alla fine
+
+I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 174. Gli edge scendono da 850 a
+453, mantenendo il peso totale di 5.195.
+
+\centerline{
+\begin{minipage}{1.05\textwidth}
+\setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
+\fbox{\includegraphics[page=1,scale=0.43]{img/GrafoPadovaniEdge.pdf}}
+\captionof{figure}{Grafo Padovani unificati per coppie di nodi adiacenti}
+\label{img:grafopadedge}
+\end{minipage}
+}
+
 
 \whitePage
 \chapter{Troubleshooting} \label{cap:trouble}
 Il grafo generato presenta ancora delle carenze.
 
-La lista di partenza include gli afferenti DEI attuali, mentre il database è del 2015. Questo
-comporta la mancanza di professori, non più a Padova, che avevano ruolo di aggregatore di una
+% subsubsection nomi mancanti
+
+La lista di partenza include gli afferenti DEI attuali, mentre il database è aggiornato al 2015.
+Questo comporta la mancanza di professori, non più a Padova, che avevano ruolo di aggregatore di una
 comunità.
 
-TODO inserire il nome di Apostolico nella lista di partenza e valutare i cambiamenti
+%Un metodo proposto per includere i nomi mancanti è: estrarre gli ID autore; estrarre i
+%paper-aut-aff; da questa lista di paper estrarre tutti gli ID autore; potenzialmente ridurre i paper
+%(e gli autori) estratti in base alle affiliation (anche solo del DEI e non di tutta Padova); iterare
+%il processo con la nuova lista di autori.
+\begin{enumerate}[noitemsep, topsep=0pt]
+\item
+Estrarre gli ID autore
+\item
+Estrarre le terne di ID paper-autore-affiliation
+\item
+Estrarre tutti i record paper-autore-affiliation relativi ai paper identificati al punto precedente
+\item
+Estrarre una nuova lista di ID autore dai paper appena estratti, ossia i coautori della lista di
+partenza.
+\item
+Eventualmente ridurre il set di autori basandosi sulle affiliation dei loro paper
+\item
+Ripetere i passi 2-5 per un numero predefinito di volte o fino alla convergenza
+\end{enumerate}
 
-Un modo proposto per includere i nomi mancanti è: estrarre gli ID autore; estrarre i paper-aut-aff;
-da questa lista di paper estrarre tutti gli ID autore; potenzialmente ridurre i paper (e gli autori)
-estratti in base alle affiliation (anche solo del DEI e non di tutta Padova); iterare il processo
-con la nuova lista di autori.
+In questo modo si estraggono tutte le comunità relative alle affiliation usate come filtro. Una
+singola collaborazione con un dipartimento esterno comporta alle iterazioni successive l'inclusione
+di molti autori di quel dipartimento. Un metodo proposto per risolvere il problema è, alla fine delle
+iterazioni e della creazione dei cluster, considerare solo quelli che contengono almeno un nome
+presente nella lista originale: in questo modo dipartimenti esterni, anche se connessi al grafo, non
+vengono inclusi.
 
-In questo modo si estraggono anche troppe comunità, una singola collaborazione con un dipartimento
-esterno comporta alle iterazioni successive l'inclusione di molti autori di quel dipartimento. Un
-modo per risolvere il problema è, alla fine delle iterazioni e della creazione dei cluster,
-considerare solo quelli che contengono almeno un nome che era nella lista originale: in questo modo
-dipartimenti esterni, anche se connessi al grafo, non vengono inclusi.
+Per verificare l'efficacia di questo metodo, è stato analizzato il caso del professor Apostolico,
+prolifico autore di paper all'Università di Padova, che essendo mancato qualche anno fa non compare
+più nella lista degli attuali afferenti al DEI. Dopo aver reinserito il suo nome nella lista di
+autori, è stata rieseguita l'estrazione dei dati e rigenerato il grafo.
 
+Il suo ruolo importante all'interno del suo gruppo di ricerca si nota dalla connessione che
+emerge con i suoi collaboratori, che precedentemente erano distanti nel grafo, come illustrato in
+figura \ref{img:apostolico}
+
+\centerline{
+\begin{minipage}{0.80\textwidth}
+\setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
+\fbox{\includegraphics[page=1,scale=1.80]{img/cropped_GrafoApostolico.pdf}}
+\captionof{figure}{Gruppo di ricerca del professor Apostolico}
+\label{img:apostolico}
+\end{minipage}
+}
+
+% \subsubsection
+% TODO scopri cosa fanno i self loop
+% TODO mancano proprio record dei paper
 
 
 \whitePage
