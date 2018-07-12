@@ -318,7 +318,13 @@ IDautore2  IDautore3  2
 \end{center}
 A partire da questi edge è stato generato il primo grafo che rappresenta la rete degli autori.
 % TODO riscrivila
-Questo metodo di creazione del grafo, che considera le collaborazioni tra autori, riduce a 778 il set di ID autori per un totale di 287 nomi univoci. Il grafo è formato da 1.830 edge con 7.803 di peso totale.
+
+Questo metodo di creazione del grafo, che considera le collaborazioni tra autori, riduce a 778 il
+set di ID autori per un totale di 287 nomi univoci. Il grafo è formato da 1.830 edge con 7.803 di
+peso totale.
+
+I grafi in questo capitolo sono stati divisi in comunità utilizzando l'algoritmo Modularity di
+Gephi.
 
 
 \centerline{
@@ -417,6 +423,7 @@ a 661, mantenendo lo stesso peso totale di 7.803.
 \end{minipage}
 }
 
+\clearpage % grafica da fare alla fine
 I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 158. Gli edge scendono da 850 a
 463, mantenendo il peso totale di 5.195.
 
@@ -448,6 +455,7 @@ delle abbreviazioni dei nomi si calcola anche la distanza minima tra i due nodi 
 distanza è minore di una certa soglia, i due nodi vengono unificati. Questo processo può essere
 iterato più volte, per sfruttare le informazioni ottenute nei passi precedenti.
 
+\clearpage % grafica da fare alla fine
 \begin{center}
 \captionof*{table}{Prima iterazione unione nodi con distanza minima minore di 2}
 \begin{minipage}{0.40\textwidth}
@@ -531,7 +539,7 @@ risultano generalmente distanti 2. Il procedimento è stato ripetuto tre volte, 
 le informazioni generate nei passi predecenti. Dopo questo numero di iterazioni il grafo raggiunge
 quasi una situazione di stabilità.
 
-%\clearpage % grafica da fare alla fine
+\clearpage % grafica da fare alla fine
 
 I nodi del grafo in figura \ref{img:grafotutti} si riducono da 778 a 336. Gli edge scendono da 1830
 a 634, mantenendo lo stesso peso totale di 7.803.
