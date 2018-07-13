@@ -90,10 +90,10 @@ def collassaNodiEdge(pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutColl
       else:
         dEdgeNomi[edgenomi] = [ [src], [dst] , [peso] ]
 
-  totedges = 0
-  for en in sorted(dEdgeNomi):
+  # totedges = 0
+  # for en in sorted(dEdgeNomi):
     # print('edgenomi: {}\t{}'.format(en, dEdgeNomi[en] ) )
-    totedges += len(dEdgeNomi[en][0])
+    # totedges += len(dEdgeNomi[en][0])
   # print('edge totali {}'.format(totedges) )
 
   # scorro il dEdgeNomi e aggrego gli autori

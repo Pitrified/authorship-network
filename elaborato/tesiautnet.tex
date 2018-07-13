@@ -643,7 +643,7 @@ I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 174. Gli edge
 
 \whitePage
 \chapter{Troubleshooting} \label{cap:trouble}
-Il grafo generato presenta ancora delle carenze.
+Il grafo generato attraverso gli accorgimenti discussi in precedenza presenta ancora delle carenze.
 
 % subsubsection nomi mancanti
 
@@ -651,7 +651,8 @@ La lista di partenza include gli afferenti DEI attuali, mentre il database è ag
 Questo comporta la mancanza di professori, non più a Padova, che avevano ruolo di aggregatore di una
 comunità.
 
-%Un metodo proposto per includere i nomi mancanti è: estrarre gli ID autore; estrarre i
+Un metodo proposto per includere i nomi mancanti è:
+%estrarre gli ID autore; estrarre i
 %paper-aut-aff; da questa lista di paper estrarre tutti gli ID autore; potenzialmente ridurre i paper
 %(e gli autori) estratti in base alle affiliation (anche solo del DEI e non di tutta Padova); iterare
 %il processo con la nuova lista di autori.
@@ -683,15 +684,17 @@ prolifico autore di paper all'Università di Padova, che essendo mancato qualche
 più nella lista degli attuali afferenti al DEI. Dopo aver reinserito il suo nome nella lista di
 autori, è stata rieseguita l'estrazione dei dati e rigenerato il grafo.
 
-Il suo ruolo importante all'interno del suo gruppo di ricerca si nota dalla connessione che
-emerge con i suoi collaboratori, che precedentemente erano distanti nel grafo, come illustrato in
-figura \ref{img:apostolico}
+%Il suo ruolo importante all'interno del suo gruppo di ricerca si nota dalla connessione che
+%emerge con i suoi collaboratori, che precedentemente erano distanti nel grafo, come illustrato in
+%figura \ref{img:apostolico}
+Come illustrato in figura \ref{img:apostolico}, utilizzando questa procedura, emerge una comunità di
+collaboratori che precendentemente erano distanti nel grafo.
 
 \centerline{
 \begin{minipage}{0.80\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
 \fbox{\includegraphics[page=1,scale=1.80]{img/cropped_GrafoApostolico.pdf}}
-\captionof{figure}{Gruppo di ricerca del professor Apostolico}
+\captionof{figure}{Rete di collaborazioni del professor Apostolico}
 \label{img:apostolico}
 \end{minipage}
 }
@@ -703,9 +706,21 @@ figura \ref{img:apostolico}
 
 \whitePage
 \chapter{Risultati} \label{cap:risultati}
+
+\section{V-measure} \label{sec:vmeasure}
+
 Descrizione della v-measure
 
+\section{Risultati} \label{sec:risultati}
+
 Presentazione dei valori di v-measure per i vari grafi e commenti.
+
+\subsubsection{Tutti vs padovani}\label{ssc:analisitp}
+Tra tutti e padovani c'è molta differenza.
+\subsubsection{Collassi vari}\label{ssc:analisicollassi}
+Tra le varie strade di collasso non c'è sostanziale differenza.
+\subsubsection{Metodi di comunity detection}\label{ssc:analisicd}
+Tra le varie comunità non c'è sostanziale differenza.
 
 
 

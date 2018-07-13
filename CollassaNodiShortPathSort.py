@@ -24,7 +24,7 @@ def abbUguali(nameSort):
   # genera liste di autNome che hanno abbreviazione uguale
   abbruguali = [nameSort[0]] # autNomi con cognomi uguali
   for i in range(len(nameSort) - 1):
-    cog = nameSort[i].rsplit(' ', 1)[1]
+    # cog = nameSort[i].rsplit(' ', 1)[1]
     # if nameSort[i+1].rsplit(' ', 1)[1] == cog:
     if abbrevia(nameSort[i+1]) == abbrevia(nameSort[i]):
       abbruguali.append(nameSort[i+1])
@@ -67,6 +67,14 @@ def ssd(a, b):
   if a < b: return (a, b)
   else: return (b, a)
 
+def swapNomeCog(fullname):
+  pz = fullname.rsplit(' ', 1)
+  if len(pz) >= 2:
+    return '{} {}'.format(pz[1], pz[0])
+  elif len(pz) == 1:
+    return pz[0]
+  else:
+    raise LookupError('Nome vuoto: {} rsplit(\' \', 1) fallito'.format(fullname) )
 
 def collassaNodiShortPath(pfAutINN, pfDatiPaj, pfEdgeUnif, pfAutUnif, maxhops):
   #edge e autori non collassati
@@ -91,7 +99,8 @@ def collassaNodiShortPath(pfAutINN, pfDatiPaj, pfEdgeUnif, pfAutUnif, maxhops):
     # print('daID: {}\ndaNum: {}\ndaNome: {}'.format(daID, daNum, daNome))
 
   # nameSort = [ ..., 'n s cog', 'n sec cog', 'nom sec cog', ... ]
-  nameSort = sorted(daNome.keys(), key=lambda x: '{} {}'.format(x.rsplit(' ', 1)[1], x.rsplit(' ', 1)[0]))
+  # nameSort = sorted(daNome.keys(), key=lambda x: '{} {}'.format(x.rsplit(' ', 1)[1], x.rsplit(' ', 1)[0]))
+  nameSort = sorted(daNome.keys(), key=lambda x: swapNomeCog(x))
   # for n in nameSort: print n
 
   UGraph = snap.LoadPajek(snap.PUNGraph, pfDatiPaj)
