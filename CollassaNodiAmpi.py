@@ -1,5 +1,18 @@
 #! python2
 
+def abbrevia(nome):
+  # restituisce il nome abbreviato
+  tocchi = nome.split()
+  if len(tocchi) == 1:
+    return nome
+  else:
+    abb = ''
+    for t in tocchi[:-1]:
+      abb += t[0] + ' '
+    abb += tocchi[-1]
+    # print('nome {} abbreviato {} '.format(nome, abb))
+    return abb
+
 def trovaSostituto(id, dAutori):
   """
   cerca l'ID nelle liste del dizionario e restituisce il primo ID della lista giusta
@@ -29,6 +42,46 @@ def trovaNome(abbreviato, dPersone):
       #print dPersone[entry]
       return entry
   return "NAMENOTFOUND!"
+
+def collassaNodiPerNome(pfEdgeCollab,  pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati):
+  dAbbr = {} # { n s cog : [IDnomelungo, IDnomeabbr] }
+  dAutID = {} # { autID : autNome }
+  with open(pfAutCollab, 'rb') as fAutCollab:
+    for line in fAutCollab:
+      autID, autNome = line.rstrip().split('\t')     # pezzi[0] id; pezzi[1] nome senza \r\n
+      dAutID[autID] = autNome
+      autAbb = abbrevia(autNome)
+      if autAbb in dAbbr:
+        if len(autNome) > len( dAutID[ dAbbr[autAbb][0] ] ):
+          dAbbr[autAbb].insert(0, autID)
+        else:
+          dAbbr[autAbb].append(autID)
+      else:
+        dAbbr[autAbb] = [autID]
+
+  dEdge = {}
+  with open(pfEdgeCollab, 'rb') as fEdgeCollab:
+    for line in fEdgeCollab:
+      id0, id1, peso = line.rstrip().split()
+      peso = int(peso)
+      abb0 = abbrevia( dAutID[id0] )
+      abb1 = abbrevia( dAutID[id1] )
+      id0nuovo = dAbbr[abb0][0]
+      id1nuovo = dAbbr[abb1][0]
+      if id0nuovo < id1nuovo: coppia = '{}\t{}'.format( id0nuovo, id1nuovo )
+      else: coppia = '{}\t{}'.format( id1nuovo, id0nuovo )
+      if coppia in dEdge:
+        dEdge[coppia] += peso
+      else:
+        dEdge[coppia] = peso
+
+  with open(pfEdgeCollabUnificati, 'wb') as fEdgeCollabUnificati:
+    for entry in dEdge:
+      fEdgeCollabUnificati.write('{}\t{}\r\n'.format(entry, dEdge[entry]))
+
+  with open(pfAutCollabUnificati, 'wb') as fAutCollabUnificati:
+    for entry in dAbbr:
+      fAutCollabUnificati.write('{}\t{}\r\n'.format( dAbbr[entry][0], dAutID[dAbbr[entry][0] ] ) )
 
 def collassaNodiAmpi(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati):
   """
