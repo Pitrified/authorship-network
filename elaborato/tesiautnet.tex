@@ -534,6 +534,7 @@ $\rightarrow$
 
 I valori ottimi di soglia e numero di iterazioni sono stati cercati sperimentalmente, ma non è
 emersa dai risultati una coppia di valori migliore in maniera rilevante rispetto alle altre.
+% TODO riferimento alla spiegazione del perché nel capitolo 4
 Ispezionando manualmente il grafo, si è constatato che ID autore riferiti alla stessa persona
 risultano generalmente distanti 2. Il procedimento è stato ripetuto tre volte, in modo da sfruttare
 le informazioni generate nei passi predecenti. Dopo questo numero di iterazioni il grafo raggiunge
@@ -699,6 +700,8 @@ collaboratori che precendentemente erano distanti nel grafo.
 \end{minipage}
 }
 
+% TODO spiegone amplia rete
+
 % \subsubsection
 % TODO scopri cosa fanno i self loop
 % TODO mancano proprio record dei paper
@@ -708,8 +711,194 @@ collaboratori che precendentemente erano distanti nel grafo.
 \chapter{Risultati} \label{cap:risultati}
 
 \section{V-measure} \label{sec:vmeasure}
+Per valutare la qualità delle partizioni dei grafi ricavati con i vari metodi descritti nelle
+sezioni precedenti, è stata utilizzata la \textit{V-measure}, come presentata da Rosenberg e
+Hirschberg \cite{vmeasure}, una misura esterna della validità dei cluster basata sull'entropia.
 
-Descrizione della v-measure
+Come terminologia, si parlerà di due distinte partizioni del set di nodi del grafo: un set di classi
+$C$, considerate la suddivisione reale dei nodi, e un set di cluster $K$ per indicare la partizione
+generata.
+
+Rosenberg e Hirschberg hanno sviluppato due concetti, l'omogeneità e la completezza, la cui media
+armonica è la V-measure.
+
+Una partizione di cluster è considerata perfettamente omogenea quando i cluster contengono
+\textit{solo} membri di una singola classe.
+
+In maniera simmetrica una partizione è perfettamente completa quando un singolo cluster contiene
+\textit{tutti} i membri di una classe.
+
+Per valutare l'omogeneità di una partizione si considera l'entropia condizionata della distribuzione
+di classi dato il clustering generato $H(C|K)$. Nel caso di perfetta omogeneità questo valore è
+nullo, mentre è massimo e vale $H(C)$ quando la distribuzione delle classi all'interno del cluster è
+identica alla distribuzione delle classi nell'intero set, per cui il clustering non fornisce alcuna
+informazione aggiuntiva. Considerando che il valore di entropia è massimo quando la partizione è
+pessima, si definisce l'omogeneità come
+
+\begin{equation} \label{eq:h}
+    h = \begin{cases} 1 & \mbox{se } H(C) = 0 \\ 1-\frac{H(C|K)}{H(C)} & \mbox{altrimenti} \end{cases}
+\end{equation}
+
+Analogamente si definisce la completezza come
+
+\begin{equation} \label{eq:c}
+    c = \begin{cases} 1 & \mbox{se } H(K) = 0 \\ 1-\frac{H(K|C)}{H(K)} & \mbox{altrimenti} \end{cases}
+\end{equation}
+
+La \textit{V-measure} è definita come la media armonica pesata dei due valori di omogeneità e
+completezza
+
+\begin{equation} \label{eq:c}
+    V_\beta = (1+\beta)\frac{h \cdot c}{\beta \cdot h + c}
+\end{equation}
+
+Se $\beta<1$ si dà maggior peso all'omogeneità, se $\beta>1$ si dà maggior peso alla completezza. In
+questo lavoro è stato usato $\beta=1$
+
+I seguenti diagrammi illustrano graficamente le tre situazioni limite. Le classi sono \{A, B, C,
+D\}, i colori rappresentano i cluster.
+
+\begin{center}
+\captionof*{table}{Clustering perfetto}
+\begin{minipage}{0.30\textwidth}
+    \begin{tabular}{|l|r|}
+    \hline $h$&1\\
+    \hline $c$&1\\
+    \hline $V$&1\\
+    \hline
+    \end{tabular}
+\end{minipage}
+% \begin{minipage}{0.075\textwidth}
+% $\rightarrow$
+% \end{minipage}
+\begin{minipage}{0.50\textwidth}
+    \begin{tikzpicture}
+    %\SetGraphUnit{3}
+    \GraphInit[vstyle=Normal]
+    %\draw[help lines] (0,0) grid (5,3);
+    \SetVertexNormal[FillColor=blue!50]
+    \Vertex[L=A]{1} % par défaut x = 0 et y = 0
+    \Vertex[x=0 , y=3, L=A]{2}
+    \Vertex[x=0.5 , y=1.5, L=A]{3}
+    \Vertex[x=1.0 , y=0.5, L=A]{4}
+    \Vertex[x=1.5 , y=2.5, L=A]{5}
+    \SetVertexNormal[FillColor=orange!50]
+    \Vertex[x=2.0 , y=1.5, L=B]{6}
+    \Vertex[x=2.5 , y=0.0, L=B]{7}
+    \Vertex[x=2.5 , y=3.0, L=B]{8}
+    \SetVertexNormal[FillColor=red!50]
+    \Vertex[x=3.0 , y=1.0, L=C]{9}
+    \Vertex[x=3.5 , y=2.0, L=C]{10}
+    \SetVertexNormal[FillColor=green!50]
+    \Vertex[x=4.0 , y=1.0, L=D]{11}
+    \Vertex[x=4.0 , y=3.0, L=D]{12}
+    \Vertex[x=5.0 , y=0.5, L=D]{13}
+    \Vertex[x=5.0 , y=2.0, L=D]{14}
+    \end{tikzpicture}
+\end{minipage}
+%\medskip
+\end{center}
+%    \setlength{\abovecaptionskip}{1cm}
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    %\hline ID     &1&2&3&4&5&6&7&8&9&10&11&12&13&14\\
+    \hline Classe &A&A&A&A&A&B&B&B&C& C& D& D& D& D\\
+    \hline Cluster&1&1&1&1&1&2&2&2&3& 3& 4& 4& 4& 4\\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\captionof*{table}{Clustering completo ma non omogeneo}
+\begin{minipage}{0.30\textwidth}
+    \begin{tabular}{|l|r|}
+    \hline $h$&0.512\\
+    \hline $c$&1\\
+    \hline $V$&0.677\\
+    \hline
+    \end{tabular}
+\end{minipage}
+\begin{minipage}{0.50\textwidth}
+    \begin{tikzpicture}
+    \GraphInit[vstyle=Normal]
+    %\draw[help lines] (0,0) grid (5,3);
+    \SetVertexNormal[FillColor=blue!50]
+    \Vertex[L=A]{1} % par défaut x = 0 et y = 0
+    \Vertex[x=0 , y=3, L=A]{2}
+    \Vertex[x=0.5 , y=1.5, L=A]{3}
+    \Vertex[x=1.0 , y=0.5, L=A]{4}
+    \Vertex[x=1.5 , y=2.5, L=A]{5}
+    \Vertex[x=2.0 , y=1.5, L=B]{6}
+    \Vertex[x=2.5 , y=0.0, L=B]{7}
+    \Vertex[x=2.5 , y=3.0, L=B]{8}
+    \SetVertexNormal[FillColor=orange!50]
+    \SetVertexNormal[FillColor=red!50]
+    \Vertex[x=3.0 , y=1.0, L=C]{9}
+    \Vertex[x=3.5 , y=2.0, L=C]{10}
+    \Vertex[x=4.0 , y=1.0, L=D]{11}
+    \Vertex[x=4.0 , y=3.0, L=D]{12}
+    \Vertex[x=5.0 , y=0.5, L=D]{13}
+    \Vertex[x=5.0 , y=2.0, L=D]{14}
+    \SetVertexNormal[FillColor=green!50]
+    \end{tikzpicture}
+\end{minipage}
+\end{center}
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    %\hline ID     &1&2&3&4&5&6&7&8&9&10&11&12&13&14\\
+    \hline Classe &A&A&A&A&A&B&B&B&C& C& D& D& D& D\\
+    \hline Cluster&1&1&1&1&1&1&1&1&2& 2& 2& 2& 2& 2\\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\captionof*{table}{Clustering omogeneo ma non completo}
+\begin{minipage}{0.30\textwidth}
+    \begin{tabular}{|l|r|}
+    \hline $h$&1\\
+    \hline $c$&0.727\\
+    \hline $V$&0.842\\
+    \hline
+    \end{tabular}
+\end{minipage}
+\begin{minipage}{0.50\textwidth}
+    \begin{tikzpicture}
+    \GraphInit[vstyle=Normal]
+    %\draw[help lines] (0,0) grid (5,3);
+    \SetVertexNormal[FillColor=blue!50]
+    \Vertex[L=A]{1} % par défaut x = 0 et y = 0
+    \Vertex[x=0 , y=3, L=A]{2}
+    \Vertex[x=0.5 , y=1.5, L=A]{3}
+    \SetVertexNormal[FillColor=orange!50]
+    \Vertex[x=1.0 , y=0.5, L=A]{4}
+    \Vertex[x=1.5 , y=2.5, L=A]{5}
+    \SetVertexNormal[FillColor=red!50]
+    \Vertex[x=2.0 , y=1.5, L=B]{6}
+    \Vertex[x=2.5 , y=0.0, L=B]{7}
+    \Vertex[x=2.5 , y=3.0, L=B]{8}
+    \SetVertexNormal[FillColor=green!50]
+    \Vertex[x=3.0 , y=1.0, L=C]{9}
+    \SetVertexNormal[FillColor=yellow!50]
+    \Vertex[x=3.5 , y=2.0, L=C]{10}
+    \SetVertexNormal[FillColor=purple!80]
+    \Vertex[x=4.0 , y=1.0, L=D]{11}
+    \SetVertexNormal[FillColor=gray!50]
+    \Vertex[x=4.0 , y=3.0, L=D]{12}
+    \Vertex[x=5.0 , y=0.5, L=D]{13}
+    \Vertex[x=5.0 , y=2.0, L=D]{14}
+    \end{tikzpicture}
+\end{minipage}
+\end{center}
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    %\hline ID     &1&2&3&4&5&6&7&8&9&10&11&12&13&14\\
+    \hline Classe &A&A&A&A&A&B&B&B&C& C& D& D& D& D\\
+    \hline Cluster&1&1&1&2&2&3&3&3&4& 5& 6& 7& 7& 7\\
+\hline
+\end{tabular}
+\end{center}
+%Preview di due grafici per avere esempi da puntare. Forse punti alla sezione dopo.
 
 \section{Risultati} \label{sec:risultati}
 
@@ -722,7 +911,9 @@ Tra le varie strade di collasso non c'è sostanziale differenza.
 \subsubsection{Metodi di comunity detection}\label{ssc:analisicd}
 Tra le varie comunità non c'è sostanziale differenza.
 
+% TODO subsubsection su iterazioni collasso short path e perché non è vero
 
+% TODO alcune strade sono migliori anche se la v-measure è simile
 
 \whitePage
 \chapter{Conclusioni} \label{cap:conclusioni}

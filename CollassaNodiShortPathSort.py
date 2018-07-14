@@ -99,6 +99,7 @@ def collassaNodiShortPath(pfAutINN, pfDatiPaj, pfEdgeUnif, pfAutUnif, maxhops):
     # print('daID: {}\ndaNum: {}\ndaNome: {}'.format(daID, daNum, daNome))
 
   # nameSort = [ ..., 'n s cog', 'n sec cog', 'nom sec cog', ... ]
+  # FIXME dopo nom sec cog puo' esserci num san cog, ...
   # nameSort = sorted(daNome.keys(), key=lambda x: '{} {}'.format(x.rsplit(' ', 1)[1], x.rsplit(' ', 1)[0]))
   nameSort = sorted(daNome.keys(), key=lambda x: swapNomeCog(x))
   # for n in nameSort: print n
@@ -115,9 +116,13 @@ def collassaNodiShortPath(pfAutINN, pfDatiPaj, pfEdgeUnif, pfAutUnif, maxhops):
     for nome in au:
       numeri.extend(daNome[nome][1])
     # print numeri
+    if len(numeri) > 100: print('au: {} len(numeri): {}'.format(au, len(numeri) ) )
     coppie = []
     # scoppie = set()
+    j = 0
     for src, dst in combinations(numeri, 2):
+      j += 1
+      if j%10000 == 0: print(j)
       lenshopa = snap.GetShortPath(UGraph, src, dst)
       # print 'da {}\ta {}\tlen {}'.format(src, dst, lenshopa)
       if lenshopa in lenfreq: lenfreq[lenshopa] += 1
@@ -154,7 +159,7 @@ def collassaNodiShortPath(pfAutINN, pfDatiPaj, pfEdgeUnif, pfAutUnif, maxhops):
           if posA <> posB: del sdc[posB]
       # if len(sdc) > 1: print 'len {} sdc {}'.format(len(sdc), sdc)
     tsdc.extend(sdc)
-  # print 'lenfreq {}'.format(lenfreq)
+  print 'lenfreq {}'.format(lenfreq)
 
   autUniti = {} # {nomelungo: [set(num da collassare), IDlungo, numlungo]}
   for s in tsdc:

@@ -29,7 +29,7 @@ def esplorazioneTotale():
   ctesi = abspath(join(__file__, '..', '..') )
   celaborati = join(ctesi, 'authorship-network', 'Versione6_amplia')
   # celaborati = join(ctesi, 'authorship-network', 'Versione5')
-  sub = 'Amplia2'
+  sub = 'Amplia5'
   TEST = False
   TEST = True
 
@@ -92,7 +92,7 @@ def esplorazioneTotale():
       'Pad' : '_padovani',
     }
   scelteUnione = {
-      # 'Nomi' : '_nomi',
+      'Nomi' : '_nomi',
       'Dist' : '_distanza',
       # 'Edge' : '_edge',
     }
@@ -167,7 +167,7 @@ def esplorazioneTotale():
   lap25 = timer()
   print('completato estraiPaperPadovaniCompleti in {}'.format(lap25 - lap2) )
 
-  for sp in sorted(sceltePadova):
+  for sp in sorted(sceltePadova, reverse=True):
     sp = sceltePadova[sp]
     print('\nInizio {}'.format(sp))
     pfPAA = pftPapAutAff.format(sp)

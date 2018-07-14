@@ -43,6 +43,7 @@ def unificaAutori(dAutColl, gliID):
     '''
   tuttiID = list(gliID)
   # print('tutti {}'.format(tuttiID) )
+  lenprima = len(tuttiID)
   for ID in tuttiID:
     for newID in dAutColl[ID]:
       if newID not in tuttiID:
@@ -52,6 +53,7 @@ def unificaAutori(dAutColl, gliID):
   for ID in tuttiID:
     dAutColl[ID] = setID # forse ricreo il set ogni volta
   # print('tutti dopo {}'.format(tuttiID) )
+  # if lenprima > 5: print('tutti prima lungo {} dopo {}'.format(lenprima, len(tuttiID) ) )
 
 def collassaNodiEdge(pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati):
   # carico autori
@@ -60,7 +62,7 @@ def collassaNodiEdge(pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutColl
     for line in fAutCollab:
       autID, autNome = line.rstrip().split('\t')
       dId[autID] = autNome
-    # print(len(dId))
+    # print('len(dId): {}'.format( len(dId) ) )
 
   dEdgeNomi = {} # {'n cog\ta rossi' : [ [id, di, cog], [id, di, rossi] ] }
   with open(pfEdgeCollab, 'rb') as fEdgeCollab:
@@ -98,8 +100,13 @@ def collassaNodiEdge(pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutColl
 
   # scorro il dEdgeNomi e aggrego gli autori
   dAutColl = {i : set([i]) for i in dId} # { id0 : set(id1, id3), id1 : set(id0, id3), ... }
-  # print('autori totali {}'.format(len(dAutColl) ) )
+  # print('autori totali {} edge totali {}'.format(len(dAutColl), len(dEdgeNomi) ) )
+  j = 0
+  totedges = len(dEdgeNomi)
   for en in dEdgeNomi:
+    j += 1
+    edgerange = dEdgeNomi[en][0]
+    # if len(edgerange) > 5: print('edge {} di {} con range {}'.format(j, totedges, edgerange) )
     if len(dEdgeNomi[en][0]) > 1: # ho almeno due edge tra i due autori
       unificaAutori(dAutColl, dEdgeNomi[en][0])
       unificaAutori(dAutColl, dEdgeNomi[en][1])
@@ -118,7 +125,12 @@ def collassaNodiEdge(pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutColl
 
   # passo il dEdgeNomi e aggrego gli edge
   dEdgeColl = {} # sl dl peso
+  j = 0
+  totedges = len(dEdgeNomi)
   for en in dEdgeNomi:
+    edgerange = len(dEdgeNomi[en][0])
+    j += 1
+    # print('edge {} di {} con range {}'.format(j, totedges, edgerange) )
     for i in range(len(dEdgeNomi[en][0]) ):
       src = dEdgeNomi[en][0][i]
       dst = dEdgeNomi[en][1][i]
