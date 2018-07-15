@@ -5,6 +5,9 @@ from random import randint
 from numpy import sqrt, log
 
 def disegnaGrafo(pfGT, pfOut, pfClassi, isgc=False):
+  # seed_rng(135)
+  seed_rng(246)
+
   g = Graph(directed=False)
   v_id = g.new_vertex_property('string')
   v_nome = g.new_vertex_property('string')

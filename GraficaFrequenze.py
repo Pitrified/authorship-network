@@ -78,6 +78,7 @@ def graficaFrequenzePerSito(pfComunita, pfGrafico):
 
   fig.tight_layout()
   fig.savefig(pfGrafico)
+  plt.close(fig)
   # plt.show()
 
 def graficaFrequenzePerGenerate(pfComunita, pfGrafico):
@@ -156,6 +157,7 @@ def graficaFrequenzePerGenerate(pfComunita, pfGrafico):
 
   fig.tight_layout()
   fig.savefig(pfGrafico)
+  plt.close(fig)
   # plt.show()
 if __name__ == '__main__':
   pfComunita = 'ComunitaMergeFrequenza_tutti_distanza_blockmodel_DEI.tsv'

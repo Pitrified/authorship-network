@@ -27,9 +27,10 @@ def esplorazioneTotale():
   from validazione import getComClu, aggregaValidazione
 
   ctesi = abspath(join(__file__, '..', '..') )
-  celaborati = join(ctesi, 'authorship-network', 'Versione6_amplia')
-  # celaborati = join(ctesi, 'authorship-network', 'Versione5')
-  sub = 'Amplia5'
+  # celaborati = join(ctesi, 'authorship-network', 'Versione6_amplia')
+  celaborati = join(ctesi, 'authorship-network', 'Versione7')
+  # sub = 'Amplia5'
+  sub = 'Prima'
   TEST = False
   TEST = True
 
@@ -42,17 +43,17 @@ def esplorazioneTotale():
   if TEST:
     pfAuthorRAW = join(cfileRAW, 'Authors1000000.txt')
     pfPapAutAffRAW = join(cfileRAW, 'PaperAuthorAffiliations5000000.txt')
-    # PFAUTORIIDPERTEST = join(celaborati, 'AutoriID_FULLTEST.txt'.format())
-    PFAUTORIIDPERTEST = join(celaborati, 'AutoriID_filtrati_DEI.txt'.format())
-    # PFTPAATUTPERTEST = join(celaborati, 'PapAutAff{}{}.txt'.format('{}', '_FULLTEST'))
-    PFTPAATUTPERTEST = join(celaborati, 'PaperAuthorAff{}{}.txt'.format('{}', '_filtrati'))
+    PFAUTORIIDPERTEST = join(celaborati, 'AutoriID_FULLTEST.txt'.format())
+    # PFAUTORIIDPERTEST = join(celaborati, 'AutoriID_filtrati_DEI.txt'.format())
+    PFTPAATUTPERTEST = join(celaborati, 'PapAutAff{}{}.txt'.format('{}', '_FULLTEST'))
+    # PFTPAATUTPERTEST = join(celaborati, 'PaperAuthorAff{}{}.txt'.format('{}', '_filtrati'))
 
   tag = '_DEI'
   # pfPersone    = join(celaborati, sub, 'PersoneNomi{}.txt'.format(tag))
   pfPersone    = join(celaborati, 'PersoneNomi{}.txt'.format(tag))
   pfAbbreviate = join(celaborati, 'PersoneNomiComunitaAbbreviate{}.txt'.format(tag))
-  pfPersone    = join(celaborati, 'PersoneNomi_apostolico{}.txt'.format(tag))
-  pfAbbreviate = join(celaborati, 'PersoneNomiComunitaAbbreviate_apostolico{}.txt'.format(tag))
+  # pfPersone    = join(celaborati, 'PersoneNomi_apostolico{}.txt'.format(tag))
+  # pfAbbreviate = join(celaborati, 'PersoneNomiComunitaAbbreviate_apostolico{}.txt'.format(tag))
   pfAutoriID   = join(celaborati, sub, 'AutoriID{}.txt'.format(tag))
 
   pftPapAutAff = join(celaborati, sub, 'PapAutAff{}{}.txt'.format('{}', tag))
@@ -65,9 +66,9 @@ def esplorazioneTotale():
   pftAutNumNome = join(celaborati, sub, subautedge, 'AutoriCollabIdNumNome{}{}{}.txt'.format('{}', '{}', tag))
   pftAutNumNomeGC = join(celaborati, sub, subautedge, 'AutoriCollabIdNumNome{}{}_GC{}.txt'.format('{}', '{}', tag))
   pftPaj = join(celaborati, sub, subautedge, 'AutoriEdgeCollab{}{}{}.paj'.format('{}', '{}', tag))
-  pftPajGC = join(celaborati, sub, subautedge, 'AutoriEdgeCollab{}{}_GC{}.paj'.format('{}', '{}', tag))
+  pftPajGC = join(celaborati, sub, subautedge, 'AutoriEdgeCollab{}{}_Gc{}.paj'.format('{}', '{}', tag))
   pftGT = join(celaborati, sub, subautedge, 'AutoriEdgeCollab{}{}{}_GT.tsv'.format('{}', '{}', tag))
-  pftGTGC = join(celaborati, sub, subautedge, 'AutoriEdgeCollab{}{}_GC{}_GT.tsv'.format('{}', '{}', tag))
+  pftGTGC = join(celaborati, sub, subautedge, 'AutoriEdgeCollab{}{}_Gc{}_GT.tsv'.format('{}', '{}', tag))
   pftEdgeGephi  = join(celaborati, sub, subautedge, 'EdgeUnificatiGephi{}{}{}.tsv'.format('{}', '{}', tag))
   pftAutGephi   = join(celaborati, sub, subautedge, 'AutoriUnificatiGephi{}{}{}.tsv'.format('{}', '{}', tag))
   pftGrafoOut = join(celaborati, sub, 'Grafo{}{}{}{}.pdf'.format('{}', '{}', '{}', tag))
@@ -81,7 +82,7 @@ def esplorazioneTotale():
   pftGrafico = join(celaborati, sub, subgrafici, 'Grafico{}{}{}{}{}.pdf'.format('{}', '{}', '{}', '{}', tag))
   pfAffPad = join(celaborati, sub, 'AffiliationPadovaPadua.txt'.format())
   pfAutPad = join(celaborati, sub, subautedge, 'AutoriPadovanichehannoscrittopaper.txt'.format())
-  pftValidation = join(celaborati, sub, 'Validation{}.{}'.format(tag, '{}'))
+  pftValidation = join(celaborati, sub, 'Validation{}{}.{}'.format('{}', tag, '{}'))
 
   maxhops = 2
   strRegAff = 'pad(ov|u)a'
@@ -94,13 +95,15 @@ def esplorazioneTotale():
   scelteUnione = {
       'Nomi' : '_nomi',
       'Dist' : '_distanza',
-      # 'Edge' : '_edge',
+      'Edge' : '_edge',
     }
   scelteComunita = {
-      # 'GirNew' : '_girvnew',
-      # 'GirNewGC' : '_GC_girvnew',
-      'ClaNeMo' : '_clanemo',
-      # 'ClaNeMoGC' : '_GC_clanemo',
+      'GirNew' : '_girvnew',         # Gi
+      # 'GirNewGC' : '_GC_girvnew',    # Gg
+      'GirNewGC' : '_Zgirvnew',    # Gg
+      'ClaNeMo' : '_clanemo',        # Cl
+      # 'ClaNeMoGC' : '_GC_clanemo',   # Gc
+      'ClaNeMoGC' : '_Zclanemo',   # Gc
     } # , '_blockmodel'] # _blk lo aggiungo solo se GT funziona
   # sceltePadova = [
     # '_tutti',
@@ -121,8 +124,9 @@ def esplorazioneTotale():
   blockmodeltag = 'Block'
   blockmodel = '_blockmodel'
   blockmodeltagGC = None
-  # blockmodeltag = 'BlockGC'
-  blockmodelGC = '_GC_blockmodel'
+  blockmodeltagGC = 'BlockGC'
+  # blockmodelGC = '_GC_blockmodel'
+  blockmodelGC = '_Zblockmodel'
   scelteGrafico = ['_sito', '_generate']
   validation = {}
 
@@ -133,7 +137,7 @@ def esplorazioneTotale():
 
   # in pfPersone ho una lista di nomi del dipartimento
   # estraggo gli IDautDEI corrispondenti (anche alle abbreviazioni)
-  print('\nChiamo estraiIDautoriMulti con\n\t{}\n\t{}\n\t{}'.format(pfPersone, pfAuthorRAW, pfAutoriID))
+  # print('\nChiamo estraiIDautoriMulti con\n\t{}\n\t{}\n\t{}'.format(pfPersone, pfAuthorRAW, pfAutoriID))
   estraiIDautoriMulti(pfPersone, pfAuthorRAW, pfAutoriID)
   lap1 = timer()
   print 'completato estraiIDautoriMulti in {}'.format(lap1 - start)
@@ -144,8 +148,8 @@ def esplorazioneTotale():
 
   # estraggo i paper scritti da questi IDautDEI
   pfPAAtut = pftPapAutAff.format(sceltePadova['Tutti'])
-  print('\nChiamo estraiPapAutAffDEImulti con \n\t{}\n\t{}\n\t{}'.format( pfAutoriID, pfPapAutAffRAW, pfPAAtut))
-  estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPAAtut)
+  # print('\nChiamo estraiPapAutAffDEImulti con \n\t{}\n\t{}\n\t{}'.format( pfAutoriID, pfPapAutAffRAW, pfPAAtut))
+  # estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPAAtut)
   lap2 = timer()
   print 'completato estraiPapAutAffDEImulti in {}'.format(lap2-lap1)
 
@@ -162,7 +166,7 @@ def esplorazioneTotale():
   # estraggo i paper con affiliation padovana
   pfPAAtut = pftPapAutAff.format(sceltePadova['Tutti'])
   pfPAApad = pftPapAutAff.format(sceltePadova['Pad'])
-  print('\nChiamo estraiPaperPadovaniCompleti con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfPAAtut, pfAffPad, pfAutoriID, pfPAApad, pfAutPad ))
+  # print('\nChiamo estraiPaperPadovaniCompleti con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfPAAtut, pfAffPad, pfAutoriID, pfPAApad, pfAutPad ))
   estraiPaperPadovaniCompleti(pfPAAtut, pfAffPad, pfAutoriID, pfPAApad, pfAutPad)
   lap25 = timer()
   print('completato estraiPaperPadovaniCompleti in {}'.format(lap25 - lap2) )
@@ -189,21 +193,21 @@ def esplorazioneTotale():
     pfAutGep = pftAutGephi.format(sp, nosu)
     preparaPerGephi(pfEdgeCollab, pfAutCollab, pfEdgeGep, pfAutGep)
     # disegno i grafi non collassati
-    # try:
-      # from DisegnaGrafoGT import disegnaGrafo
-      # pfGrafoOut = pftGrafoOut.format(sp, nosu, '{}{}'.format(blockmodel, '{}'))
-      # pfClassi = pftClassi.format(sp, nosu, blockmodel)
+    try:
+      from DisegnaGrafoGT import disegnaGrafo
+      pfGrafoOut = pftGrafoOut.format(sp, nosu, '{}{}'.format(blockmodel, '{}'))
+      pfClassi = pftClassi.format(sp, nosu, blockmodel)
       # disegnaGrafo(pfGT, pfGrafoOut, pfClassi)
-    # except ImportError:
-      # print('Ti serve graph_tool, usa Linux')
-    # except:
-      # raise
+    except ImportError:
+      print('Ti serve graph_tool, usa Linux')
+    except:
+      raise
 
     # collasso i nomi basandomi su nomi ed abbreviazioni
     if 'Nomi' in scelteUnione:
       pfEdgeCollabUnificati = pftEdgeCollabUnificati.format(sp, scelteUnione['Nomi'])
       pfAutCollabUnificati = pftAutCollabUnificati.format(sp, scelteUnione['Nomi'])
-      print('\nChiamo collassaNodiAmpi con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati))
+      # print('\nChiamo collassaNodiAmpi con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati))
       # collassaNodiAmpi(pfPersone, pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati)
       collassaNodiPerNome(pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati)
 
@@ -211,21 +215,21 @@ def esplorazioneTotale():
     pfPaj = pftPaj.format(sp, '')
     pfAutNumNome = pftAutNumNome.format(sp, '')
     pfGT = pftGT.format(sp, '')
-    print('\nChiamo preparaPerSNAP con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome, pfGT) )
+    # print('\nChiamo preparaPerSNAP con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome, pfGT) )
     preparaPerSNAP(pfEdgeCollab, pfAutCollab, pfPaj, pfAutNumNome, pfGT)
 
     # collasso i nomi basandomi sulle distanze
     if 'Dist' in scelteUnione:
       pfEdgeCollabUnificati = pftEdgeCollabUnificati.format(sp, scelteUnione['Dist'])
       pfAutCollabUnificati = pftAutCollabUnificati.format(sp, scelteUnione['Dist'])
-      print('\nChiamo collassaNodiShortPath con \n\t{}\n\t{}\n\t{}\n\t{}\n\tDistanza massima tra autori {}'.format( pfAutNumNome, pfPaj, pfEdgeCollabUnificati, pfAutCollabUnificati, maxhops) )
+      # print('\nChiamo collassaNodiShortPath con \n\t{}\n\t{}\n\t{}\n\t{}\n\tDistanza massima tra autori {}'.format( pfAutNumNome, pfPaj, pfEdgeCollabUnificati, pfAutCollabUnificati, maxhops) )
       collassaNodiShortPath(pfAutNumNome, pfPaj, pfEdgeCollabUnificati, pfAutCollabUnificati, maxhops)
 
     # collasso i nomi basandomi sugli edge
     if 'Edge' in scelteUnione:
       pfEdgeCollabUnificati = pftEdgeCollabUnificati.format(sp, scelteUnione['Edge'])
       pfAutCollabUnificati = pftAutCollabUnificati.format(sp, scelteUnione['Edge'])
-      print('\nChiamo collassaNodiEdge con \n\t{}\n\t{}\n\t{}\n\t{}\n\t'.format( pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati) )
+      # print('\nChiamo collassaNodiEdge con \n\t{}\n\t{}\n\t{}\n\t{}\n\t'.format( pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati) )
       collassaNodiEdge(pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati)
 
     for su in scelteUnione:
@@ -236,14 +240,14 @@ def esplorazioneTotale():
       pfAutCollabUnificati = pftAutCollabUnificati.format(sp, su)
       pfEdgeGephi = pftEdgeGephi.format(sp, su)
       pfAutGephi = pftAutGephi.format(sp, su)
-      print('\nChiamo preparaPerGephi con \n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollabUnificati, pfAutCollabUnificati, pfEdgeGephi, pfAutGephi))
+      # print('\nChiamo preparaPerGephi con \n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollabUnificati, pfAutCollabUnificati, pfEdgeGephi, pfAutGephi))
       preparaPerGephi( pfEdgeCollabUnificati, pfAutCollabUnificati, pfEdgeGephi, pfAutGephi)
 
       # preparo per GT e SNAP
       pfPaj = pftPaj.format(sp, su)
       pfAutNumNome = pftAutNumNome.format(sp, su)
       pfGT = pftGT.format(sp, su)
-      print('\nChiamo preparaPerSNAP con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollabUnificati, pfAutCollabUnificati, pfPaj, pfAutNumNome, pfGT) )
+      # print('\nChiamo preparaPerSNAP con \n\t{}\n\t{}\n\t{}\n\t{}\n\t{}'.format( pfEdgeCollabUnificati, pfAutCollabUnificati, pfPaj, pfAutNumNome, pfGT) )
       preparaPerSNAP(pfEdgeCollabUnificati, pfAutCollabUnificati, pfPaj, pfAutNumNome, pfGT)
 
       # estraggo la componente centrale
@@ -258,24 +262,24 @@ def esplorazioneTotale():
       lapgns = timer()
       if 'GirNew' in scelteComunita:
         pfClassi = pftClassi.format(sp, su, scelteComunita['GirNew']) # file com di SNAP
-        print('\nChiamo analizzaGirvanNewman con \n\t{}\n\t{}\n\t{}'.format(pfPaj, pfAutNumNome, pfClassi) )
-        analizzaGirvanNewman(pfPaj, pfAutNumNome, pfClassi)
+        # print('\nChiamo analizzaGirvanNewman con \n\t{}\n\t{}\n\t{}'.format(pfPaj, pfAutNumNome, pfClassi) )
+        # analizzaGirvanNewman(pfPaj, pfAutNumNome, pfClassi)
       if 'GirNewGC' in scelteComunita:
         pfClassiGC = pftClassi.format(sp, su, scelteComunita['GirNewGC'])
-        analizzaGirvanNewman(pfPajGC, pfAutNumNomeGC, pfClassiGC)
+        # analizzaGirvanNewman(pfPajGC, pfAutNumNomeGC, pfClassiGC)
       lapgne = timer()
-      print('Completato analizzaGirvanNewman in {}'.format(lapgne - lapgns) )
+      # print('Completato analizzaGirvanNewman in {}'.format(lapgne - lapgns) )
 
       lapgns = timer()
       if 'ClaNeMo' in scelteComunita:
         pfClassi = pftClassi.format(sp, su, scelteComunita['ClaNeMo']) # file com di SNAP
-        print('\nChiamo analizzaClausetNewmanMoore con \n\t{}\n\t{}\n\t{}'.format(pfPaj, pfAutNumNome, pfClassi) )
-        analizzaClausetNewmanMoore(pfPaj, pfAutNumNome, pfClassi)
+        # print('\nChiamo analizzaClausetNewmanMoore con \n\t{}\n\t{}\n\t{}'.format(pfPaj, pfAutNumNome, pfClassi) )
+        # analizzaClausetNewmanMoore(pfPaj, pfAutNumNome, pfClassi)
       if 'ClaNeMoGC' in scelteComunita:
         pfClassiGC = pftClassi.format(sp, su, scelteComunita['ClaNeMoGC']) # file com di SNAP
-        analizzaClausetNewmanMoore(pfPajGC, pfAutNumNomeGC, pfClassiGC)
+        # analizzaClausetNewmanMoore(pfPajGC, pfAutNumNomeGC, pfClassiGC)
       lapgne = timer()
-      print('Completato analizzaClausetNewmanMoore in {}'.format(lapgne - lapgns) )
+      # print('Completato analizzaClausetNewmanMoore in {}'.format(lapgne - lapgns) )
 
       # disegno i grafi
       # TODO potrei colorarli con le varie comunita generate nei vari modi
@@ -287,15 +291,15 @@ def esplorazioneTotale():
           scelteComunita[blockmodeltag] = blockmodel
           pfGrafoOut = pftGrafoOut.format(sp, su, '{}{}'.format(blockmodel, '{}'))
           pfClassi = pftClassi.format(sp, su, blockmodel)
-          print('\nChiamo disegnaGrafo con \n\t{}\n\t{}\n\t{}'.format(pfGT, pfGrafoOut, pfClassi) )
-          disegnaGrafo(pfGT, pfGrafoOut, pfClassi)
+          # print('\nChiamo disegnaGrafo con \n\t{}\n\t{}\n\t{}'.format(pfGT, pfGrafoOut, pfClassi) )
+          # disegnaGrafo(pfGT, pfGrafoOut, pfClassi)
         if blockmodeltagGC:
-          scelteComunita[blockmodeltagGC] = blockmodel
+          scelteComunita[blockmodeltagGC] = blockmodelGC
           pfGrafoOutGC = pftGrafoOut.format(sp, su, '{}{}'.format(blockmodelGC, '{}'))
           pfClassiGC = pftClassi.format(sp, su, blockmodelGC)
-          disegnaGrafo(pfGTGC, pfGrafoOutGC, pfClassiGC, isgc=True)
+          # disegnaGrafo(pfGTGC, pfGrafoOutGC, pfClassiGC, isgc=True)
         lapgte = timer()
-        print('Completato disegnaGrafo in {}'.format(lapgte - lapgts) )
+        # print('Completato disegnaGrafo in {}'.format(lapgte - lapgts) )
       except ImportError:
         print('Ti serve graph_tool, usa Linux')
       except:
@@ -316,15 +320,21 @@ def esplorazioneTotale():
         # chiave = 'v{}{}{}'.format(sp, su, sc)
         # validation[chiave] = homogeneity_completeness_v_measure(com, clu)
         # print('{} {}'.format(chiave , validation[chiave]) )
-        chiave = 'v{}{}{}_noNone'.format(sp, su, sc)
+        # chiave = 'v{}{}{}_noNone'.format(sp, su, sc)
+        ssp = sp[1:3].capitalize()
+        ssu = su[1:3].capitalize()
+        ssc = sc[1:3].capitalize()
+        chiave = '{}{}{}'.format(ssp, ssu, ssc)
+        # chiave = '{}{}{}'.format(ssc, ssp, ssu)
+        # chiave = '{}{}{}'.format(ssu, ssp, ssc)
         validation[chiave] = homogeneity_completeness_v_measure(comnn, clunn)
         print('{} {}'.format(chiave , validation[chiave]) )
 
+        pfGrafico = pftGrafico.format(sp, su, sc, scelteGrafico[0])
         # print('\nChiamo graficaFrequenzePerSito con \n\t{}\n\t{}'.format(pfFreq, pfGrafico) )
-        # pfGrafico = pftGrafico.format(sp, su, sc, scelteGrafico[0])
-        # graficaFrequenzePerSito(pfFreq, pfGrafico)
-        # pfGrafico = pftGrafico.format(sp, su, sc, scelteGrafico[1])
-        # graficaFrequenzePerGenerate(pfFreq, pfGrafico)
+        graficaFrequenzePerSito(pfFreq, pfGrafico)
+        pfGrafico = pftGrafico.format(sp, su, sc, scelteGrafico[1])
+        graficaFrequenzePerGenerate(pfFreq, pfGrafico)
 
   aggregaValidazione(pftValidation, validation)
 

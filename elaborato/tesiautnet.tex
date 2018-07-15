@@ -252,10 +252,11 @@ Papers.txt&Paper ID\\
 \FloatBarrier
 
 \section{Processo di estrazione} \label{sec:processo}
-%\subsection{Approccio iniziale} \label{subsec:primo}
+
 Dal sito di dipartimento (\url{http://www.dei.unipd.it/lista-docenti}) sono stati estratti i nomi
 degli attuali afferenti DEI, includendo Docenti, Assegnisti di ricerca, Collaboratori di ricerca e
 Dottorandi.
+% TODO la lista viene ritoccata a mano (peserico, nicolo', maria-guglielmina)
 
 La lista ottenuta comprende 379 autori.
 % TODO non fare il pezzente e scrivi quanti hanno l'etichetta
@@ -379,7 +380,8 @@ Dalle terne selezionate, si estrae un set di ID autori che hanno pubblicato alme
 Si estraggono i paper scritti da questi ID autore e si procede alla generazione degli edge pesati.
 \end{itemize}
 
-Applicando questo metodo, gli ID autore si riducono a 306, relativi a 201 nomi univoci. Il grafo generato include 850 edge con un peso totale di 5.195.
+Applicando questo metodo, gli ID autore si riducono a 306, relativi a 201 nomi univoci. Il grafo
+generato include 850 edge con un peso totale di 5.195.
 
 \centerline{
 \begin{minipage}{1.10\textwidth}
@@ -641,6 +643,22 @@ I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 174. Gli edge
 \end{minipage}
 }
 
+\subsection{Errori intrinseci al database} \label{ssc:intrinseci}
+
+- database obsoleto
+
+- erdos erds e caratteri speciali
+
+- paper mancanti della professoressa
+
+- self loop
+% \subsubsection
+% TODO scopri cosa fanno i self loop
+% TODO mancano proprio record dei paper
+
+- nomi abbreviati
+
+
 
 \whitePage
 \chapter{Troubleshooting} \label{cap:trouble}
@@ -702,22 +720,24 @@ collaboratori che precendentemente erano distanti nel grafo.
 
 % TODO spiegone amplia rete
 
-% \subsubsection
-% TODO scopri cosa fanno i self loop
-% TODO mancano proprio record dei paper
-
 
 \whitePage
 \chapter{Risultati} \label{cap:risultati}
 
 \section{V-measure} \label{sec:vmeasure}
-Per valutare la qualità delle partizioni dei grafi ricavati con i vari metodi descritti nelle
-sezioni precedenti, è stata utilizzata la \textit{V-measure}, come presentata da Rosenberg e
-Hirschberg \cite{vmeasure}, una misura esterna della validità dei cluster basata sull'entropia.
 
-Come terminologia, si parlerà di due distinte partizioni del set di nodi del grafo: un set di classi
-$C$, considerate la suddivisione reale dei nodi, e un set di cluster $K$ per indicare la partizione
-generata.
+La \textit{V-measure}, una misura esterna della validità
+dei cluster basata sull'entropia, presentata da Rosenberg e Hirschberg \cite{vmeasure}, è stata
+utilizzata per valutare la qualità delle partizioni dei grafi ricavati con i vari metodi descritti
+nelle sezioni precedenti.
+
+%Per valutare la qualità delle partizioni dei grafi ricavati con i vari metodi descritti nelle
+%sezioni precedenti, è stata utilizzata la \textit{V-measure}, come presentata da Rosenberg e
+%Hirschberg \cite{vmeasure}, una misura esterna della validità dei cluster basata sull'entropia.
+
+Come terminologia, si parlerà di due distinte partizioni del set di nodi da analizzare: un set di
+classi $C$, considerate la suddivisione reale dei nodi, e un set di cluster $K$ per indicare la
+partizione generata.
 
 Rosenberg e Hirschberg hanno sviluppato due concetti, l'omogeneità e la completezza, la cui media
 armonica è la V-measure.
@@ -730,10 +750,10 @@ In maniera simmetrica una partizione è perfettamente completa quando un singolo
 
 Per valutare l'omogeneità di una partizione si considera l'entropia condizionata della distribuzione
 di classi dato il clustering generato $H(C|K)$. Nel caso di perfetta omogeneità questo valore è
-nullo, mentre è massimo e vale $H(C)$ quando la distribuzione delle classi all'interno del cluster è
-identica alla distribuzione delle classi nell'intero set, per cui il clustering non fornisce alcuna
-informazione aggiuntiva. Considerando che il valore di entropia è massimo quando la partizione è
-pessima, si definisce l'omogeneità come
+nullo in quanto il cluster contiene una singola classe, mentre è massimo e vale $H(C)$ quando la
+distribuzione delle classi all'interno del cluster è identica alla distribuzione delle classi
+nell'intero set, per cui il clustering non fornisce alcuna informazione aggiuntiva. Considerando che
+il valore di entropia è massimo quando la partizione è pessima, si definisce l'omogeneità come
 
 \begin{equation} \label{eq:h}
     h = \begin{cases} 1 & \mbox{se } H(C) = 0 \\ 1-\frac{H(C|K)}{H(C)} & \mbox{altrimenti} \end{cases}
@@ -748,7 +768,7 @@ Analogamente si definisce la completezza come
 La \textit{V-measure} è definita come la media armonica pesata dei due valori di omogeneità e
 completezza
 
-\begin{equation} \label{eq:c}
+\begin{equation} \label{eq:v}
     V_\beta = (1+\beta)\frac{h \cdot c}{\beta \cdot h + c}
 \end{equation}
 
@@ -900,9 +920,17 @@ D\}, i colori rappresentano i cluster.
 \end{center}
 %Preview di due grafici per avere esempi da puntare. Forse punti alla sezione dopo.
 
-\section{Risultati} \label{sec:risultati}
+L'algoritmo utilizzato per calcolare la \textit{V-measure} è
+% \url{homogeneity_completeness_v_measure},
+{\fontfamily{qcr}\selectfont \footnotesize homogeneity\_completeness\_v\_measure},
+incluso nella libreria \textit{scikit-learn}
+\cite{scikit-learn}.
 
-Presentazione dei valori di v-measure per i vari grafi e commenti.
+\section{Analisi dei risultati} \label{sec:risultati}
+
+Per valutare la qualità delle partizioni generate, è stata calcolata la \textit{V-measure}
+considerando il Settore Scientifico Disciplinare estratto dal sito di dipartimento come classe
+corretta di appartenenza degli autori.
 
 \subsubsection{Tutti vs padovani}\label{ssc:analisitp}
 Tra tutti e padovani c'è molta differenza.
@@ -917,7 +945,9 @@ Tra le varie comunità non c'è sostanziale differenza.
 
 \whitePage
 \chapter{Conclusioni} \label{cap:conclusioni}
-Partendo da una lista di nomi di un dipartimento si può estrarre un grafo che lo rappresenti? Le comunità generate rispecchiano quelle reali?
+
+Partendo da una lista di nomi di un dipartimento si può estrarre un grafo che lo rappresenti? Le
+comunità generate rispecchiano quelle reali?
 
 TODO se vuoi fallo su matematica e mostra un grafo con qualche valore di v-measure
 
