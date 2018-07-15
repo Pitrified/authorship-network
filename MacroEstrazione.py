@@ -16,6 +16,7 @@ def esplorazioneTotale():
   from EstraiAutoriCollab import estraiAutoriCollab
   from CollassaNodiAmpi import collassaNodiAmpi
   from CollassaNodiAmpi import collassaNodiPerNome
+  from CollassaNodiIterato import collassaNodiIterato
   from CollassaNodiShortPathSort import collassaNodiShortPath
   from CollassaNodiEdge import collassaNodiEdge
   from Verifiche_Test.PreparaPerGephi import preparaPerGephi
@@ -30,7 +31,7 @@ def esplorazioneTotale():
   # celaborati = join(ctesi, 'authorship-network', 'Versione6_amplia')
   celaborati = join(ctesi, 'authorship-network', 'Versione7')
   # sub = 'Amplia5'
-  sub = 'Prima'
+  sub = 'Seconda'
   TEST = False
   TEST = True
 
@@ -85,6 +86,7 @@ def esplorazioneTotale():
   pftValidation = join(celaborati, sub, 'Validation{}{}.{}'.format('{}', tag, '{}'))
 
   maxhops = 2
+  numit = 3
   strRegAff = 'pad(ov|u)a'
   regAff = re.compile(strRegAff, re.IGNORECASE)
 
@@ -99,10 +101,10 @@ def esplorazioneTotale():
     }
   scelteComunita = {
       'GirNew' : '_girvnew',         # Gi
-      # 'GirNewGC' : '_GC_girvnew',    # Gg
+      'GirNewGC' : '_GC_girvnew',    # Gg
       'GirNewGC' : '_Zgirvnew',    # Gg
       'ClaNeMo' : '_clanemo',        # Cl
-      # 'ClaNeMoGC' : '_GC_clanemo',   # Gc
+      'ClaNeMoGC' : '_GC_clanemo',   # Gc
       'ClaNeMoGC' : '_Zclanemo',   # Gc
     } # , '_blockmodel'] # _blk lo aggiungo solo se GT funziona
   # sceltePadova = [
@@ -149,7 +151,7 @@ def esplorazioneTotale():
   # estraggo i paper scritti da questi IDautDEI
   pfPAAtut = pftPapAutAff.format(sceltePadova['Tutti'])
   # print('\nChiamo estraiPapAutAffDEImulti con \n\t{}\n\t{}\n\t{}'.format( pfAutoriID, pfPapAutAffRAW, pfPAAtut))
-  # estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPAAtut)
+  estraiPapAutAffDEImulti(pfAutoriID, pfPapAutAffRAW, pfPAAtut)
   lap2 = timer()
   print 'completato estraiPapAutAffDEImulti in {}'.format(lap2-lap1)
 
@@ -197,7 +199,7 @@ def esplorazioneTotale():
       from DisegnaGrafoGT import disegnaGrafo
       pfGrafoOut = pftGrafoOut.format(sp, nosu, '{}{}'.format(blockmodel, '{}'))
       pfClassi = pftClassi.format(sp, nosu, blockmodel)
-      # disegnaGrafo(pfGT, pfGrafoOut, pfClassi)
+      disegnaGrafo(pfGT, pfGrafoOut, pfClassi)
     except ImportError:
       print('Ti serve graph_tool, usa Linux')
     except:
@@ -223,7 +225,8 @@ def esplorazioneTotale():
       pfEdgeCollabUnificati = pftEdgeCollabUnificati.format(sp, scelteUnione['Dist'])
       pfAutCollabUnificati = pftAutCollabUnificati.format(sp, scelteUnione['Dist'])
       # print('\nChiamo collassaNodiShortPath con \n\t{}\n\t{}\n\t{}\n\t{}\n\tDistanza massima tra autori {}'.format( pfAutNumNome, pfPaj, pfEdgeCollabUnificati, pfAutCollabUnificati, maxhops) )
-      collassaNodiShortPath(pfAutNumNome, pfPaj, pfEdgeCollabUnificati, pfAutCollabUnificati, maxhops)
+      # collassaNodiShortPath(pfAutNumNome, pfPaj, pfEdgeCollabUnificati, pfAutCollabUnificati, maxhops)
+      collassaNodiIterato(pfEdgeCollab, pfAutCollab, pfEdgeCollabUnificati, pfAutCollabUnificati, maxhops, numit)
 
     # collasso i nomi basandomi sugli edge
     if 'Edge' in scelteUnione:
@@ -263,23 +266,23 @@ def esplorazioneTotale():
       if 'GirNew' in scelteComunita:
         pfClassi = pftClassi.format(sp, su, scelteComunita['GirNew']) # file com di SNAP
         # print('\nChiamo analizzaGirvanNewman con \n\t{}\n\t{}\n\t{}'.format(pfPaj, pfAutNumNome, pfClassi) )
-        # analizzaGirvanNewman(pfPaj, pfAutNumNome, pfClassi)
+        analizzaGirvanNewman(pfPaj, pfAutNumNome, pfClassi)
       if 'GirNewGC' in scelteComunita:
         pfClassiGC = pftClassi.format(sp, su, scelteComunita['GirNewGC'])
-        # analizzaGirvanNewman(pfPajGC, pfAutNumNomeGC, pfClassiGC)
+        analizzaGirvanNewman(pfPajGC, pfAutNumNomeGC, pfClassiGC)
       lapgne = timer()
-      # print('Completato analizzaGirvanNewman in {}'.format(lapgne - lapgns) )
+      print('Completato analizzaGirvanNewman in {}'.format(lapgne - lapgns) )
 
       lapgns = timer()
       if 'ClaNeMo' in scelteComunita:
         pfClassi = pftClassi.format(sp, su, scelteComunita['ClaNeMo']) # file com di SNAP
         # print('\nChiamo analizzaClausetNewmanMoore con \n\t{}\n\t{}\n\t{}'.format(pfPaj, pfAutNumNome, pfClassi) )
-        # analizzaClausetNewmanMoore(pfPaj, pfAutNumNome, pfClassi)
+        analizzaClausetNewmanMoore(pfPaj, pfAutNumNome, pfClassi)
       if 'ClaNeMoGC' in scelteComunita:
         pfClassiGC = pftClassi.format(sp, su, scelteComunita['ClaNeMoGC']) # file com di SNAP
-        # analizzaClausetNewmanMoore(pfPajGC, pfAutNumNomeGC, pfClassiGC)
+        analizzaClausetNewmanMoore(pfPajGC, pfAutNumNomeGC, pfClassiGC)
       lapgne = timer()
-      # print('Completato analizzaClausetNewmanMoore in {}'.format(lapgne - lapgns) )
+      print('Completato analizzaClausetNewmanMoore in {}'.format(lapgne - lapgns) )
 
       # disegno i grafi
       # TODO potrei colorarli con le varie comunita generate nei vari modi
@@ -292,14 +295,14 @@ def esplorazioneTotale():
           pfGrafoOut = pftGrafoOut.format(sp, su, '{}{}'.format(blockmodel, '{}'))
           pfClassi = pftClassi.format(sp, su, blockmodel)
           # print('\nChiamo disegnaGrafo con \n\t{}\n\t{}\n\t{}'.format(pfGT, pfGrafoOut, pfClassi) )
-          # disegnaGrafo(pfGT, pfGrafoOut, pfClassi)
+          disegnaGrafo(pfGT, pfGrafoOut, pfClassi)
         if blockmodeltagGC:
           scelteComunita[blockmodeltagGC] = blockmodelGC
           pfGrafoOutGC = pftGrafoOut.format(sp, su, '{}{}'.format(blockmodelGC, '{}'))
           pfClassiGC = pftClassi.format(sp, su, blockmodelGC)
-          # disegnaGrafo(pfGTGC, pfGrafoOutGC, pfClassiGC, isgc=True)
+          disegnaGrafo(pfGTGC, pfGrafoOutGC, pfClassiGC, isgc=True)
         lapgte = timer()
-        # print('Completato disegnaGrafo in {}'.format(lapgte - lapgts) )
+        print('Completato disegnaGrafo in {}'.format(lapgte - lapgts) )
       except ImportError:
         print('Ti serve graph_tool, usa Linux')
       except:

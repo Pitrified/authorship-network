@@ -39,6 +39,8 @@
 \usepackage{longtable}%per tabelle che vanno da una pagina all'altra
 \usepackage[final]{pdfpages}%per importare pdf
 \usepackage{tkz-graph}
+\usepackage{multirow}
+\usepackage{float}
 
 
 %fine pacchetti
@@ -166,26 +168,37 @@ Presentazione della struttura della tesi.
 \chapter{Community detection} \label{cap:comdet}
 
 \section{Studi precedenti} \label{sec:storia}
+
+Descrizione delle comunità - edge più probabili tra nodi interni alla comunità e meno tra le
+comunità
+
+Descrizione della modularity come metrica.
+
 Descrizione della community detection.
 
 Descrizione della bibliografia attuale sui grafi di coautori.
 
 \section{Metodi usati} \label{sec:metodi}
-Che metodi vengono usati per generare le comunità.
+
+Per partizionare il set di nodi di un grafo in cluster sono stati utilizzati tre algoritmi:
+l'algoritmo di Girvan-Newman e l'algoritmo di Clauset-Newman-Moore, implementati nella libreria
+Stanford Network Analysis Platform (SNAP)~\cite{snapnets}, e l'algoritmo Stochastic Blockmodel,
+implementato in graph-tool~\cite{peixoto_graph-tool_2014}.
 
 \subsection{Girvan–Newman} \label{subsec:gn}
 Descrizione metodo GN.
-
-Nella libreria SNAP di Stanford \cite{snapnets}
+Ha complessità $O(E^2N)$
 
 \subsection{Blockmodel} \label{subsec:bn}
 Descrizione metodo blockmodel.
+Ha complessità $O(N ln^2(N))$
 
 \subsection{Clauset-Newman-Moore} \label{subsec:cnm}
 Descrizione metodo Clauset-Newman-Moore.
+Ha complessità $O(N ln^2(N))$
 
-\subsection{Louvain} \label{subsec:lou}
-Descrizione metodo Louvain se implementato.
+% \subsection{Louvain} \label{subsec:lou}
+% Descrizione metodo Louvain se implementato.
 
 
 
@@ -363,6 +376,13 @@ Il primo problema è già in parte risolto dal metodo di creazione del grafo, ch
 ID autori che hanno almeno una collaborazione con un altro ID nel set. In questo modo più del 90\%
 degli ID viene filtrato.
 
+Ispezionando manualmente il grafo, si rileva la presenza di due nodi riferiti a "c pizzi", che però
+sono connessi ad autori con cui la professoressa Pizzi non ha mai collaborato. Analizzando gli ID,
+le loro collaborazioni e i paper a cui hanno collaborato, si è dedotto che sono ID relativi
+probabilmente a Carmine Pizzi e Claudia Pizzi, medici rispettivamente a Bologna e Milano. Questi ID
+sono stati inclusi perché risultano collaborazioni con altri autori il cui nome è presente nella
+lista di partenza estratta dal sito di dipartimento.
+
 È stato sviluppato un secondo metodo di estrazione dei dati che esclude gli ID autore se non hanno
 mai pubblicato un paper a Padova, considerando le informazioni sulle affiliation dei paper, come
 viene illustrato di seguito.
@@ -382,6 +402,9 @@ Si estraggono i paper scritti da questi ID autore e si procede alla generazione 
 
 Applicando questo metodo, gli ID autore si riducono a 306, relativi a 201 nomi univoci. Il grafo
 generato include 850 edge con un peso totale di 5.195.
+
+Gli ID autore riferiti a "c pizzi", non avendo neanche un paper con affiliation padovana, vengono
+correttamente filtrati.
 
 \centerline{
 \begin{minipage}{1.10\textwidth}
@@ -645,7 +668,9 @@ I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 174. Gli edge
 
 \subsection{Errori intrinseci al database} \label{ssc:intrinseci}
 
-- database obsoleto
+- affiliation non compilate
+autori grandi hanno un paper padovano che li mantiene, autori piccoli scompaiono
+potrei guardare i coautori dei paper se sono padovani
 
 - erdos erds e caratteri speciali
 
@@ -657,6 +682,7 @@ I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 174. Gli edge
 % TODO mancano proprio record dei paper
 
 - nomi abbreviati
+- database obsoleto
 
 
 
@@ -765,15 +791,15 @@ Analogamente si definisce la completezza come
     c = \begin{cases} 1 & \mbox{se } H(K) = 0 \\ 1-\frac{H(K|C)}{H(K)} & \mbox{altrimenti} \end{cases}
 \end{equation}
 
-La \textit{V-measure} è definita come la media armonica pesata dei due valori di omogeneità e
-completezza
+La \textit{V-measure} è definita come la media armonica dei due valori di omogeneità e completezza
 
 \begin{equation} \label{eq:v}
-    V_\beta = (1+\beta)\frac{h \cdot c}{\beta \cdot h + c}
+    % V_\beta = (1+\beta)\frac{h \cdot c}{\beta \cdot h + c}
+    V = \frac{h \cdot c}{h + c}
 \end{equation}
 
-Se $\beta<1$ si dà maggior peso all'omogeneità, se $\beta>1$ si dà maggior peso alla completezza. In
-questo lavoro è stato usato $\beta=1$
+% Se $\beta<1$ si dà maggior peso all'omogeneità, se $\beta>1$ si dà maggior peso alla completezza. In
+% questo lavoro è stato usato $\beta=1$
 
 I seguenti diagrammi illustrano graficamente le tre situazioni limite. Le classi sono \{A, B, C,
 D\}, i colori rappresentano i cluster.
@@ -920,10 +946,9 @@ D\}, i colori rappresentano i cluster.
 \end{center}
 %Preview di due grafici per avere esempi da puntare. Forse punti alla sezione dopo.
 
-L'algoritmo utilizzato per calcolare la \textit{V-measure} è
-% \url{homogeneity_completeness_v_measure},
-{\fontfamily{qcr}\selectfont \footnotesize homogeneity\_completeness\_v\_measure},
-incluso nella libreria \textit{scikit-learn}
+L'algoritmo utilizzato per calcolare la \textit{V-measure} è\\ {\fontfamily{qcr}\selectfont
+% \footnotesize
+homogeneity\_completeness\_v\_measure}, incluso nella libreria \textit{scikit-learn}
 \cite{scikit-learn}.
 
 \section{Analisi dei risultati} \label{sec:risultati}
@@ -932,12 +957,176 @@ Per valutare la qualità delle partizioni generate, è stata calcolata la \texti
 considerando il Settore Scientifico Disciplinare estratto dal sito di dipartimento come classe
 corretta di appartenenza degli autori.
 
-\subsubsection{Tutti vs padovani}\label{ssc:analisitp}
-Tra tutti e padovani c'è molta differenza.
-\subsubsection{Collassi vari}\label{ssc:analisicollassi}
-Tra le varie strade di collasso non c'è sostanziale differenza.
-\subsubsection{Metodi di comunity detection}\label{ssc:analisicd}
-Tra le varie comunità non c'è sostanziale differenza.
+\subsection{Dati generati}
+
+Nella tabella \ref{tab:valorivmeasure} sono indicati i valori di \textit{V-measure} per tutte le
+possibili combinazioni di metodologia di estrazione paper, unione dei nodi e creazione dei cluster.
+
+{
+    \footnotesize
+    % \small
+% \begin{table}[htbp]
+% \begin{table}[H]
+% \centering
+\begin{center}
+% \begin{tabular}{ |l|l|l|r| }
+\captionof{table}{Numero di cluster e valore di V-measure delle partizioni generate}
+\label{tab:valorivmeasure}
+\begin{longtable}{ |l|l|l|r|r| }
+    \hline
+        Set paper & Unione & Algoritmo di clustering & Num. di cluster & V-measure \\
+    \hline
+        \multirow{18}{4em}{Tutti}
+        &
+        \multirow{6}{4em}{Nomi}
+        &Blockmodel  &4&0.51\\
+        &&Clauset-Newman-Moore&15&0.63\\
+        &&Girvan-Newman  &18&0.57\\
+        &&Blockmodel GC  &6&0.54\\
+        &&CNM Giant Component  &9&0.62\\
+        &&GN Giant Component  &12&0.56\\
+    \cline{2-5}
+        % cella tutti
+        &
+        \multirow{6}{4em}{Distanza}
+        &Blockmodel &10&0.36\\
+        &&Clauset-Newman-Moore &64&0.44\\
+        &&Girvan-Newman &64 &0.48\\
+        &&Blockmodel GC  &6&0.44\\
+        &&CNM Giant Component  &8&0.40\\
+        &&GN Giant Component  &15&0.52\\
+    \cline{2-5}
+        % cella tutti
+        &
+        \multirow{6}{4em}{Edge}
+        &Blockmodel &5&0.35\\
+        &&Clauset-Newman-Moore &56&0.45\\
+        &&Girvan-Newman &56&0.48\\
+        &&Blockmodel GC  &6&0.47\\
+        &&CNM Giant Component  &8&0.42\\
+        &&GN Giant Component  &15&0.50\\
+    \cline{1-5}
+        \multirow{18}{4em}{Padovani}
+        &
+        \multirow{6}{4em}{Nomi}
+        &Blockmodel &3&0.40\\
+        &&Clauset-Newman-Moore &13&0.58\\
+        &&Girvan-Newman &16&0.62\\
+        &&Blockmodel GC  &3&0.41\\
+        &&CNM Giant Component  &8&0.52\\
+        &&GN Giant Component  &11&0.61\\
+    \cline{2-5}
+        % cella padovani
+        &
+        \multirow{6}{4em}{Distanza}
+        &Blockmodel &6&0.48\\
+        &&Clauset-Newman-Moore &20&0.52\\
+        &&Girvan-Newman &25&0.64\\
+        &&Blockmodel GC  &4&0.52\\
+        &&CNM Giant Component  &9&0.61\\
+        &&GN Giant Component  &12&0.63\\
+    \cline{2-5}
+        % cella padovani
+        &
+        \multirow{6}{4em}{Edge}
+        &Blockmodel &5&0.49\\
+        &&Clauset-Newman-Moore &20&0.52\\
+        &&Girvan-Newman &25&0.65\\
+        &&Blockmodel GC  &6&0.60\\
+        &&CNM Giant Component  &9&0.63\\
+        &&GN Giant Component  &12&0.65\\
+    \hline
+% \end{tabular}
+\end{longtable}
+% \end{table}
+\end{center}
+}
+
+Gli stessi dati sono riportati graficamente in figura \ref{img:graficovmeasure}, utilizzando le
+seguenti etichette:\\
+\\
+Tu: Tutti; Pa: Padovani\\
+No: Nomi; Di: Distanza; Ed: Edge\\
+% - Bl: Blockmodel - Cl: Clauset Newman Moore - Gi: Girvan Newman
+Bl: Blockmodel; Cl: Clauset-Newman-Moore; Gi: Girvan-Newman\\
+GC indica l'elaborazione effettuata sulla Giant Component
+
+
+% figura grafico v-measure
+\centerline{
+\begin{minipage}{1.15\textwidth}
+\setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
+\fbox{\includegraphics[page=1,scale=0.80]{img/Validation_generale_DEI.pdf}}
+\captionof{figure}{Valori di V-measure delle partizioni generate}
+\label{img:graficovmeasure}
+\end{minipage}
+}
+
+% TODO da qualche parte 4 grafi, layout fisso colori variabili in base ai diversi modi di generare
+% cluster. (volendo 24 grafi colorati a gruppi di 4)
+
+\clearpage
+
+\subsection{Analisi}
+
+\subsubsection{Confronto tra i metodi di estrazione}
+
+I valori di \textit{V-measure}, aggregati per metodo di estrazione dei dati ed unione dei nodi, sono
+riassunti in figura \ref{img:vmeasureestrazione}.
+
+I grafi generati considerando solo i paper scritti da autori con almeno un affiliation padovana
+hanno un valore medio di \textit{V-measure} di $0.56$, lievemente superiore al valore medio ottenuto
+dai grafi generati considerando tutti i paper estratti, pari a $0.49$.
+
+Il valore della \textit{V-measure} del grafo generato considerando tutti i paper estratti ed unendo
+i nodi per nome è fra i più alti, ma ciò non corrisponde a un grafo ben rappresentativo della rete
+di autori del DEI, per i motivi illustrati in \ref{ssc:padovani}.
+
+% Pizzi è in tutti e non in padovani, ma in tutti collabora con autori con cui non ha davvero
+% collaborato. Sono omonimie sfortunate. Padovani ha filtrato questo nodo omonimo. L'ID vero della
+% professoressa ha affiliation padovana ma non ha collaborazioni con padovani nella lista.
+
+
+% figura grafico v-measure aggregata per strada
+\centerline{
+\begin{minipage}{1.15\textwidth}
+\setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
+\fbox{\includegraphics[page=1,scale=0.80]{img/Validation_Unione_DEI.pdf}}
+\captionof{figure}{Medie dei valori di \textit{V-measure} aggregate per metodo di estrazione}
+\label{img:vmeasureestrazione}
+\end{minipage}
+}
+
+\clearpage
+
+\subsubsection{Confronto tra i metodi di community detection}
+
+I valori di \textit{V-measure}, aggregati per algoritmo di generazione dei cluster, sono riassunti
+in figura \ref{img:vmeasurecluster}.
+
+Il metodo Girvan-Newman si è rivelato essere il migliore in termini di \textit{V-measure}, sia
+quando applicato all'intero grafo, sia quando applicato solo alla componente centrale dello stesso.
+
+Nel caso del metodo Blockmodel, si nota una differenza tra l'analisi dell'intero grafo e della sua
+componente centrale, ed è stata rilevata una migliore efficacia del metodo nel secondo caso.
+
+% figura grafico v-measure aggregata per comunità
+\centerline{
+\begin{minipage}{1.15\textwidth}
+\setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
+\fbox{\includegraphics[page=1,scale=0.80]{img/Validation_Comunita_DEI.pdf}}
+\captionof{figure}{Medie dei valori di V-measure aggregate per algoritmo di generazione cluster}
+\label{img:vmeasurecluster}
+\end{minipage}
+}
+
+
+% \subsubsection{Tutti vs padovani}\label{ssc:analisitp}
+% Tra tutti e padovani c'è molta differenza.
+% \subsubsection{Collassi vari}\label{ssc:analisicollassi}
+% Tra le varie strade di collasso non c'è sostanziale differenza.
+% \subsubsection{Metodi di comunity detection}\label{ssc:analisicd}
+% Tra le varie comunità non c'è sostanziale differenza.
 
 % TODO subsubsection su iterazioni collasso short path e perché non è vero
 
