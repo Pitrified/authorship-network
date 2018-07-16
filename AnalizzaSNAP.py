@@ -20,7 +20,7 @@ def analizzaGirvanNewman(pfPaj, pfAINN, pfMod):
       dMod.update({nodo:classe})
     classe += 1
     # print('')
-  print('Numero di comunita analizzaGirvanNewman: {}'.format(classe) )
+  print('Numero di comunita analizzaGirvanNewman: {} modularity: {}'.format(classe, modularity) )
 
   dNum = {}
   with open(pfAINN, 'rb') as fAINN:
@@ -51,7 +51,7 @@ def analizzaClausetNewmanMoore(pfPaj, pfAINN, pfMod):
       dMod.update({nodo:classe})
     classe += 1
     # print('')
-  print('Numero di comunita analizzaClausetNewmanMoore: {}'.format(classe) )
+  print('Numero di comunita analizzaClausetNewmanMoore: {} modularity: {}'.format(classe, modularity) )
 
   dNum = {}
   with open(pfAINN, 'rb') as fAINN:

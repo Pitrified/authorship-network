@@ -167,12 +167,11 @@ Presentazione della struttura della tesi.
 \whitePage
 \chapter{Community detection} \label{cap:comdet}
 
-\section{Studi precedenti} \label{sec:storia}
+\section{Studi esistenti} \label{sec:storia}
 
-Descrizione delle comunità - edge più probabili tra nodi interni alla comunità e meno tra le
-comunità
+Descrizione delle comunità
 
-Descrizione della modularity come metrica.
+% - edge più probabili tra nodi interni alla comunità e meno tra le comunità
 
 Descrizione della community detection.
 
@@ -181,26 +180,63 @@ Descrizione della bibliografia attuale sui grafi di coautori.
 \section{Metodi usati} \label{sec:metodi}
 
 Per partizionare il set di nodi di un grafo in cluster sono stati utilizzati tre algoritmi:
-l'algoritmo di Girvan-Newman e l'algoritmo di Clauset-Newman-Moore, implementati nella libreria
-Stanford Network Analysis Platform (SNAP)~\cite{snapnets}, e l'algoritmo Stochastic Blockmodel,
-implementato in graph-tool~\cite{peixoto_graph-tool_2014}.
+l'algoritmo di Girvan-Newman~\cite{Girvan7821} e l'algoritmo di
+Clauset-Newman-Moore~\cite{2004PhRvE..70f6111C}, implementati nella libreria Stanford Network
+Analysis Platform (SNAP)~\cite{snapnets}, e l'algoritmo \textit{Stochastic Block
+Model}~\cite{2014PhRvE..89a2804P}, implementato in
+\textit{graph-tool}~\cite{peixoto_graph-tool_2014}.
 
 \subsection{Girvan–Newman} \label{subsec:gn}
-Descrizione metodo GN.
-Ha complessità $O(E^2N)$
+Girvan e Newman introducono la \textit{Edge Betweenness} come misura di quanto un arco agisca da
+ponte fra due comunità in un grafo. Ispirandosi alla \textit{Vertex Betweenness}, che valuta il
+numero di cammini minimi fra coppie di nodi che passano per il nodo in esame, definiscono la
+centralità di un arco come numero di cammini minimi tra i nodi del grafo che passano per tale arco.
 
-\subsection{Blockmodel} \label{subsec:bn}
-Descrizione metodo blockmodel.
-Ha complessità $O(N ln^2(N))$
+Per suddividere il grafo in comunità, vengono progressivamente eliminati gli archi con centralità
+massima, dopo aver ricalcolato i cammini minimi modificati dall'eliminazione degli archi.
+
+Il risultato dell'algoritmo è un dendrogramma, da cui si estrapola la struttura delle comunità del
+grafo.
+
+Ha complessità $O(E^2N)$ nel caso peggiore, dove $E$ è il numero di edge e $N$ è il numero di nodi,
+che diventa $O(N^3)$ nel caso di un grafo sparso in cui $N\sim E$.
 
 \subsection{Clauset-Newman-Moore} \label{subsec:cnm}
-Descrizione metodo Clauset-Newman-Moore.
-Ha complessità $O(N ln^2(N))$
 
-% \subsection{Louvain} \label{subsec:lou}
-% Descrizione metodo Louvain se implementato.
+Girvan e Newman introducono la \textit{modularity} \cite{2004phrve..69b6113n} come valutazione della
+qualità della suddivisione in cluster dei nodi di un grafo. La \textit{modularity} viene definita
+come la frazione di edge in un grafo che connettono nodi nella stessa comunità meno la frazione di
+edge che connetterebbero quei nodi se gli archi del grafo fossero casuali ma la struttura in
+comunità fosse la stessa. Se la frazione di archi all'interno di una comunità non è maggiore di
+quella prevista in un grafo casuale, la \textit{modularity} è nulla, se il grafo ha una struttura in
+comunità ben definita, il valore si avvicina a 1.
 
+L'algoritmo sviluppato da Clauset, Newman e Moore utilizza un approccio \textit{greedy} per trovare
+una suddivisione dei nodi che massimizzi la \textit{modularity}. Partendo da una una suddivisione
+che consiste in un nodo per comunità, ad ogni iterazione si uniscono le due comunità la cui
+aggregazione comporta il massimo incremento della \textit{modularity}.
 
+L'algoritmo ha complessità $O(ED\log N)$ dove $E$ è il numero di edge, $N$ è il numero di nodi e $D$
+è la profondità del dendrogramma che descrive la struttura delle comunità del grafo. La complessità
+diventa $O(N\log^{2}(N))$ nel caso di un grafo sparso in cui $N\sim E$, e con struttura delle
+comunità gerarchica in cui $D\sim\log N$.
+
+\subsection{Stochastic Block Model} \label{subsec:bn}
+
+A differenza dei due metodi descritti nelle sezioni precedenti, l'algoritmo del \textit{Stochastic
+Block Model} segue un approccio euristico al problema del \textit{community detection}.
+Inoltre questo algoritmo non favorisce necessariamente la struttura delle comunità formate da nodi
+strettamente connessi tra loro e meno connessi con membri delle altre comunità.
+
+Il modello stocastico a blocchi generalizza la struttura di comunità di un grafo raggruppando i nodi
+in blocchi e definendo una matrice delle probabilità di esistenza degli archi tra nodi di ciascun
+blocco.
+
+Il problema del partizionamento viene quindi convertito in un processo statistico di inferenza dei
+parametri del modello basandosi sul grafo osservato.
+
+Anche questo algoritmo è implementato con una strategia \textit{greedy} che risulta in una
+complessità $O(N ln^2(N))$.
 
 \whitePage
 \chapter{Estrazione dati} \label{cap:estrazione}
@@ -208,7 +244,7 @@ Ha complessità $O(N ln^2(N))$
 \section{Struttura database Microsoft} \label{sec:msr}
 % https://academic.microsoft.com/#/faq https://dl.acm.org/citation.cfm?doid=2740908.2742839 citato
 % da qua
-Il database da cui sono stati estratti i dati è il Microsoft Academic Graph
+Il database da cui sono stati estratti i dati è il Microsoft Academic Graph~
 \cite{Sinha:2015:OMA:2740908.2742839}, che contiene informazioni relative a pubblicazioni
 scientifiche, autori, istituzioni accademiche, riviste, conferenze e settori di studio. I record
 presenti nei file forniscono le relazioni tra queste entità.
@@ -448,7 +484,7 @@ a 661, mantenendo lo stesso peso totale di 7.803.
 \end{minipage}
 }
 
-\clearpage % grafica da fare alla fine
+% \clearpage % grafica da fare alla fine
 I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 158. Gli edge scendono da 850 a
 463, mantenendo il peso totale di 5.195.
 
@@ -480,7 +516,7 @@ delle abbreviazioni dei nomi si calcola anche la distanza minima tra i due nodi 
 distanza è minore di una certa soglia, i due nodi vengono unificati. Questo processo può essere
 iterato più volte, per sfruttare le informazioni ottenute nei passi precedenti.
 
-\clearpage % grafica da fare alla fine
+% \clearpage % grafica da fare alla fine
 \begin{center}
 \captionof*{table}{Prima iterazione unione nodi con distanza minima minore di 2}
 \begin{minipage}{0.40\textwidth}
@@ -753,7 +789,7 @@ collaboratori che precendentemente erano distanti nel grafo.
 \section{V-measure} \label{sec:vmeasure}
 
 La \textit{V-measure}, una misura esterna della validità
-dei cluster basata sull'entropia, presentata da Rosenberg e Hirschberg \cite{vmeasure}, è stata
+dei cluster basata sull'entropia, presentata da Rosenberg e Hirschberg~\cite{vmeasure}, è stata
 utilizzata per valutare la qualità delle partizioni dei grafi ricavati con i vari metodi descritti
 nelle sezioni precedenti.
 
@@ -948,7 +984,7 @@ D\}, i colori rappresentano i cluster.
 
 L'algoritmo utilizzato per calcolare la \textit{V-measure} è\\ {\fontfamily{qcr}\selectfont
 % \footnotesize
-homogeneity\_completeness\_v\_measure}, incluso nella libreria \textit{scikit-learn}
+homogeneity\_completeness\_v\_measure}, incluso nella libreria \textit{scikit-learn}~
 \cite{scikit-learn}.
 
 \section{Analisi dei risultati} \label{sec:risultati}
@@ -1125,7 +1161,7 @@ componente centrale, ed è stata rilevata una migliore efficacia del metodo nel 
 % Tra tutti e padovani c'è molta differenza.
 % \subsubsection{Collassi vari}\label{ssc:analisicollassi}
 % Tra le varie strade di collasso non c'è sostanziale differenza.
-% \subsubsection{Metodi di comunity detection}\label{ssc:analisicd}
+% \subsubsection{Metodi di community detection}\label{ssc:analisicd}
 % Tra le varie comunità non c'è sostanziale differenza.
 
 % TODO subsubsection su iterazioni collasso short path e perché non è vero
