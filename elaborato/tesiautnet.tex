@@ -16,7 +16,7 @@
 \usepackage{amssymb} %simboli matematici
 \usepackage{booktabs}%en­hances the qual­ity of ta­bles
 \usepackage{caption}%to cus­tomise the cap­tions in float­ing en­vi­ron­ments like fig­ure and ta­ble
-\usepackage{subfig}%manipulation and ref­er­ence of small or ‘sub’ fig­ures and ta­bles within a sin­gle fig­ure or ta­ble en­vi­ron­ment
+% \usepackage{subfig}%manipulation and ref­er­ence of small or ‘sub’ fig­ures and ta­bles within a sin­gle fig­ure or ta­ble en­vi­ron­ment
 \usepackage{eurosym}%The Euro­pean cur­rency sym­bol for the Euro
 \usepackage{siunitx}%tante cose sulle unità di misura
 \usepackage{calligra}%cal­li­graphic font
@@ -41,6 +41,7 @@
 \usepackage{tkz-graph}
 \usepackage{multirow}
 \usepackage{float}
+\usepackage{subcaption}
 
 
 %fine pacchetti
@@ -306,6 +307,18 @@ Dal sito di dipartimento (\url{http://www.dei.unipd.it/lista-docenti}) sono stat
 degli attuali afferenti DEI, includendo Docenti, Assegnisti di ricerca, Collaboratori di ricerca e
 Dottorandi.
 % TODO la lista viene ritoccata a mano (peserico, nicolo', maria-guglielmina)
+
+Si è reso necessario intervenire manualmente sulla lista per risolvere alcune criticità:
+\begin{itemize}
+\item[--]
+    I caratteri Unicode non sono ben gestiti nel database, a volte si trova la lettera non
+        accentata, altre volte è presente un apostrofo invece dell'accento, in altri casi il
+        carattere è assente del tutto. I nomi che contengono tali caratteri sono stati inseriti in
+        tutte le varianti identificate.
+\item[--]
+    Afferenti con nomi composti uniti da trattino o con molteplici secondi nomi sono stati inseriti
+        in multiple varianti
+\end{itemize}
 
 La lista ottenuta comprende 379 autori.
 % TODO non fare il pezzente e scrivi quanti hanno l'etichetta
@@ -704,22 +717,32 @@ I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 174. Gli edge
 
 \subsection{Errori intrinseci al database} \label{ssc:intrinseci}
 
-- affiliation non compilate
-autori grandi hanno un paper padovano che li mantiene, autori piccoli scompaiono
-potrei guardare i coautori dei paper se sono padovani
+Nel corso delle varie iterazioni dell'estrazione dei dati, sono state identificate
+varie lacune nei record del database, riassunte di seguito
 
-- erdos erds e caratteri speciali
+\begin{itemize}
+\item[--]
 
-- paper mancanti della professoressa
+I record di Paper-Autore-Affiliation non contengono l'ID affiliation in 264.069.014 record su
+325.498.062. In particolare per autori con pochi paper, la fase di pruning basata sulle
+affiliation è molto influenzata da questa mancanza.
 
-- self loop
-% \subsubsection
-% TODO scopri cosa fanno i self loop
-% TODO mancano proprio record dei paper
+\item[--]
 
-- nomi abbreviati
-- database obsoleto
+Nei record Paper-Autore-Affiliation, può mancare il record relativo a uno dei coautori.
 
+\item[--]
+
+Tra i coautori dei un paper, possono essere riportati più ID autore riferiti alla stessa persona.
+
+\item[--]
+
+I nomi con caratteri non ASCII sono trattati in maniera imprevedibile.
+
+\end{itemize}
+
+Nel prossimo capitolo si propongono dei metodi alternativi di estrazione dei dati per tentare di
+aggirare questi problemi.
 
 
 \whitePage
@@ -728,47 +751,13 @@ Il grafo generato attraverso gli accorgimenti discussi in precedenza presenta an
 
 % subsubsection nomi mancanti
 
-La lista di partenza include gli afferenti DEI attuali, mentre il database è aggiornato al 2015.
-Questo comporta la mancanza di professori, non più a Padova, che avevano ruolo di aggregatore di una
-comunità.
+In particolare, la lista di partenza include solo gli attuali afferenti DEI, estratti dal sito di
+dipartimento. Questo comporta la mancanza di professori, non più attivi a Padova, che avevano ruolo
+di aggregatore di una comunità.
 
-Un metodo proposto per includere i nomi mancanti è:
-%estrarre gli ID autore; estrarre i
-%paper-aut-aff; da questa lista di paper estrarre tutti gli ID autore; potenzialmente ridurre i paper
-%(e gli autori) estratti in base alle affiliation (anche solo del DEI e non di tutta Padova); iterare
-%il processo con la nuova lista di autori.
-\begin{enumerate}[noitemsep, topsep=0pt]
-\item
-Estrarre gli ID autore
-\item
-Estrarre le terne di ID paper-autore-affiliation
-\item
-Estrarre tutti i record paper-autore-affiliation relativi ai paper identificati al punto precedente
-\item
-Estrarre una nuova lista di ID autore dai paper appena estratti, ossia i coautori della lista di
-partenza.
-\item
-Eventualmente ridurre il set di autori basandosi sulle affiliation dei loro paper
-\item
-Ripetere i passi 2-5 per un numero predefinito di volte o fino alla convergenza
-\end{enumerate}
-
-In questo modo si estraggono tutte le comunità relative alle affiliation usate come filtro. Una
-singola collaborazione con un dipartimento esterno comporta alle iterazioni successive l'inclusione
-di molti autori di quel dipartimento. Un metodo proposto per risolvere il problema è, alla fine delle
-iterazioni e della creazione dei cluster, considerare solo quelli che contengono almeno un nome
-presente nella lista originale: in questo modo dipartimenti esterni, anche se connessi al grafo, non
-vengono inclusi.
-
-Per verificare l'efficacia di questo metodo, è stato analizzato il caso del professor Apostolico,
-prolifico autore di paper all'Università di Padova, che essendo mancato qualche anno fa non compare
-più nella lista degli attuali afferenti al DEI. Dopo aver reinserito il suo nome nella lista di
-autori, è stata rieseguita l'estrazione dei dati e rigenerato il grafo.
-
-%Il suo ruolo importante all'interno del suo gruppo di ricerca si nota dalla connessione che
-%emerge con i suoi collaboratori, che precedentemente erano distanti nel grafo, come illustrato in
-%figura \ref{img:apostolico}
-Come illustrato in figura \ref{img:apostolico}, utilizzando questa procedura, emerge una comunità di
+Inserendo manualmente Alberto Apostolico, prolifico autore di paper all'Università di Padova, nella
+lista di partenza, il grafo, in prossimità del professore, cambia in maniera rilevante, come
+illustrato in figura \ref{img:apostolico}. Utilizzando questa procedura, emerge una comunità di
 collaboratori che precendentemente erano distanti nel grafo.
 
 \centerline{
@@ -780,7 +769,47 @@ collaboratori che precendentemente erano distanti nel grafo.
 \end{minipage}
 }
 
-% TODO spiegone amplia rete
+Un metodo generale proposto per identificare anche autori non presenti nella lista degli attuali
+afferenti DEI è:
+
+\begin{enumerate}[noitemsep, topsep=0pt]
+\item
+Estrarre gli ID autore dalla lista di partenza
+\item
+Estrarre le terne di ID paper-autore-affiliation
+\item
+Estrarre tutti i record paper-autore-affiliation relativi ai paper identificati al punto precedente
+\item
+Estrarre una nuova lista di ID autore dai paper appena estratti, ossia i coautori degli autori nella
+lista utilizzata al punto 2 per estrarre le terne
+\item
+Eventualmente ridurre il set di autori basandosi sulle affiliation dei loro paper
+\item
+Ripetere i passi 2-5 per un numero predefinito di volte o fino alla convergenza della rete, nel
+momento in cui non vengono identificati ulteriori coautori
+\end{enumerate}
+
+In questo modo si estraggono tutte le comunità relative alle affiliation usate come filtro. Una
+singola collaborazione con un dipartimento esterno comporta alle iterazioni successive l'inclusione
+di molti autori di quel dipartimento. Un metodo proposto per risolvere il problema e generare una
+rete di autori relativa solo al dipartimento di interesse è, alla fine delle iterazioni e della
+creazione dei cluster, considerare solo quelli che contengono almeno un nome presente nella lista
+originale: in questo modo dipartimenti esterni, anche se connessi al grafo, vengono filtrati.
+
+Gli step 2,3 e 4 sono stati implementati, estraendo 3.845.835 record Paper-Autore-Affiliation,
+relativi a 56.450 paper univoci, da cui si ricavano 256.917 ID autore e 193.396 nomi univoci. Questi
+valori decisamente elevati di coautori e paper è dovuto alla presenza di riviste, classificate come
+paper nel database, a cui hanno collaborato centinaia e anche migliaia di autori.
+
+Filtrando i paper con più di 30 collaborazioni, il set di paper si riduce a 52.001 univoci, su
+311.816 record Paper-Autore-Affiliation. Vengono identificati 148.124 ID autore per un totale di
+112.440 nomi univoci.
+
+9572 paper univoci padovani
+23.417 paper padovani
+2.442 ID autori padovani
+2.094 nomi univoci
+
 
 
 \whitePage
@@ -1101,7 +1130,7 @@ GC indica l'elaborazione effettuata sulla Giant Component
 % TODO da qualche parte 4 grafi, layout fisso colori variabili in base ai diversi modi di generare
 % cluster. (volendo 24 grafi colorati a gruppi di 4)
 
-\clearpage
+% \clearpage
 
 \subsection{Analisi}
 
@@ -1118,22 +1147,30 @@ Il valore della \textit{V-measure} del grafo generato considerando tutti i paper
 i nodi per nome è fra i più alti, ma ciò non corrisponde a un grafo ben rappresentativo della rete
 di autori del DEI, per i motivi illustrati in \ref{ssc:padovani}.
 
-% Pizzi è in tutti e non in padovani, ma in tutti collabora con autori con cui non ha davvero
-% collaborato. Sono omonimie sfortunate. Padovani ha filtrato questo nodo omonimo. L'ID vero della
-% professoressa ha affiliation padovana ma non ha collaborazioni con padovani nella lista.
-
-
 % figura grafico v-measure aggregata per strada
-\centerline{
-\begin{minipage}{1.15\textwidth}
-\setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
-\fbox{\includegraphics[page=1,scale=0.80]{img/Validation_Unione_DEI.pdf}}
-\captionof{figure}{Medie dei valori di \textit{V-measure} aggregate per metodo di estrazione}
-\label{img:vmeasureestrazione}
-\end{minipage}
-}
+\begin{figure}[H]
+    \begin{minipage}[c]{0.60\textwidth}
+    \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
+    \fbox{\includegraphics[page=1,scale=0.40]{img/Validation_Unione_DEI.pdf}}
+    \end{minipage}
+    % \hfill
+    \begin{minipage}[c]{0.32\textwidth}
+    \caption{Medie dei valori di \textit{V-measure} aggregate per metodo di estrazione degli autori
+        e per metodo di unione dei nodi}
+    \label{img:vmeasureestrazione}
+    \end{minipage}
+\end{figure}
 
-\clearpage
+% \centerline{
+% \begin{minipage}{1.15\textwidth}
+% \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
+% \fbox{\includegraphics[page=1,scale=0.40]{img/Validation_Unione_DEI.pdf}}
+% \captionof{figure}{Medie dei valori di \textit{V-measure} aggregate per metodo di estrazione}
+% \label{img:vmeasureestrazione}
+% \end{minipage}
+% }
+
+% \clearpage
 
 \subsubsection{Confronto tra i metodi di community detection}
 
@@ -1146,16 +1183,202 @@ quando applicato all'intero grafo, sia quando applicato solo alla componente cen
 Nel caso del metodo Blockmodel, si nota una differenza tra l'analisi dell'intero grafo e della sua
 componente centrale, ed è stata rilevata una migliore efficacia del metodo nel secondo caso.
 
-% figura grafico v-measure aggregata per comunità
-\centerline{
-\begin{minipage}{1.15\textwidth}
-\setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
-\fbox{\includegraphics[page=1,scale=0.80]{img/Validation_Comunita_DEI.pdf}}
-\captionof{figure}{Medie dei valori di V-measure aggregate per algoritmo di generazione cluster}
-\label{img:vmeasurecluster}
-\end{minipage}
-}
+\begin{figure}[H]
+    \begin{minipage}[c]{0.60\textwidth}
+    \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
+    \fbox{\includegraphics[page=1,scale=0.40]{img/Validation_Comunita_DEI.pdf}}
+    \end{minipage}
+    % \hfill
+    \begin{minipage}[c]{0.32\textwidth}
+    \caption{Medie dei valori di V-measure aggregate per algoritmo di generazione cluster }
+    \label{img:vmeasurecluster}
+    \end{minipage}
+\end{figure}
 
+% \centerline{
+% \begin{minipage}{1.15\textwidth}
+% \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
+% \fbox{\includegraphics[page=1,scale=0.40]{img/Validation_Comunita_DEI.pdf}}
+% \captionof{figure}{Medie dei valori di V-measure aggregate per algoritmo di generazione cluster}
+% \label{img:vmeasurecluster}
+% \end{minipage}
+% }
+
+Nelle pagine successive sono riportati i grafi che hanno ottenuto i valori migliori di
+\textit{V-measure}
+
+In figura \ref{fig:grafipadovaniedge} sono presenti i grafi relativi ai grafi generati considerando
+solo gli autori con almeno un'affiliation padovana, unendo i nodi seguendo la strategia dei nodi
+adiacenti. In figura \ref{fig:grafipadovaniedgeaggregati} i cluster degli stessi grafi sono stati
+aggregati per evidenziare le relazioni tra le comunità del grafo.
+
+In figura \ref{fig:grafigirvanaggregati} sono riportati i cluster ottenuti applicando l'algoritmo di
+Girvan e Newman alle componenti centrali dei grafi generati in tutti i possibili modi.
+
+\clearpage
+\begin{figure}[ht]
+    \centering
+        \begin{subfigure}[b]{0.5\textwidth}
+            \centering
+            \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+            % \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_padovani_edge_girvan_DEI.pdf}}
+            \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoPadovaniEdgeGirvan.pdf}}
+            \caption{Girvan Newmann}
+        \end{subfigure}%
+        ~
+        \begin{subfigure}[b]{0.5\textwidth}
+            \centering
+            \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+            \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoPadovaniEdgeGirvanGiant.pdf}}
+            \caption{GN - Componente centrale}
+        \end{subfigure}
+        \\
+        \begin{subfigure}[b]{0.5\textwidth}
+            \centering
+            \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+            \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoPadovaniEdgeClanemo.pdf}}
+            \caption{Clauset Newman Moore}
+        \end{subfigure}%
+        ~
+        \begin{subfigure}[b]{0.5\textwidth}
+            \centering
+            \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+            % \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_padovani_edge_clanemo_DEI.pdf}}
+            \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoPadovaniEdgeClanemoGiant.pdf}}
+            \caption{CNM - componente centrale}
+        \end{subfigure}%
+        \\
+        \begin{subfigure}[b]{0.5\textwidth}
+            \centering
+            \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+            \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoPadovaniEdgeBlockmodel.pdf}}
+            \caption{Block Model}
+        \end{subfigure}%
+        ~
+        \begin{subfigure}[b]{0.5\textwidth}
+            \centering
+            \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+            \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoPadovaniEdgeBlockmodelGiant.pdf}}
+            \caption{BM - componente centrale}
+        \end{subfigure}%
+    \caption{Confronto delle suddivisioni in cluster del grafo degli autori con almeno un'affiliation
+    padovana, dove i nodi sono stati uniti utilizzando la strategia per nodi adiacenti}
+    \label{fig:grafipadovaniedge}
+\end{figure}
+
+\clearpage
+\begin{figure}[ht]
+    \centering
+        \begin{subfigure}[b]{0.5\textwidth}
+            \centering
+            \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+            % \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_padovani_edge_girvan_DEI.pdf}}
+                \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_padovani_edge_girvnew_DEI.pdf}}
+                \caption{Girvan Newmann}
+            \end{subfigure}%
+            ~
+            \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+                \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_padovani_edge_Zgirvnew_DEI.pdf}}
+                \caption{GN - Componente centrale}
+            \end{subfigure}
+            \\
+            \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+                \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_padovani_edge_clanemo_DEI.pdf}}
+                \caption{Clauset Newman Moore}
+            \end{subfigure}%
+            ~
+            \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+                % \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_padovani_edge_clanemo_DEI.pdf}}
+                \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_padovani_edge_Zclanemo_DEI.pdf}}
+                \caption{CNM - componente centrale}
+            \end{subfigure}%
+            \\
+            \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+                \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_padovani_edge_blockmodel_DEI.pdf}}
+                \caption{Block Model}
+            \end{subfigure}%
+            ~
+            \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+                \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_padovani_edge_Zblockmodel_DEI.pdf}}
+                \caption{BM - componente centrale}
+        \end{subfigure}%
+    \caption{Confronto delle suddivisioni in cluster del grafo degli autori con almeno un'affiliation
+    padovana, dove i nodi sono stati uniti utilizzando la strategia per nodi adiacenti; i cluster sono
+    stati aggregati in nodi, i colori dei nodi indicano la suddivisione in classi dei cluster;
+    l'etichetta corrisponde alla classe predominante nel cluster}
+    \label{fig:grafipadovaniedgeaggregati}
+\end{figure}
+
+\clearpage
+\begin{figure}[ht]
+    \centering
+        \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+                \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_tutti_nomi_Zgirvnew_DEI.pdf}}
+                \caption{Tutti - uniti per nome}
+            \end{subfigure}%
+            ~
+            \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+                \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_padovani_nomi_Zgirvnew_DEI.pdf}}
+                \caption{Padovani - uniti per nome}
+            \end{subfigure}
+            \\
+            \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+                \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_tutti_distanza_Zgirvnew_DEI.pdf}}
+                \caption{Tutti - uniti per distanza}
+            \end{subfigure}%
+            ~
+            \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+                % \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_padovani_edge_clanemo_DEI.pdf}}
+                \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_padovani_distanza_Zgirvnew_DEI.pdf}}
+                \caption{Padovani - uniti per distanza}
+            \end{subfigure}%
+            \\
+            \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+                \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_tutti_edge_Zgirvnew_DEI.pdf}}
+                \caption{Tutti - uniti per nodi adiacenti}
+            \end{subfigure}%
+            ~
+            \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+                \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_padovani_edge_Zgirvnew_DEI.pdf}}
+                \caption{Padovani - uniti per nodi adiacenti}
+        \end{subfigure}%
+    \caption{Confronto delle suddivisioni in cluster generate dall'algoritmo Girvan-Newman applicato
+    alla componente centrale del grafo; i cluster sono stati aggregati in nodi, i colori dei nodi
+    indicano la suddivisione in classi dei cluster; l'etichetta corrisponde alla classe
+    predominante nel cluster}
+    \label{fig:grafigirvanaggregati}
+\end{figure}
+
+% \centerline{
+% \begin{minipage}{1.20\textwidth}
+% \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
+% \fbox{\includegraphics[page=1,scale=0.47]{img/GrafoTuttiDistanza23.pdf}}
+% \captionof{figure}{Grafo collaborazioni unificati per distanza}
+% \label{img:grafotuttidistanza}
+% \end{minipage}
+% }
 
 % \subsubsection{Tutti vs padovani}\label{ssc:analisitp}
 % Tra tutti e padovani c'è molta differenza.
