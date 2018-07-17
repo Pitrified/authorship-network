@@ -147,18 +147,27 @@ Dott. Mattia \textsc{Samory} % Supervisor's Name
 \addcontentsline{toc}{chapter}{Abstract} % we put the asterisk so we add it manually to the toc
 % qua ci sarà un glorioso abstract
 
-Viene presentato un metodo per estrarre la rete degli autori afferenti al Dipartimento di Ingegneria
-dell'Informazione dal \textit{Microsoft Academic Graph}.
+L'interazione tra ricercatori è evidente nelle loro collaborazioni per la pubblicazione di articoli
+scientifici. La rete di co-autorialità tra ricercatori è pertanto un modello ricco di informazioni
+sulle dinamiche della ricerca scientifica.
 
-Vengono utilizzati tre metodi per classificare gli autori in comunità corrispondenti ai gruppi di
-ricerca.
+In questa tesi si è sviluppato un sistema per ricostruire la rete di collaborazioni tra autori di
+pubblicazioni scientifiche afferenti al Dipartimento di Ingegneria dell’Informazione dell’università
+di Padova a partire dai dati di \textit{Microsoft Academic Graph} gestendo problemi dovuti ad
+omonimie, presenza di più identificatori per un singolo autore, presenza di record con informazioni
+mancanti o errate.
 
-Il Settore Scientifico Disciplinare viene sfruttato per valutare le partizioni ottenute.
+Per il partizionamento in comunità, definite dall’appartenenza di un autore ad un dato Settore
+Scientifico Disciplinare, sono stati utilizzati tre metodi per classificare gli autori in comunità
+corrispondenti ai gruppi di ricerca: Girvan-Newman, Clauset-Newman-Moore, e Stocastica Block Model.
 
-Viene proposto un metodo alternativo di estrazione dei dati per creare una rete più ampia, che
-includa anche autori non più afferenti al DEI.
+Le problematiche evidenziate nella fase di estrazione non consentono una mappatura perfetta con le
+aree di ricerca attive in dipartimento, ma la struttura macroscopica che si ricava dai grafi
+fornisce quantomeno un’indicazione di tale composizione, in particolare quando si utilizza
+l’algoritmo di Girvan e Newman.
 
-% \whitePage
+\whitePage
+% \clearpage
 \section*{Introduzione} \label{introduzione}
 \addcontentsline{toc}{chapter}{Introduzione} % we put the asterisk so we add it manually to the toc
 
@@ -172,27 +181,40 @@ un'organizzazione interna. Studiando la struttura della rete si possono mettere
 in luce le relazioni e i meccanismi che la governano, ricavando utili indicazioni sul comportamento
 globale del sistema complesso studiato.
 
-Una caratteristica molto descrittiva di un grafo sono le comunità che lo formano, e l'individuazione
-delle comunità è un'argomento di ricerca molto interessante.
-\\
-\\
-In questo elaborato, viene presentato uno studio di una rete di autori di pubblicazioni
-scientifiche.
+La struttura interna di una rete, come nel caso della rete sociale oggetto di questo studio, si può
+riassumere aggregando i nodi in comunità. L'individuazione accurata delle comunità è pertanto
+fondamentale per la descrizione della rete e per questo motivo è un importante oggetto di studio.
 
-Nella prima sezione viene descritto il problema del community detection e vengono descritti alcuni
-dei metodi esistenti per analizzare un grafo.
+La ricostruzione accurate della rete delle pubblicazioni scientifiche permette una miglior
+comprensione dell'attività accademica. Le applicazioni spaziano dal valutare lo scambio di
+conoscenza tra i diversi settori di studio, alla misura dell'impatto a lungo termine delle ricerche,
+al tracciare la mobilità dei ricercatori \cite{Fortunatoeaao0185}. Ciò è cruciale per permettere agli enti
+istituzionali ed ai responsabili politici di destinare risorse per promuovere l'eccellenza
+accademica.
+
+In questo contesto è stato sviluppato un sistema per l'estrazione di informazioni da record di
+pubblicazioni per creare una rete di associazioni tra co-autori afferenti al Dipartimento di
+Ingegneria dell'Informazione dell'Università di Padova e sono state ricostruite le corrispondenti
+comunità.
+
+L'elaborato segue la seguente struttura.
+Nella prima sezione viene descritto il problema del community detection. Vengono descritti tre dei
+metodi esistenti per partizionare un grafo. I primo due metodi sono deterministici: l'algoritmo
+proposto da Girvan e Newman e l'algoritmo sviluppato da Clauset, Newman e Moore. Il terzo è un
+metodo probabilistico, lo \textit{Stochastic Block Model}. Viene descritta la \textit{V-measure},
+una misura esterna utilizzata per valutare la validità dei cluster generati.
 
 Nella seconda sezione viene descritta la struttura del \textit{Microsoft Academic Graph} da cui sono
 stati estratti i dati, il metodo che si è usato per estrarli e i problemi riscontrati. Vengono
 proposti e implementati dei metodi alternativi per risolverli.
 
-Nella terza sezione viene descritta la metrica utilizzata per valutare i grafi ottenuti, la
-\textit{V-measure}, e vengono presentati i risultati ottenuti.
+Nella terza sezione viene descritto il metodo con cui sono generate le comunità e vengono presentati
+i risultati ottenuti.
 
 Nell'ultima sezione si traggono le conclusioni sul lavoro svolto.
 
-Il codice scritto per la manipolazione dei dati è disponibile sulla piattaforma \textit{GitHub} alla
-pagina \url{github.com/Pitrified/authorship-network}.
+Il codice scritto per la manipolazione dei dati è disponibile alla pagina
+\url{github.com/Pitrified/authorship-network}.
 
 
 \whitePage
@@ -202,11 +224,20 @@ pagina \url{github.com/Pitrified/authorship-network}.
 
 Le relazioni tra elementi di un sistema complesso possono essere rappresentate con un grafo. Gli
 elementi del sistema sono rappresentati dai nodi e le loro interazioni dagli archi. A livello
-globale, la topologia del grafo fornisce già parecchie informazioni sul sistema. A livello
-intermedio, molti grafi dimostrano una certo livello di organizzazione. Le comunità sono gruppi di
-nodi reputati simili in base a qualche metrica di somiglianza. In generale, i nodi di una stessa
-comunità sono fortemente connessi tra loro, mentre le connessioni tra nodi in diverse comunità sono
-meno probabili.
+globale, la topologia del grafo fornisce informazioni sul sistema. A livello intermedio fra il grafo
+nel suo insieme e le connessioni fra singoli nodi, molti grafi dimostrano un certo livello di
+organizzazione.
+
+Una comunità viene definita come un insieme di nodi tali per cui i nodi di una stessa comunità sono
+fortemente connessi tra loro, mentre le connessioni tra nodi in diverse comunità sono meno
+probabili.
+
+Questa definizione di comunità è stata preferita perché rispecchia la struttura della rete dei
+co-autori di pubblicazioni scientifiche, dove un alto numero di collaborazioni comporta in generale
+l'appartenenza allo stesso gruppo di ricerca o, a livello più macroscopico, allo stesso Settore
+Scientifico Disciplinare.
+
+% Le comunità sono gruppi di nodi reputati simili in base a qualche metrica di somiglianza.
 
 Nella sezione seguente, vengono presentati tre metodi per estrapolare la struttura in comunità di un
 grafo.
@@ -219,6 +250,10 @@ Clauset-Newman-Moore~\cite{2004PhRvE..70f6111C}, implementati nella libreria Sta
 Analysis Platform (SNAP)~\cite{snapnets}, e l'algoritmo \textit{Stochastic Block
 Model}~\cite{2014PhRvE..89a2804P}, implementato in
 \textit{graph-tool}~\cite{peixoto_graph-tool_2014}.
+
+Questi metodi sono stati scelti perché sono stati sviluppati considerando una definizione di
+comunità aderente a quella proposta nella sezione precedente, che è considerata descrivere
+adeguatamente la struttura interna di una rete di co-autori.
 
 \subsection{Girvan–Newman} \label{subsec:gn}
 Girvan e Newman introducono la \textit{Edge Betweenness} come misura di quanto un arco agisca da
@@ -271,9 +306,235 @@ parametri del modello basandosi sul grafo osservato.
 
 Anche questo algoritmo è implementato con una strategia \textit{greedy} che risulta in una
 complessità $O(N ln^2(N))$.
+\\
+\\
+Si evidenzia il fatto che il primo algoritmo descritto ha complessità $O(N^3)$, che lo rende
+inadeguato nel caso di reti numerose. I successivi algoritmi scalano meglio con la dimensione del
+grafo, avendo complessità $O(N ln^2(N))$.
+
+\section{V-measure} \label{sec:vmeasure}
+
+La \textit{V-measure}, una misura esterna della validità
+dei cluster basata sull'entropia, presentata da Rosenberg e Hirschberg~\cite{vmeasure}, è stata
+utilizzata per valutare la qualità delle partizioni dei grafi ricavati con i vari metodi descritti
+nelle sezioni successive.
+
+In questo elaborato, viene considerata buona una partizione degli autori che rispecchi la loro
+suddivisione nei Settori Scientifici Disciplinari.
+
+%Per valutare la qualità delle partizioni dei grafi ricavati con i vari metodi descritti nelle
+%sezioni precedenti, è stata utilizzata la \textit{V-measure}, come presentata da Rosenberg e
+%Hirschberg \cite{vmeasure}, una misura esterna della validità dei cluster basata sull'entropia.
+
+Come terminologia, si parlerà di due distinte partizioni del set di nodi da analizzare: un set di
+classi $C$, considerate la suddivisione reale dei nodi, e un set di cluster $K$ per indicare la
+partizione generata.
+
+Rosenberg e Hirschberg hanno sviluppato due concetti, l'omogeneità e la completezza, la cui media
+armonica è la \textit{V-measure}.
+
+Una partizione di cluster è considerata perfettamente omogenea quando i cluster contengono
+\textit{solo} membri di una singola classe, come esemplificato nella Tabella
+\ref{tab:omogeneononcompleto}.
+
+In maniera simmetrica una partizione è perfettamente completa quando un singolo cluster contiene
+\textit{tutti} i membri di una classe, come esemplificato nella Tabella
+\ref{tab:completononomogeneo}.
+
+Per valutare l'omogeneità di una partizione si considera l'entropia condizionata della distribuzione
+di classi dato il clustering generato $H(C|K)$. Nel caso di perfetta omogeneità questo valore è
+nullo in quanto il cluster contiene una singola classe, mentre è massimo e vale $H(C)$ quando la
+distribuzione delle classi all'interno del cluster è identica alla distribuzione delle classi
+nell'intero set, per cui il clustering non fornisce alcuna informazione aggiuntiva.
+\\
+Considerando che
+il valore di entropia è massimo quando la partizione è pessima, si definisce l'omogeneità come
+
+\begin{equation} \label{eq:h}
+    h = \begin{cases} 1 & \mbox{se } H(C) = 0 \\ 1-\frac{H(C|K)}{H(C)} & \mbox{altrimenti} \end{cases}
+\end{equation}
+
+Analogamente si definisce la completezza come
+
+\begin{equation} \label{eq:c}
+    c = \begin{cases} 1 & \mbox{se } H(K) = 0 \\ 1-\frac{H(K|C)}{H(K)} & \mbox{altrimenti} \end{cases}
+\end{equation}
+
+La \textit{V-measure} è definita come la media armonica dei due valori di omogeneità e completezza
+
+\begin{equation} \label{eq:v}
+    % V_\beta = (1+\beta)\frac{h \cdot c}{\beta \cdot h + c}
+    V = \frac{h \cdot c}{h + c}
+\end{equation}
+
+% Se $\beta<1$ si dà maggior peso all'omogeneità, se $\beta>1$ si dà maggior peso alla completezza. In
+% questo lavoro è stato usato $\beta=1$
+
+I seguenti diagrammi illustrano graficamente le tre situazioni limite. Le classi sono \{A, B, C,
+D\}, i colori rappresentano i cluster.
+
+\begin{center}
+\captionof{table}{Clustering perfetto}
+\begin{minipage}{0.30\textwidth}
+    \begin{tabular}{|l|r|}
+    \hline $h$&1\\
+    \hline $c$&1\\
+    \hline $V$&1\\
+    \hline
+    \end{tabular}
+\end{minipage}
+% \begin{minipage}{0.075\textwidth}
+% $\rightarrow$
+% \end{minipage}
+\begin{minipage}{0.50\textwidth}
+    \begin{tikzpicture}
+    %\SetGraphUnit{3}
+    \GraphInit[vstyle=Normal]
+    %\draw[help lines] (0,0) grid (5,3);
+    \SetVertexNormal[FillColor=blue!50]
+    \Vertex[L=A]{1} % par défaut x = 0 et y = 0
+    \Vertex[x=0 , y=3, L=A]{2}
+    \Vertex[x=0.5 , y=1.5, L=A]{3}
+    \Vertex[x=1.0 , y=0.5, L=A]{4}
+    \Vertex[x=1.5 , y=2.5, L=A]{5}
+    \SetVertexNormal[FillColor=orange!50]
+    \Vertex[x=2.0 , y=1.5, L=B]{6}
+    \Vertex[x=2.5 , y=0.0, L=B]{7}
+    \Vertex[x=2.5 , y=3.0, L=B]{8}
+    \SetVertexNormal[FillColor=red!50]
+    \Vertex[x=3.0 , y=1.0, L=C]{9}
+    \Vertex[x=3.5 , y=2.0, L=C]{10}
+    \SetVertexNormal[FillColor=green!50]
+    \Vertex[x=4.0 , y=1.0, L=D]{11}
+    \Vertex[x=4.0 , y=3.0, L=D]{12}
+    \Vertex[x=5.0 , y=0.5, L=D]{13}
+    \Vertex[x=5.0 , y=2.0, L=D]{14}
+    \end{tikzpicture}
+\end{minipage}
+%\medskip
+\end{center}
+%    \setlength{\abovecaptionskip}{1cm}
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    %\hline ID     &1&2&3&4&5&6&7&8&9&10&11&12&13&14\\
+    \hline Classe &A&A&A&A&A&B&B&B&C& C& D& D& D& D\\
+    \hline Cluster&1&1&1&1&1&2&2&2&3& 3& 4& 4& 4& 4\\
+\hline
+\end{tabular}
+\end{center}
+
+% questo fa male al cuore % GRAFICA
+\begin{minipage}{0.30\textwidth}
+\end{minipage}
+
+\begin{center}
+\captionof{table}{Clustering omogeneo ma non completo}
+    \label{tab:omogeneononcompleto}
+\begin{minipage}{0.30\textwidth}
+    \begin{tabular}{|l|r|}
+    \hline $h$&1\\
+    \hline $c$&0.727\\
+    \hline $V$&0.842\\
+    \hline
+    \end{tabular}
+\end{minipage}
+\begin{minipage}{0.50\textwidth}
+    \begin{tikzpicture}
+    \GraphInit[vstyle=Normal]
+    %\draw[help lines] (0,0) grid (5,3);
+    \SetVertexNormal[FillColor=blue!50]
+    \Vertex[L=A]{1} % par défaut x = 0 et y = 0
+    \Vertex[x=0 , y=3, L=A]{2}
+    \Vertex[x=0.5 , y=1.5, L=A]{3}
+    \SetVertexNormal[FillColor=orange!50]
+    \Vertex[x=1.0 , y=0.5, L=A]{4}
+    \Vertex[x=1.5 , y=2.5, L=A]{5}
+    \SetVertexNormal[FillColor=red!50]
+    \Vertex[x=2.0 , y=1.5, L=B]{6}
+    \Vertex[x=2.5 , y=0.0, L=B]{7}
+    \Vertex[x=2.5 , y=3.0, L=B]{8}
+    \SetVertexNormal[FillColor=green!50]
+    \Vertex[x=3.0 , y=1.0, L=C]{9}
+    \SetVertexNormal[FillColor=yellow!50]
+    \Vertex[x=3.5 , y=2.0, L=C]{10}
+    \SetVertexNormal[FillColor=purple!80]
+    \Vertex[x=4.0 , y=1.0, L=D]{11}
+    \SetVertexNormal[FillColor=gray!50]
+    \Vertex[x=4.0 , y=3.0, L=D]{12}
+    \Vertex[x=5.0 , y=0.5, L=D]{13}
+    \Vertex[x=5.0 , y=2.0, L=D]{14}
+    \end{tikzpicture}
+\end{minipage}
+\end{center}
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    %\hline ID     &1&2&3&4&5&6&7&8&9&10&11&12&13&14\\
+    \hline Classe &A&A&A&A&A&B&B&B&C& C& D& D& D& D\\
+    \hline Cluster&1&1&1&2&2&3&3&3&4& 5& 6& 7& 7& 7\\
+\hline
+\end{tabular}
+\end{center}
+
+\clearpage % GRAFICA
+
+\begin{center}
+\captionof{table}{Clustering completo ma non omogeneo}
+    \label{tab:completononomogeneo}
+\begin{minipage}{0.30\textwidth}
+    \begin{tabular}{|l|r|}
+    \hline $h$&0.512\\
+    \hline $c$&1\\
+    \hline $V$&0.677\\
+    \hline
+    \end{tabular}
+\end{minipage}
+\begin{minipage}{0.50\textwidth}
+    \begin{tikzpicture}
+    \GraphInit[vstyle=Normal]
+    %\draw[help lines] (0,0) grid (5,3);
+    \SetVertexNormal[FillColor=blue!50]
+    \Vertex[L=A]{1} % par défaut x = 0 et y = 0
+    \Vertex[x=0 , y=3, L=A]{2}
+    \Vertex[x=0.5 , y=1.5, L=A]{3}
+    \Vertex[x=1.0 , y=0.5, L=A]{4}
+    \Vertex[x=1.5 , y=2.5, L=A]{5}
+    \Vertex[x=2.0 , y=1.5, L=B]{6}
+    \Vertex[x=2.5 , y=0.0, L=B]{7}
+    \Vertex[x=2.5 , y=3.0, L=B]{8}
+    \SetVertexNormal[FillColor=orange!50]
+    \SetVertexNormal[FillColor=red!50]
+    \Vertex[x=3.0 , y=1.0, L=C]{9}
+    \Vertex[x=3.5 , y=2.0, L=C]{10}
+    \Vertex[x=4.0 , y=1.0, L=D]{11}
+    \Vertex[x=4.0 , y=3.0, L=D]{12}
+    \Vertex[x=5.0 , y=0.5, L=D]{13}
+    \Vertex[x=5.0 , y=2.0, L=D]{14}
+    \SetVertexNormal[FillColor=green!50]
+    \end{tikzpicture}
+\end{minipage}
+\end{center}
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    %\hline ID     &1&2&3&4&5&6&7&8&9&10&11&12&13&14\\
+    \hline Classe &A&A&A&A&A&B&B&B&C& C& D& D& D& D\\
+    \hline Cluster&1&1&1&1&1&1&1&1&2& 2& 2& 2& 2& 2\\
+\hline
+\end{tabular}
+\end{center}
+
+%Preview di due grafici per avere esempi da puntare. Forse punti alla sezione dopo.
+
+L'algoritmo utilizzato per calcolare la \textit{V-measure} è\\ {\fontfamily{qcr}\selectfont
+% \footnotesize
+homogeneity\_completeness\_v\_measure}, incluso nella libreria \textit{scikit-learn}~
+\cite{scikit-learn}.
 
 \whitePage
 \chapter{Estrazione dati} \label{cap:estrazione}
+
+In questo capitolo viene descritta la struttura del database \textit{Microsoft}. Viene descritto il
+metodo di estrazione dei dati, il processo di eliminazione dei dati spuri e di aggregazione dei
+nodi. Infine vengono riassunti i problemi intrinseci rilevati nel database.
 
 \section{Struttura database Microsoft} \label{sec:msr}
 % https://academic.microsoft.com/#/faq https://dl.acm.org/citation.cfm?doid=2740908.2742839 citato
@@ -289,7 +550,9 @@ separati da tabulazione.
 Per il lavoro oggetto di questa tesi sono stati utilizzati in particolare quattro file del database,
 la cui struttura è illustrata nella tabella \ref{table:msrstruttura1}.
 
-L'ultimo aggiornamento del database disponibile risale all'agosto 2015.
+% L'ultimo aggiornamento del database disposizione risale all'agosto 2015.
+La versione del database \textit{Microsoft} utilizzato è quella dell'agosto 2015.
+
 \begin{center}
 %\begin{table}
 %\begin{tabular}{| l | l |}
@@ -338,8 +601,8 @@ Papers.txt&Paper ID\\
 
 Dal sito di dipartimento (\url{http://www.dei.unipd.it/lista-docenti}) sono stati estratti i nomi
 degli attuali afferenti DEI, includendo Docenti, Assegnisti di ricerca, Collaboratori di ricerca e
-Dottorandi.
-% TODO la lista viene ritoccata a mano (peserico, nicolo', maria-guglielmina)
+Dottorandi. Questa lista è necessaria per avere un set di nomi degli autori afferenti al DEI da cui
+partire per estrarre i dati.
 
 Si è reso necessario intervenire manualmente sulla lista per risolvere alcune criticità:
 \begin{itemize}
@@ -356,14 +619,20 @@ Si è reso necessario intervenire manualmente sulla lista per risolvere alcune c
 La lista ottenuta comprende 379 autori.
 % TODO non fare il pezzente e scrivi quanti hanno l'etichetta
 Dove presente, è stato estratto il Settore Scientifico Disciplinare dell'afferente, che ha fornito
-la partizione in classi utilizzata come rifermento alla fine dell'elaborazione dei dati.
-Nel caso di assegnisti e dottorandi, è stata assegnata come classe \textit{"N/A"}
+la partizione in classi utilizzata come rifermento alla fine dell'elaborazione dei dati. Il Settore
+Scientifico Disciplinare è una categoria definita dal MIUR che codifica l'afferenza disciplinare dei
+docenti universitari italiani.
+Nel caso di assegnisti e dottorandi, è stata assegnata come classe \textit{"N/A"}, che include 204
+nomi.
 
 I nomi propri degli autori sono stati abbreviati in tutte le possibili combinazioni per rispecchiare
-la struttura del database Microsoft, ed è stato creato un file con la struttura seguente:
+la struttura del database Microsoft. Se nel momento dell'abbreviazione si generano conflitti fra
+possibili etichette del nome, viene associata l'etichetta \textit{"Multipli"}. Il file generato ha
+la struttura indicata nella tabella \ref{tab:nomietichette}.
 
 \begin{center}
 \captionof{table}{PersoneComunitaDEI.txt}
+\label{tab:nomietichette}
 \begin{minipage}{0.90\textwidth}
 \begin{verbatim}
 a a pietracaprina            INF/01 - INFORMATICA
@@ -371,7 +640,10 @@ a alberto pietracaprina	     INF/01 - INFORMATICA
 andrea a pietracaprina	      INF/01 - INFORMATICA
 andrea alberto pietracaprina	INF/01 - INFORMATICA
 ...
-
+mattia zorzi                 INF/04 - AUTOMATICA
+michele zorzi                INF/03 - TELECOMUNICAZIONI
+m zorzi                      Multipli
+...
 \end{verbatim}
 \end{minipage}
 \end{center}
@@ -385,8 +657,9 @@ i record relativi ai paper, nella forma (ID paper, ID autore, ID affiliation), p
 
 Dalla lista così ottenuta, non necessariamente ordinata, sono stati creati gli edge fra ID autore,
 considerando una collaborazione tra autori per ciascun paper pubblicato assieme. Gli edge sono poi
-stati aggregati creando una edge list pesata. Questi due passaggi sono esemplificati nella tabella
-\ref{tab:creazioneedge}
+stati aggregati creando una edge list pesata, in cui i pesi corrispondono al numero totale di
+collaborazioni tra due autori. Questi due passaggi sono esemplificati nella tabella
+\ref{tab:creazioneedge}.
 
 \begin{center}
 
@@ -424,7 +697,7 @@ afferente DEI. Nel grafo compaiono 287 nomi univoci, connessi da 1.830 edge con 
 totale.
 
 I grafi in questo capitolo sono stati divisi in comunità utilizzando l'algoritmo Modularity di
-Gephi.
+Gephi \cite{2008JSMTE..10..008B}.
 
 
 \centerline{
@@ -456,7 +729,7 @@ Vengono selezionati anche gli ID riferiti ad autori omonimi, non affiliati al DE
 Ad un singolo autore DEI sono associati più ID autore.
 \end{itemize}
 
-Nelle sottosezioni successive si presenteranno le soluzioni che sono state implementate per cercare
+Nelle sezioni successive si presenteranno le soluzioni che sono state implementate per cercare
 di risolvere questi problemi.
 
 %::::PADOVANI::::
@@ -516,6 +789,7 @@ generato include 850 edge con un peso totale di 5.195.
 }
 
 %::::::::::::::::::::::::::::::::::COLLASSANODI::::::::::::::::::::::::::::::::::::::::::::::::::::::
+\clearpage % GRAFICA
 \subsection{Unione di ID autore in singoli nodi} \label{ssc:collassa}
 % TODO esempio di qualcuno
 Per risolvere il secondo problema insorto nell'estrazione dei dati, per cui ad una singola persona
@@ -540,7 +814,7 @@ I nodi del grafo in figura \ref{img:grafotutti} si riducono da 778 a 199. Gli ed
 a 661, mantenendo lo stesso peso totale di 7.803 (Figura \ref{img:grafotuttinome}).
 
 \centerline{
-\begin{minipage}{1.10\textwidth}
+\begin{minipage}{1.00\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
 \fbox{\includegraphics[page=1,scale=0.37]{img/GrafoTuttiNomi.pdf}}
 \captionof{figure}{Grafo delle collaborazioni - nodi unificati per nome}
@@ -549,11 +823,12 @@ a 661, mantenendo lo stesso peso totale di 7.803 (Figura \ref{img:grafotuttinome
 }
 
 % \clearpage % grafica da fare alla fine
+\clearpage % GRAFICA
 I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 158. Gli edge scendono da 850 a
 463, mantenendo il peso totale di 5.195 (Figura \ref{img:grafopadnome}).
 
 \centerline{
-\begin{minipage}{1.10\textwidth}
+\begin{minipage}{0.90\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
 \fbox{\includegraphics[page=1,scale=0.37]{img/GrafoPadovaniNomi.pdf}}
 \captionof{figure}{Grafo autori con affiliation padovana - nodi unificati per nome}
@@ -570,9 +845,8 @@ Questo fa sì che più persone vengano assimilate erroneamente in un unico nodo.
 Nei dati che sono stati trattati questo succede solo nel caso di ``\textit{Mattia Zorzi}'' e
 ``\textit{Michele Zorzi}'', che si abbreviano entrambi in ``\textit{m zorzi}''.
 
-In dataset più ampi oppure relativi a comunità che anche se ristrette presentano una bassa
-variabilità dei cognomi, il fenomeno dei falsi positivi incide in maniera molto più marcata sulla
-veridicità del grafo.
+In dataset con bassa variabilità dei cognomi, o in generale in dataset più ampi, il fenomeno dei
+falsi positivi incide in maniera più marcata sulla veridicità del grafo ottenuto con questo metodo.
 
 Nel secondo metodo sviluppato per unificare i nodi, viene richiesta un'ulteriore condizione per
 considerare due nodi come relativi alla stessa persona fisica. Oltre a verificare la corrispondenza
@@ -581,6 +855,7 @@ distanza è minore di una certa soglia, i due nodi vengono unificati. Questo pro
 iterato più volte, per sfruttare le informazioni ottenute nei passi precedenti.
 
 % \clearpage % grafica da fare alla fine
+\clearpage % GRAFICA
 \begin{center}
 \captionof*{table}{Prima iterazione unione nodi con distanza minima minore di 2}
 \begin{minipage}{0.40\textwidth}
@@ -664,15 +939,16 @@ risultano generalmente distanti 2. Il procedimento è stato ripetuto tre volte, 
 le informazioni generate nei passi predecenti. Dopo questo numero di iterazioni il grafo raggiunge
 quasi una situazione di stabilità, per cui nelle iterazioni successive non vengono uniti altri nodi.
 
-\clearpage % grafica da fare alla fine
+% \clearpage % GRAFICA
 
 I nodi del grafo in figura \ref{img:grafotutti} si riducono da 778 a 336. Gli edge scendono da 1830
 a 634, mantenendo lo stesso peso totale di 7.803 (Figura \ref{img:grafotuttidistanza}).
 
 \centerline{
-\begin{minipage}{1.20\textwidth}
+\begin{minipage}{0.80\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
-\fbox{\includegraphics[page=1,scale=0.47]{img/GrafoTuttiDistanza23.pdf}}
+% \fbox{\includegraphics[page=1,scale=0.47]{img/GrafoTuttiDistanza23.pdf}}
+\fbox{\includegraphics[page=1,scale=0.30]{img/GrafoTuttiDistanza23.pdf}}
 \captionof{figure}{Grafo delle collaborazioni - nodi unificati per distanza}
 \label{img:grafotuttidistanza}
 \end{minipage}
@@ -692,7 +968,7 @@ I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 173. Gli edge
 
 % TODO mostra tabella o grafico dei confronti delle iterazioni varie
 
-\clearpage % grafica da fare alla fine
+% \clearpage % grafica da fare alla fine
 
 \subsubsection{Unione di nodi in base a nodi adiacenti} \label{ssc:edge}
 Osservando i grafi generati senza unire i nodi, si nota la presenza di un elevato numero di
@@ -739,19 +1015,22 @@ $\rightarrow$
 \end{minipage}
 \end{center}
 
+
+\clearpage % GRAFICA
+
 I nodi del grafo in figura \ref{img:grafotutti} si riducono da 778 a 313. Gli edge scendono da 1830
 a 615, mantenendo lo stesso peso totale di 7.803 (Figura \ref{img:grafotuttiedge}).
 
 \centerline{
 \begin{minipage}{1.05\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
-\fbox{\includegraphics[page=1,scale=0.43]{img/GrafoTuttiEdge.pdf}}
+\fbox{\includegraphics[page=1,scale=0.40]{img/GrafoTuttiEdge.pdf}}
 \captionof{figure}{Grafo delle collaborazioni - nodi unificati per coppie di nodi adiacenti}
 \label{img:grafotuttiedge}
 \end{minipage}
 }
 
-\clearpage % grafica da fare alla fine
+% \clearpage % grafica da fare alla fine
 
 I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 174. Gli edge scendono da 850 a
 453, mantenendo il peso totale di 5.195 (Figura \ref{img:grafopadedge}).
@@ -759,19 +1038,11 @@ I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 174. Gli edge
 \centerline{
 \begin{minipage}{1.05\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
-\fbox{\includegraphics[page=1,scale=0.43]{img/GrafoPadovaniEdge.pdf}}
+\fbox{\includegraphics[page=1,scale=0.40]{img/GrafoPadovaniEdge.pdf}}
 \captionof{figure}{Grafo autori con affiliation padovana - nodi unificati per coppie di nodi adiacenti}
 \label{img:grafopadedge}
 \end{minipage}
 }
-
-\subsection{Generazione delle comunità}
-
-I grafi generati secondo i metodi descritti nella sezione precedente sono stati suddivisi in
-comunità utilizzando gli algoritmi descritti nella sezione \ref{sec:metodi}.
-
-Le comunità sono inoltre state generate anche considerando solo la componene centrale dei grafi
-(\textit{Giant Component}).
 
 \subsection{Errori intrinseci al database} \label{ssc:intrinseci}
 
@@ -787,12 +1058,12 @@ affiliation è molto influenzata da questa mancanza.
 
 \item[--]
 
-Nei record Paper-Autore-Affiliation, può mancare il record relativo a uno dei coautori. In altri
+Nei record Paper-Autore-Affiliation, può mancare il record relativo a uno dei co-autori. In altri
         casi l'ID autore presente può essere errato.
 
 \item[--]
 
-Tra i coautori dei un paper, possono essere riportati più ID autore riferiti alla stessa persona.
+Tra i co-autori dei un paper, possono essere riportati più ID autore riferiti alla stessa persona.
 
 \item[--]
 
@@ -847,13 +1118,13 @@ Estrarre le terne di ID paper-autore-affiliation
 \item
 Estrarre tutti i record paper-autore-affiliation relativi ai paper identificati al punto precedente
 \item
-Estrarre una nuova lista di ID autore dai paper appena estratti, ossia i coautori degli autori nella
+Estrarre una nuova lista di ID autore dai paper appena estratti, ossia i co-autori degli autori nella
 lista utilizzata al punto 2 per estrarre le terne
 \item
 Eventualmente ridurre il set di autori basandosi sulle affiliation dei loro paper
 \item
 Ripetere i passi 2-5 per un numero predefinito di volte o fino alla convergenza della rete, nel
-momento in cui non vengono identificati ulteriori coautori
+momento in cui non vengono identificati ulteriori co-autori
 \end{enumerate}
 
 In questo modo si estraggono tutte le comunità relative al set di affiliation usato come filtro. Una
@@ -867,7 +1138,7 @@ originale. In questo modo dipartimenti esterni, anche se connessi al grafo, veng
 
 Gli step 2,3 e 4 sono stati implementati, estraendo 3.845.835 record Paper-Autore-Affiliation,
 relativi a 56.450 paper univoci, da cui si ricavano 256.917 ID autore e 193.396 nomi univoci. Questi
-valori decisamente elevati di coautori e paper sono dovuti alla presenza di riviste, classificate come
+valori decisamente elevati di co-autori e paper sono dovuti alla presenza di riviste, classificate come
 paper nel database, a cui hanno collaborato centinaia e anche migliaia di autori.
 
 Filtrando i paper con più di 30 collaborazioni, il set di paper viene ridotto a 52.001 paper
@@ -914,206 +1185,16 @@ verosimilmente afferente al DEI.
 \whitePage
 \chapter{Risultati} \label{cap:risultati}
 
-\section{V-measure} \label{sec:vmeasure}
+\section{Generazione delle comunità}
 
-La \textit{V-measure}, una misura esterna della validità
-dei cluster basata sull'entropia, presentata da Rosenberg e Hirschberg~\cite{vmeasure}, è stata
-utilizzata per valutare la qualità delle partizioni dei grafi ricavati con i vari metodi descritti
-nelle sezioni precedenti.
+I grafi generati secondo i metodi descritti nella sezione precedente sono stati suddivisi in
+comunità utilizzando gli algoritmi descritti nella sezione \ref{sec:metodi}.
 
-%Per valutare la qualità delle partizioni dei grafi ricavati con i vari metodi descritti nelle
-%sezioni precedenti, è stata utilizzata la \textit{V-measure}, come presentata da Rosenberg e
-%Hirschberg \cite{vmeasure}, una misura esterna della validità dei cluster basata sull'entropia.
+Le comunità sono inoltre state generate anche considerando solo la componene centrale dei grafi.
 
-Come terminologia, si parlerà di due distinte partizioni del set di nodi da analizzare: un set di
-classi $C$, considerate la suddivisione reale dei nodi, e un set di cluster $K$ per indicare la
-partizione generata.
+Il numero di comunità in cui viene suddiviso il grafo è calcolato dagli algoritmi utilizzati in modo
+da generare la suddivisione ottimale.
 
-Rosenberg e Hirschberg hanno sviluppato due concetti, l'omogeneità e la completezza, la cui media
-armonica è la V-measure.
-
-Una partizione di cluster è considerata perfettamente omogenea quando i cluster contengono
-\textit{solo} membri di una singola classe.
-
-In maniera simmetrica una partizione è perfettamente completa quando un singolo cluster contiene
-\textit{tutti} i membri di una classe.
-
-Per valutare l'omogeneità di una partizione si considera l'entropia condizionata della distribuzione
-di classi dato il clustering generato $H(C|K)$. Nel caso di perfetta omogeneità questo valore è
-nullo in quanto il cluster contiene una singola classe, mentre è massimo e vale $H(C)$ quando la
-distribuzione delle classi all'interno del cluster è identica alla distribuzione delle classi
-nell'intero set, per cui il clustering non fornisce alcuna informazione aggiuntiva. Considerando che
-il valore di entropia è massimo quando la partizione è pessima, si definisce l'omogeneità come
-
-\begin{equation} \label{eq:h}
-    h = \begin{cases} 1 & \mbox{se } H(C) = 0 \\ 1-\frac{H(C|K)}{H(C)} & \mbox{altrimenti} \end{cases}
-\end{equation}
-
-Analogamente si definisce la completezza come
-
-\begin{equation} \label{eq:c}
-    c = \begin{cases} 1 & \mbox{se } H(K) = 0 \\ 1-\frac{H(K|C)}{H(K)} & \mbox{altrimenti} \end{cases}
-\end{equation}
-
-La \textit{V-measure} è definita come la media armonica dei due valori di omogeneità e completezza
-
-\begin{equation} \label{eq:v}
-    % V_\beta = (1+\beta)\frac{h \cdot c}{\beta \cdot h + c}
-    V = \frac{h \cdot c}{h + c}
-\end{equation}
-
-% Se $\beta<1$ si dà maggior peso all'omogeneità, se $\beta>1$ si dà maggior peso alla completezza. In
-% questo lavoro è stato usato $\beta=1$
-
-I seguenti diagrammi illustrano graficamente le tre situazioni limite. Le classi sono \{A, B, C,
-D\}, i colori rappresentano i cluster.
-
-\begin{center}
-\captionof*{table}{Clustering perfetto}
-\begin{minipage}{0.30\textwidth}
-    \begin{tabular}{|l|r|}
-    \hline $h$&1\\
-    \hline $c$&1\\
-    \hline $V$&1\\
-    \hline
-    \end{tabular}
-\end{minipage}
-% \begin{minipage}{0.075\textwidth}
-% $\rightarrow$
-% \end{minipage}
-\begin{minipage}{0.50\textwidth}
-    \begin{tikzpicture}
-    %\SetGraphUnit{3}
-    \GraphInit[vstyle=Normal]
-    %\draw[help lines] (0,0) grid (5,3);
-    \SetVertexNormal[FillColor=blue!50]
-    \Vertex[L=A]{1} % par défaut x = 0 et y = 0
-    \Vertex[x=0 , y=3, L=A]{2}
-    \Vertex[x=0.5 , y=1.5, L=A]{3}
-    \Vertex[x=1.0 , y=0.5, L=A]{4}
-    \Vertex[x=1.5 , y=2.5, L=A]{5}
-    \SetVertexNormal[FillColor=orange!50]
-    \Vertex[x=2.0 , y=1.5, L=B]{6}
-    \Vertex[x=2.5 , y=0.0, L=B]{7}
-    \Vertex[x=2.5 , y=3.0, L=B]{8}
-    \SetVertexNormal[FillColor=red!50]
-    \Vertex[x=3.0 , y=1.0, L=C]{9}
-    \Vertex[x=3.5 , y=2.0, L=C]{10}
-    \SetVertexNormal[FillColor=green!50]
-    \Vertex[x=4.0 , y=1.0, L=D]{11}
-    \Vertex[x=4.0 , y=3.0, L=D]{12}
-    \Vertex[x=5.0 , y=0.5, L=D]{13}
-    \Vertex[x=5.0 , y=2.0, L=D]{14}
-    \end{tikzpicture}
-\end{minipage}
-%\medskip
-\end{center}
-%    \setlength{\abovecaptionskip}{1cm}
-\begin{center}
-\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-    %\hline ID     &1&2&3&4&5&6&7&8&9&10&11&12&13&14\\
-    \hline Classe &A&A&A&A&A&B&B&B&C& C& D& D& D& D\\
-    \hline Cluster&1&1&1&1&1&2&2&2&3& 3& 4& 4& 4& 4\\
-\hline
-\end{tabular}
-\end{center}
-
-\begin{center}
-\captionof*{table}{Clustering completo ma non omogeneo}
-\begin{minipage}{0.30\textwidth}
-    \begin{tabular}{|l|r|}
-    \hline $h$&0.512\\
-    \hline $c$&1\\
-    \hline $V$&0.677\\
-    \hline
-    \end{tabular}
-\end{minipage}
-\begin{minipage}{0.50\textwidth}
-    \begin{tikzpicture}
-    \GraphInit[vstyle=Normal]
-    %\draw[help lines] (0,0) grid (5,3);
-    \SetVertexNormal[FillColor=blue!50]
-    \Vertex[L=A]{1} % par défaut x = 0 et y = 0
-    \Vertex[x=0 , y=3, L=A]{2}
-    \Vertex[x=0.5 , y=1.5, L=A]{3}
-    \Vertex[x=1.0 , y=0.5, L=A]{4}
-    \Vertex[x=1.5 , y=2.5, L=A]{5}
-    \Vertex[x=2.0 , y=1.5, L=B]{6}
-    \Vertex[x=2.5 , y=0.0, L=B]{7}
-    \Vertex[x=2.5 , y=3.0, L=B]{8}
-    \SetVertexNormal[FillColor=orange!50]
-    \SetVertexNormal[FillColor=red!50]
-    \Vertex[x=3.0 , y=1.0, L=C]{9}
-    \Vertex[x=3.5 , y=2.0, L=C]{10}
-    \Vertex[x=4.0 , y=1.0, L=D]{11}
-    \Vertex[x=4.0 , y=3.0, L=D]{12}
-    \Vertex[x=5.0 , y=0.5, L=D]{13}
-    \Vertex[x=5.0 , y=2.0, L=D]{14}
-    \SetVertexNormal[FillColor=green!50]
-    \end{tikzpicture}
-\end{minipage}
-\end{center}
-\begin{center}
-\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-    %\hline ID     &1&2&3&4&5&6&7&8&9&10&11&12&13&14\\
-    \hline Classe &A&A&A&A&A&B&B&B&C& C& D& D& D& D\\
-    \hline Cluster&1&1&1&1&1&1&1&1&2& 2& 2& 2& 2& 2\\
-\hline
-\end{tabular}
-\end{center}
-
-\begin{center}
-\captionof*{table}{Clustering omogeneo ma non completo}
-\begin{minipage}{0.30\textwidth}
-    \begin{tabular}{|l|r|}
-    \hline $h$&1\\
-    \hline $c$&0.727\\
-    \hline $V$&0.842\\
-    \hline
-    \end{tabular}
-\end{minipage}
-\begin{minipage}{0.50\textwidth}
-    \begin{tikzpicture}
-    \GraphInit[vstyle=Normal]
-    %\draw[help lines] (0,0) grid (5,3);
-    \SetVertexNormal[FillColor=blue!50]
-    \Vertex[L=A]{1} % par défaut x = 0 et y = 0
-    \Vertex[x=0 , y=3, L=A]{2}
-    \Vertex[x=0.5 , y=1.5, L=A]{3}
-    \SetVertexNormal[FillColor=orange!50]
-    \Vertex[x=1.0 , y=0.5, L=A]{4}
-    \Vertex[x=1.5 , y=2.5, L=A]{5}
-    \SetVertexNormal[FillColor=red!50]
-    \Vertex[x=2.0 , y=1.5, L=B]{6}
-    \Vertex[x=2.5 , y=0.0, L=B]{7}
-    \Vertex[x=2.5 , y=3.0, L=B]{8}
-    \SetVertexNormal[FillColor=green!50]
-    \Vertex[x=3.0 , y=1.0, L=C]{9}
-    \SetVertexNormal[FillColor=yellow!50]
-    \Vertex[x=3.5 , y=2.0, L=C]{10}
-    \SetVertexNormal[FillColor=purple!80]
-    \Vertex[x=4.0 , y=1.0, L=D]{11}
-    \SetVertexNormal[FillColor=gray!50]
-    \Vertex[x=4.0 , y=3.0, L=D]{12}
-    \Vertex[x=5.0 , y=0.5, L=D]{13}
-    \Vertex[x=5.0 , y=2.0, L=D]{14}
-    \end{tikzpicture}
-\end{minipage}
-\end{center}
-\begin{center}
-\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-    %\hline ID     &1&2&3&4&5&6&7&8&9&10&11&12&13&14\\
-    \hline Classe &A&A&A&A&A&B&B&B&C& C& D& D& D& D\\
-    \hline Cluster&1&1&1&2&2&3&3&3&4& 5& 6& 7& 7& 7\\
-\hline
-\end{tabular}
-\end{center}
-%Preview di due grafici per avere esempi da puntare. Forse punti alla sezione dopo.
-
-L'algoritmo utilizzato per calcolare la \textit{V-measure} è\\ {\fontfamily{qcr}\selectfont
-% \footnotesize
-homogeneity\_completeness\_v\_measure}, incluso nella libreria \textit{scikit-learn}~
-\cite{scikit-learn}.
 
 \section{Analisi dei risultati} \label{sec:risultati}
 
@@ -1121,11 +1202,16 @@ Per valutare la qualità delle partizioni generate, è stata calcolata la \texti
 considerando il Settore Scientifico Disciplinare estratto dal sito di dipartimento come classe
 corretta di appartenenza degli autori.
 
+Si è scelto di non considerare gli autori con etichetta \textit{"N/A"} per il calcolo della
+\textit{V-measure}, perché la classe corrispondente risulta frammentata in modo quasi uniforme tra i
+cluster, riducendo la completezza e quindi il valore di \textit{V-measure} calcolato.
+
 \subsection{Dati generati}
 
 Nella tabella \ref{tab:valorivmeasure} sono indicati i valori di \textit{V-measure} per tutte le
 possibili combinazioni di metodologia di estrazione paper, unione dei nodi e creazione dei cluster.
 
+\clearpage % GRAFICA
 {
     \footnotesize
     % \small
@@ -1134,11 +1220,11 @@ possibili combinazioni di metodologia di estrazione paper, unione dei nodi e cre
 % \centering
 \begin{center}
 % \begin{tabular}{ |l|l|l|r| }
-\captionof{table}{Numero di cluster e valore di V-measure delle partizioni generate}
+    \captionof{table}{Numero di cluster e valore di \textit{V-measure} delle partizioni generate}
 \label{tab:valorivmeasure}
 \begin{longtable}{ |l|l|l|r|r| }
     \hline
-        Set paper & Unione & Algoritmo di clustering & Num. di cluster & V-measure \\
+        Set paper & Unione & Algoritmo di clustering & Num. di cluster & \textit{V-measure} \\
     \hline
         \multirow{18}{4em}{Tutti}
         &
@@ -1147,8 +1233,8 @@ possibili combinazioni di metodologia di estrazione paper, unione dei nodi e cre
         &&Clauset-Newman-Moore&15&0.63\\
         &&Girvan-Newman  &18&0.57\\
         &&Blockmodel GC  &6&0.54\\
-        &&CNM Giant Component  &9&0.62\\
-        &&GN Giant Component  &12&0.56\\
+        &&CNM Componente Centrale  &9&0.62\\
+        &&GN Componente Centrale  &12&0.56\\
     \cline{2-5}
         % cella tutti
         &
@@ -1157,8 +1243,8 @@ possibili combinazioni di metodologia di estrazione paper, unione dei nodi e cre
         &&Clauset-Newman-Moore &64&0.44\\
         &&Girvan-Newman &64 &0.48\\
         &&Blockmodel GC  &6&0.44\\
-        &&CNM Giant Component  &8&0.40\\
-        &&GN Giant Component  &15&0.52\\
+        &&CNM Componente Centrale  &8&0.40\\
+        &&GN Componente Centrale  &15&0.52\\
     \cline{2-5}
         % cella tutti
         &
@@ -1167,8 +1253,8 @@ possibili combinazioni di metodologia di estrazione paper, unione dei nodi e cre
         &&Clauset-Newman-Moore &56&0.45\\
         &&Girvan-Newman &56&0.48\\
         &&Blockmodel GC  &6&0.47\\
-        &&CNM Giant Component  &8&0.42\\
-        &&GN Giant Component  &15&0.50\\
+        &&CNM Componente Centrale  &8&0.42\\
+        &&GN Componente Centrale  &15&0.50\\
     \cline{1-5}
         \multirow{18}{4em}{Padovani}
         &
@@ -1177,8 +1263,8 @@ possibili combinazioni di metodologia di estrazione paper, unione dei nodi e cre
         &&Clauset-Newman-Moore &13&0.58\\
         &&Girvan-Newman &16&0.62\\
         &&Blockmodel GC  &3&0.41\\
-        &&CNM Giant Component  &8&0.52\\
-        &&GN Giant Component  &11&0.61\\
+        &&CNM Componente Centrale  &8&0.52\\
+        &&GN Componente Centrale  &11&0.61\\
     \cline{2-5}
         % cella padovani
         &
@@ -1187,8 +1273,8 @@ possibili combinazioni di metodologia di estrazione paper, unione dei nodi e cre
         &&Clauset-Newman-Moore &20&0.52\\
         &&Girvan-Newman &25&0.64\\
         &&Blockmodel GC  &4&0.52\\
-        &&CNM Giant Component  &9&0.61\\
-        &&GN Giant Component  &12&0.63\\
+        &&CNM Componente Centrale  &9&0.61\\
+        &&GN Componente Centrale  &12&0.63\\
     \cline{2-5}
         % cella padovani
         &
@@ -1197,8 +1283,8 @@ possibili combinazioni di metodologia di estrazione paper, unione dei nodi e cre
         &&Clauset-Newman-Moore &20&0.52\\
         &&Girvan-Newman &25&0.65\\
         &&Blockmodel GC  &6&0.60\\
-        &&CNM Giant Component  &9&0.63\\
-        &&GN Giant Component  &12&0.65\\
+        &&CNM Componente Centrale  &9&0.63\\
+        &&GN Componente Centrale  &12&0.65\\
     \hline
 % \end{tabular}
 \end{longtable}
@@ -1216,7 +1302,7 @@ Ed: Unione dei nodi in base a nodi adiacenti\\
 Bl: comunità generate dall'algoritmo Blockmodel\\
 Cl: comunità generate dall'algoritmo Clauset-Newman-Moore\\
 Gi: comunità generate dall'algoritmo Girvan-Newman\\
-GC: indica l'elaborazione effettuata sulla Giant Component
+GC: indica l'elaborazione effettuata sulla Componente Centrale
 
 
 % figura grafico v-measure
@@ -1224,7 +1310,7 @@ GC: indica l'elaborazione effettuata sulla Giant Component
 \begin{minipage}{1.15\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
 \fbox{\includegraphics[page=1,scale=0.80]{img/Validation_generale_DEI.pdf}}
-\captionof{figure}{Valori di V-measure delle partizioni generate}
+    \captionof{figure}{Valori di \textit{V-measure} delle partizioni generate}
 \label{img:graficovmeasure}
 \end{minipage}
 }
@@ -1283,7 +1369,8 @@ Il metodo Girvan-Newman si è rivelato essere il migliore in termini di \textit{
 quando applicato all'intero grafo, sia quando applicato solo alla componente centrale dello stesso.
 
 Nel caso del metodo Blockmodel, si nota una differenza tra l'analisi dell'intero grafo e della sua
-componente centrale, ed è stata rilevata una migliore efficacia del metodo nel secondo caso.
+componente centrale, ed è stata rilevata una maggiore efficacia del metodo quando applicato solo
+alla componente centrale del grafo.
 
 \begin{figure}[H]
     \begin{minipage}[c]{0.60\textwidth}
@@ -1292,7 +1379,7 @@ componente centrale, ed è stata rilevata una migliore efficacia del metodo nel 
     \end{minipage}
     % \hfill
     \begin{minipage}[c]{0.32\textwidth}
-    \caption{Medie dei valori di V-measure aggregate per algoritmo di generazione cluster }
+        \caption{Medie dei valori di \textit{V-measure} aggregate per algoritmo di generazione cluster }
     \label{img:vmeasurecluster}
     \end{minipage}
 \end{figure}
@@ -1318,7 +1405,7 @@ quelle di maggiore dimensione siano più frazionate.
 
 
 In figura \ref{fig:grafigirvanaggregati} sono riportati i cluster ottenuti applicando l'algoritmo di
-Girvan e Newman alle componenti centrali dei grafi generati in tutti i possibili modi.
+Girvan e Newman alle componenti centrali dei grafi generati con i diversi approcci proposti.
 
 \clearpage
 \begin{figure}[ht]
@@ -1328,7 +1415,7 @@ Girvan e Newman alle componenti centrali dei grafi generati in tutti i possibili
             \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
             % \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_padovani_edge_girvan_DEI.pdf}}
             \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoPadovaniEdgeGirvan.pdf}}
-            \caption{Girvan Newmann}
+            \caption{Girvan Newman}
         \end{subfigure}%
         ~
         \begin{subfigure}[b]{0.5\textwidth}
@@ -1379,7 +1466,7 @@ Girvan e Newman alle componenti centrali dei grafi generati in tutti i possibili
             \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
             % \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_padovani_edge_girvan_DEI.pdf}}
                 \fbox{\includegraphics[page=1,scale=0.30]{img/Aggregati/GrafoAggregato_padovani_edge_girvnew_DEI.pdf}}
-                \caption{Girvan Newmann}
+                \caption{Girvan Newman}
             \end{subfigure}%
             ~
             \begin{subfigure}[b]{0.5\textwidth}
@@ -1499,17 +1586,44 @@ Girvan e Newman alle componenti centrali dei grafi generati in tutti i possibili
 \whitePage
 \chapter{Conclusioni} \label{cap:conclusioni}
 
-Alcuni metodi seguiti hanno prodotto una rete di autori soddisfacente. In particolare quando la rete
-viene filtrata considerando gli autori con almeno un paper con affiliation padovana, gli autori
+Questo lavoro si proponeva come obiettivo la creazione di una rete di co-autori di pubblicazioni
+scientifiche, in particolare degli autori afferenti al Dipartimento di Ingegneria dell'Informazione
+dell'Università di Padova.
+
+L'approccio seguito è stato quello di estrarre dal database \textit{Microsoft} le collaborazioni tra
+gli autori il cui nome figura nella lista di afferenti DEI. La rete generata è stata filtrata
+mantenendo solo gli autori con almeno una pubblicazione con affiliation padovana.
+
+Nelle due reti generate in questo modo, compaiono nodi multipli associati allo stesso autore DEI.
+Sono stati sviluppati tre metodi di deduplicazione per aggregare i nodi relativi allo stesso autore.
+Il metodo dell'unione dei nodi per nome presenta delle lacune nel caso di omonimie. I metodi di
+unione dei nodi per distanza minima o per nodi adiacenti sono stati sviluppati per risolvere questo
+problema.
+
+Le sei reti generate seguendo tutte le possibili combinazioni dei metodi precedenti sono state
+suddivise in cluster utilizzando tre algoritmi, applicati all'intero grafo o solo alla sua
+componente centrale.
+
+Alcuni dei metodi seguiti hanno prodotto una rete di autori soddisfacente. In particolare quando la
+rete viene filtrata considerando gli autori con almeno un paper con affiliation padovana, gli autori
 estratti sono verosimilmente afferenti al DEI.
 
-Le problematiche evidenziate non consentono un'identificazione perfetta dei gruppi di ricerca, ma la
-struttura macroscopica che si ricava dai grafi fornisce un'indicazione della composizione del
-dipartimento, in particolare quando si utilizza l'algoritmo di Girvan e Newmann.
+Le problematiche evidenziate (la presenza di nodi omonimi e di nodi multipli dello stesso autore)
+non consentono un'identificazione perfetta dei gruppi di ricerca, ma la struttura macroscopica che
+si ricava dai grafi fornisce un'indicazione della composizione del dipartimento, in particolare
+quando si utilizza l'algoritmo di Girvan e Newman.
 
-La rete ottenuta ampliando il set degli autori è molto completa ma non è limitata al dipartimento.
-Uno studio più approfondito delle strategie di rimozione dei nodi esterni può portare a una rete che
-descrive in maniera accurata il dipartimento.
+Si è constatata l'importanza degli autori, non più afferenti dei, che in passato sono stati fulcro
+di una comunità.
+
+Per cercare di identificare e includere questi autori, è stato proposto un metodo per ampliare il
+set di autori che considera i co-autori dei paper scritti dagli autori del dipartimento.
+
+La prima iterazione di questo metodo proposto è stata implementata, ottenendo una rete molto
+completa ma che non è limitata al dipartimento.
+
+Un futuro studio più approfondito delle strategie di rimozione dei nodi esterni può portare alla
+generazione di una rete che descrive in maniera accurata il dipartimento.
 
 % Partendo da una lista di nomi di un dipartimento si può estrarre un grafo che lo rappresenti? Le
 % comunità generate rispecchiano quelle reali?
