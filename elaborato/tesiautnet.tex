@@ -146,37 +146,70 @@ Dott. Mattia \textsc{Samory} % Supervisor's Name
 \section*{Abstract} \label{abstract} % the asterisk is to remove the numbering
 \addcontentsline{toc}{chapter}{Abstract} % we put the asterisk so we add it manually to the toc
 % qua ci sarà un glorioso abstract
-È stato generato un grafo delle pubblicazioni del DEI.
 
-Sono stati cercati cluster nel grafo.
+Viene presentato un metodo per estrarre la rete degli autori afferenti al Dipartimento di Ingegneria
+dell'Informazione dal \textit{Microsoft Academic Graph}.
 
-% TODO spezzettare le parole in un abstract è orribile
-Sono stati confrontati con la struttura delle comunità del dipartimento.
+Vengono utilizzati tre metodi per classificare gli autori in comunità corrispondenti ai gruppi di
+ricerca.
 
+Il Settore Scientifico Disciplinare viene sfruttato per valutare le partizioni ottenute.
+
+Viene proposto un metodo alternativo di estrazione dei dati per creare una rete più ampia, che
+includa anche autori non più afferenti al DEI.
 
 % \whitePage
 \section*{Introduzione} \label{introduzione}
 \addcontentsline{toc}{chapter}{Introduzione} % we put the asterisk so we add it manually to the toc
 
-Breve descrizione del community detection e della sua importanza, in generale e nel caso particolare
-delle comunità di autori di pubblicazioni scientifiche.
+L'analisi delle reti ha ricevuto molto interesse negli ultimi 20 anni, grazie alle sue numerose
+applicazioni in ambito scientifico e industriale in campi che spaziano dall'ecologia all'economia,
+dallo studio delle reti sociali alle neuroscienze, e più recentemente per le sue applicazioni agli
+studi di machine learning.
 
-Presentazione della struttura della tesi.
+Le reti che descrivono fenomeni e situazioni naturali sono spesso caratterizzate da
+un'organizzazione interna. Studiando la struttura della rete si possono mettere
+in luce le relazioni e i meccanismi che la governano, ricavando utili indicazioni sul comportamento
+globale del sistema complesso studiato.
 
+Una caratteristica molto descrittiva di un grafo sono le comunità che lo formano, e l'individuazione
+delle comunità è un'argomento di ricerca molto interessante.
+\\
+\\
+In questo elaborato, viene presentato uno studio di una rete di autori di pubblicazioni
+scientifiche.
+
+Nella prima sezione viene descritto il problema del community detection e vengono descritti alcuni
+dei metodi esistenti per analizzare un grafo.
+
+Nella seconda sezione viene descritta la struttura del \textit{Microsoft Academic Graph} da cui sono
+stati estratti i dati, il metodo che si è usato per estrarli e i problemi riscontrati. Vengono
+proposti e implementati dei metodi alternativi per risolverli.
+
+Nella terza sezione viene descritta la metrica utilizzata per valutare i grafi ottenuti, la
+\textit{V-measure}, e vengono presentati i risultati ottenuti.
+
+Nell'ultima sezione si traggono le conclusioni sul lavoro svolto.
+
+Il codice scritto per la manipolazione dei dati è disponibile sulla piattaforma \textit{GitHub} alla
+pagina \url{github.com/Pitrified/authorship-network}.
 
 
 \whitePage
 \chapter{Community detection} \label{cap:comdet}
 
-\section{Studi esistenti} \label{sec:storia}
+\section{Definizione del problema} \label{sec:storia}
 
-Descrizione delle comunità
+Le relazioni tra elementi di un sistema complesso possono essere rappresentate con un grafo. Gli
+elementi del sistema sono rappresentati dai nodi e le loro interazioni dagli archi. A livello
+globale, la topologia del grafo fornisce già parecchie informazioni sul sistema. A livello
+intermedio, molti grafi dimostrano una certo livello di organizzazione. Le comunità sono gruppi di
+nodi reputati simili in base a qualche metrica di somiglianza. In generale, i nodi di una stessa
+comunità sono fortemente connessi tra loro, mentre le connessioni tra nodi in diverse comunità sono
+meno probabili.
 
-% - edge più probabili tra nodi interni alla comunità e meno tra le comunità
-
-Descrizione della community detection.
-
-Descrizione della bibliografia attuale sui grafi di coautori.
+Nella sezione seguente, vengono presentati tre metodi per estrapolare la struttura in comunità di un
+grafo.
 
 \section{Metodi usati} \label{sec:metodi}
 
@@ -225,8 +258,8 @@ comunità gerarchica in cui $D\sim\log N$.
 \subsection{Stochastic Block Model} \label{subsec:bn}
 
 A differenza dei due metodi descritti nelle sezioni precedenti, l'algoritmo del \textit{Stochastic
-Block Model} segue un approccio euristico al problema del \textit{community detection}.
-Inoltre questo algoritmo non favorisce necessariamente la struttura delle comunità formate da nodi
+Block Model} segue un approccio stocastico al problema del \textit{community detection}. Inoltre
+questo algoritmo non favorisce necessariamente la struttura delle comunità formate da nodi
 strettamente connessi tra loro e meno connessi con membri delle altre comunità.
 
 Il modello stocastico a blocchi generalizza la struttura di comunità di un grafo raggruppando i nodi
@@ -324,6 +357,7 @@ La lista ottenuta comprende 379 autori.
 % TODO non fare il pezzente e scrivi quanti hanno l'etichetta
 Dove presente, è stato estratto il Settore Scientifico Disciplinare dell'afferente, che ha fornito
 la partizione in classi utilizzata come rifermento alla fine dell'elaborazione dei dati.
+Nel caso di assegnisti e dottorandi, è stata assegnata come classe \textit{"N/A"}
 
 I nomi propri degli autori sono stati abbreviati in tutte le possibili combinazioni per rispecchiare
 la struttura del database Microsoft, ed è stato creato un file con la struttura seguente:
@@ -350,7 +384,9 @@ i record relativi ai paper, nella forma (ID paper, ID autore, ID affiliation), p
 62.291 paper.
 
 Dalla lista così ottenuta, non necessariamente ordinata, sono stati creati gli edge fra ID autore,
-che sono poi stati aggregati creando una edge list pesata, come indicato in \ref{tab:creazioneedge}
+considerando una collaborazione tra autori per ciascun paper pubblicato assieme. Gli edge sono poi
+stati aggregati creando una edge list pesata. Questi due passaggi sono esemplificati nella tabella
+\ref{tab:creazioneedge}
 
 \begin{center}
 
@@ -383,8 +419,9 @@ A partire da questi edge è stato generato il primo grafo che rappresenta la ret
 % TODO riscrivila
 
 Questo metodo di creazione del grafo, che considera le collaborazioni tra autori, riduce a 778 il
-set di ID autori per un totale di 287 nomi univoci. Il grafo è formato da 1.830 edge con 7.803 di
-peso totale.
+set di ID autori, eliminando tutti i nodi sconnessi, che si assume siano riferiti ad omonimi di un
+afferente DEI. Nel grafo compaiono 287 nomi univoci, connessi da 1.830 edge con 7.803 di peso
+totale.
 
 I grafi in questo capitolo sono stati divisi in comunità utilizzando l'algoritmo Modularity di
 Gephi.
@@ -394,7 +431,7 @@ Gephi.
 \begin{minipage}{1.45\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
 \fbox{\includegraphics[page=1,scale=0.60]{img/GrafoCollaborazioni.pdf}}
-\captionof{figure}{Grafo collaborazioni}
+\captionof{figure}{Grafo delle collaborazioni}
 \label{img:grafotutti}
 \end{minipage}
 }
@@ -419,22 +456,34 @@ Vengono selezionati anche gli ID riferiti ad autori omonimi, non affiliati al DE
 Ad un singolo autore DEI sono associati più ID autore.
 \end{itemize}
 
+Nelle sottosezioni successive si presenteranno le soluzioni che sono state implementate per cercare
+di risolvere questi problemi.
+
 %::::PADOVANI::::
 \subsection{Filtro degli autori per affiliation} \label{ssc:padovani}
 Il primo problema è già in parte risolto dal metodo di creazione del grafo, che considera solo gli
 ID autori che hanno almeno una collaborazione con un altro ID nel set. In questo modo più del 90\%
 degli ID viene filtrato.
 
-Ispezionando manualmente il grafo, si rileva la presenza di due nodi riferiti a "c pizzi", che però
-sono connessi ad autori con cui la professoressa Pizzi non ha mai collaborato. Analizzando gli ID,
-le loro collaborazioni e i paper a cui hanno collaborato, si è dedotto che sono ID relativi
-probabilmente a Carmine Pizzi e Claudia Pizzi, medici rispettivamente a Bologna e Milano. Questi ID
-sono stati inclusi perché risultano collaborazioni con altri autori il cui nome è presente nella
-lista di partenza estratta dal sito di dipartimento.
+Tuttavia, nel caso di collaborazioni tra omonimi di autori DEI, quantomeno in forma abbreviata,
+autori non del DEI non vengono filtrati.
 
-È stato sviluppato un secondo metodo di estrazione dei dati che esclude gli ID autore se non hanno
-mai pubblicato un paper a Padova, considerando le informazioni sulle affiliation dei paper, come
-viene illustrato di seguito.
+% Ispezionando manualmente il grafo, si trova un esempio di questo caso nella collaborazione tra
+% \textit{"c pizzi"} e \textit{"f guerra"}, di cui non si trova riscontro in letteratura. Analizzando
+% gli ID, le loro collaborazioni e i paper a cui hanno collaborato, si è dedotto che sia l'ID relativo
+% a Carmine Pizzi, medico a Bologna.
+%
+% si rileva la presenza di due nodi riferiti a "c pizzi", che però
+% sono connessi ad autori con cui la professoressa Pizzi non ha mai collaborato. Analizzando
+% gli ID,
+% le loro collaborazioni e i paper a cui hanno collaborato, si è dedotto che sono ID relativi
+% probabilmente a Carmine Pizzi e Claudia Pizzi, medici rispettivamente a Bologna e Milano.
+% Questi ID sono stati inclusi perché risultano collaborazioni con altri autori il cui nome è presente
+% nella lista di partenza estratta dal sito di dipartimento.
+
+Per ovviare a questo problema, è stato sviluppato un secondo metodo di estrazione dei dati che
+esclude gli ID autore se non hanno mai pubblicato un paper a Padova, considerando le informazioni
+sulle affiliation dei paper, come viene illustrato di seguito.
 
 \begin{itemize}[noitemsep, topsep=0pt]
 \item[--]
@@ -452,14 +501,16 @@ Si estraggono i paper scritti da questi ID autore e si procede alla generazione 
 Applicando questo metodo, gli ID autore si riducono a 306, relativi a 201 nomi univoci. Il grafo
 generato include 850 edge con un peso totale di 5.195.
 
-Gli ID autore riferiti a "c pizzi", non avendo neanche un paper con affiliation padovana, vengono
-correttamente filtrati.
+% Gli ID autore riferiti a "c pizzi", non avendo neanche un paper con affiliation padovana, vengono
+% correttamente filtrati.
 
 \centerline{
 \begin{minipage}{1.10\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
 \fbox{\includegraphics[page=1,scale=0.45]{img/GrafoPadovani.pdf}}
-\captionof{figure}{Grafo Padovani}
+\captionof{figure}{Grafo delle collaborazioni tra autori con nominativi associati alla lista di
+    afferenti al DEI che hanno pubblicato almeno un lavoro con affiliation presente nella lista di
+    affiliation padovane estratte}
 \label{img:grafopad}
 \end{minipage}
 }
@@ -469,14 +520,14 @@ correttamente filtrati.
 % TODO esempio di qualcuno
 Per risolvere il secondo problema insorto nell'estrazione dei dati, per cui ad una singola persona
 fisica, effettivamente affiliata al DEI, possono essere associati più ID autore, sono state seguite
-due vie alternative fra loro.
+tre vie alternative fra loro.
 
-Il primo metodo tiene conto solo dei nomi associati ai nodi del grafo, il secondo metodo sfrutta la
-struttura del grafo per stabilire se due nodi siano riferiti alla stessa persona.
+Il primo metodo tiene conto solo dei nomi associati ai nodi del grafo, il secondo e il terzo metodo
+sfruttano la struttura del grafo per stabilire se due nodi siano riferiti alla stessa persona.
 
 % I grafi precedentemente generati vengono rielaborati
 
-\subsubsection{Per nome} \label{ssc:nomi} % questo label è inutile
+\subsubsection{Unione di nodi in base al nome} \label{ssc:nomi} % questo label è inutile
 
 I grafi precedentemente generati vengono rielaborati, ipotizzando che nodi con nomi uguali o le cui
 abbreviazioni sono uguali possano essere considerati un unico nodo.
@@ -486,31 +537,31 @@ pietracaprina}'' ma anche a ``\textit{andrea a pietracaprina}'' come pure a ``\t
 pietracaprina}''.
 
 I nodi del grafo in figura \ref{img:grafotutti} si riducono da 778 a 199. Gli edge scendono da 1830
-a 661, mantenendo lo stesso peso totale di 7.803.
+a 661, mantenendo lo stesso peso totale di 7.803 (Figura \ref{img:grafotuttinome}).
 
 \centerline{
 \begin{minipage}{1.10\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
 \fbox{\includegraphics[page=1,scale=0.37]{img/GrafoTuttiNomi.pdf}}
-\captionof{figure}{Grafo collaborazioni - nodi unificati per nome}
+\captionof{figure}{Grafo delle collaborazioni - nodi unificati per nome}
 \label{img:grafotuttinome}
 \end{minipage}
 }
 
 % \clearpage % grafica da fare alla fine
 I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 158. Gli edge scendono da 850 a
-463, mantenendo il peso totale di 5.195.
+463, mantenendo il peso totale di 5.195 (Figura \ref{img:grafopadnome}).
 
 \centerline{
 \begin{minipage}{1.10\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
 \fbox{\includegraphics[page=1,scale=0.37]{img/GrafoPadovaniNomi.pdf}}
-\captionof{figure}{Grafo padovani - nodi unificati per nome}
+\captionof{figure}{Grafo autori con affiliation padovana - nodi unificati per nome}
 \label{img:grafopadnome}
 \end{minipage}
 }
 
-\subsubsection{Per distanza} \label{ssc:distanza}
+\subsubsection{Unione di nodi in base alla distanza} \label{ssc:distanza}
 
 Il metodo che considera i nomi precedentemente descritto introduce una criticità nel caso un cui due
 autori abbiano un nome che viene abbreviato nello stesso modo.
@@ -608,34 +659,33 @@ $\rightarrow$
 
 I valori ottimi di soglia e numero di iterazioni sono stati cercati sperimentalmente, ma non è
 emersa dai risultati una coppia di valori migliore in maniera rilevante rispetto alle altre.
-% TODO riferimento alla spiegazione del perché nel capitolo 4
 Ispezionando manualmente il grafo, si è constatato che ID autore riferiti alla stessa persona
 risultano generalmente distanti 2. Il procedimento è stato ripetuto tre volte, in modo da sfruttare
 le informazioni generate nei passi predecenti. Dopo questo numero di iterazioni il grafo raggiunge
-quasi una situazione di stabilità.
+quasi una situazione di stabilità, per cui nelle iterazioni successive non vengono uniti altri nodi.
 
 \clearpage % grafica da fare alla fine
 
 I nodi del grafo in figura \ref{img:grafotutti} si riducono da 778 a 336. Gli edge scendono da 1830
-a 634, mantenendo lo stesso peso totale di 7.803.
+a 634, mantenendo lo stesso peso totale di 7.803 (Figura \ref{img:grafotuttidistanza}).
 
 \centerline{
 \begin{minipage}{1.20\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
 \fbox{\includegraphics[page=1,scale=0.47]{img/GrafoTuttiDistanza23.pdf}}
-\captionof{figure}{Grafo collaborazioni unificati per distanza}
+\captionof{figure}{Grafo delle collaborazioni - nodi unificati per distanza}
 \label{img:grafotuttidistanza}
 \end{minipage}
 }
 
 I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 173. Gli edge scendono da 850 a
-439, mantenendo il peso totale di 5.195.
+439, mantenendo il peso totale di 5.195 (Figura \ref{img:grafopaddistanza}).
 
 \centerline{
 \begin{minipage}{1.00\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
 \fbox{\includegraphics[page=1,scale=0.37]{img/GrafoPadovaniDistanza23.pdf}}
-\captionof{figure}{Grafo Padovani unificati per distanza}
+\captionof{figure}{Grafo autori con affiliation padovana - nodi unificati per distanza}
 \label{img:grafopaddistanza}
 \end{minipage}
 }
@@ -644,7 +694,7 @@ I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 173. Gli edge
 
 \clearpage % grafica da fare alla fine
 
-\subsubsection{Per nodi adiacenti} \label{ssc:edge}
+\subsubsection{Unione di nodi in base a nodi adiacenti} \label{ssc:edge}
 Osservando i grafi generati senza unire i nodi, si nota la presenza di un elevato numero di
 componenti sconnesse formate da 2-4 autori, che sono principalmente effettivi collaboratori tra
 loro. È stato sviluppato un metodo di deduplicazione dei nodi che si basa sulle collaborazioni tra
@@ -690,13 +740,13 @@ $\rightarrow$
 \end{center}
 
 I nodi del grafo in figura \ref{img:grafotutti} si riducono da 778 a 313. Gli edge scendono da 1830
-a 615, mantenendo lo stesso peso totale di 7.803.
+a 615, mantenendo lo stesso peso totale di 7.803 (Figura \ref{img:grafotuttiedge}).
 
 \centerline{
 \begin{minipage}{1.05\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
 \fbox{\includegraphics[page=1,scale=0.43]{img/GrafoTuttiEdge.pdf}}
-\captionof{figure}{Grafo collaborazioni unificati per coppie di nodi adiacenti}
+\captionof{figure}{Grafo delle collaborazioni - nodi unificati per coppie di nodi adiacenti}
 \label{img:grafotuttiedge}
 \end{minipage}
 }
@@ -704,16 +754,24 @@ a 615, mantenendo lo stesso peso totale di 7.803.
 \clearpage % grafica da fare alla fine
 
 I nodi del grafo in figura \ref{img:grafopad} si riducono da 306 a 174. Gli edge scendono da 850 a
-453, mantenendo il peso totale di 5.195.
+453, mantenendo il peso totale di 5.195 (Figura \ref{img:grafopadedge}).
 
 \centerline{
 \begin{minipage}{1.05\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
 \fbox{\includegraphics[page=1,scale=0.43]{img/GrafoPadovaniEdge.pdf}}
-\captionof{figure}{Grafo Padovani unificati per coppie di nodi adiacenti}
+\captionof{figure}{Grafo autori con affiliation padovana - nodi unificati per coppie di nodi adiacenti}
 \label{img:grafopadedge}
 \end{minipage}
 }
+
+\subsection{Generazione delle comunità}
+
+I grafi generati secondo i metodi descritti nella sezione precedente sono stati suddivisi in
+comunità utilizzando gli algoritmi descritti nella sezione \ref{sec:metodi}.
+
+Le comunità sono inoltre state generate anche considerando solo la componene centrale dei grafi
+(\textit{Giant Component}).
 
 \subsection{Errori intrinseci al database} \label{ssc:intrinseci}
 
@@ -729,7 +787,8 @@ affiliation è molto influenzata da questa mancanza.
 
 \item[--]
 
-Nei record Paper-Autore-Affiliation, può mancare il record relativo a uno dei coautori.
+Nei record Paper-Autore-Affiliation, può mancare il record relativo a uno dei coautori. In altri
+        casi l'ID autore presente può essere errato.
 
 \item[--]
 
@@ -741,12 +800,15 @@ I nomi con caratteri non ASCII sono trattati in maniera imprevedibile.
 
 \end{itemize}
 
-Nel prossimo capitolo si propongono dei metodi alternativi di estrazione dei dati per tentare di
+% Nel prossimo capitolo si propongono dei metodi alternativi di estrazione dei dati per tentare di
+% aggirare questi problemi.
+
+Nella prossima sezione si propongono dei metodi alternativi di estrazione dei dati per tentare di
 aggirare questi problemi.
 
-
-\whitePage
-\chapter{Troubleshooting} \label{cap:trouble}
+% \whitePage
+% \chapter{Troubleshooting} \label{cap:trouble}
+\section{Troubleshooting}
 Il grafo generato attraverso gli accorgimenti discussi in precedenza presenta ancora delle carenze.
 
 % subsubsection nomi mancanti
@@ -755,19 +817,24 @@ In particolare, la lista di partenza include solo gli attuali afferenti DEI, est
 dipartimento. Questo comporta la mancanza di professori, non più attivi a Padova, che avevano ruolo
 di aggregatore di una comunità.
 
-Inserendo manualmente Alberto Apostolico, prolifico autore di paper all'Università di Padova, nella
-lista di partenza, il grafo, in prossimità del professore, cambia in maniera rilevante, come
-illustrato in figura \ref{img:apostolico}. Utilizzando questa procedura, emerge una comunità di
-collaboratori che precendentemente erano distanti nel grafo.
+Ad esempio, inserendo manualmente Alberto Apostolico, prolifico autore di paper all'Università di
+Padova, nella lista di partenza, il grafo, in prossimità del professore, cambia in maniera
+rilevante, come illustrato in figura \ref{img:apostolico}. I nodi non sono stati uniti per
+evidenziare come l'assenza dei nodi riferiti al professor Apostolico influenzerebbe la
+deduplicazione dei nodi. Utilizzando questa procedura, emerge una comunità di collaboratori che
+precendentemente erano distanti nel grafo.
 
 \centerline{
 \begin{minipage}{0.80\textwidth}
 \setlength{\fboxrule}{0pt}	%barbatrucco per far sparire il bordo della box
 \fbox{\includegraphics[page=1,scale=1.80]{img/cropped_GrafoApostolico.pdf}}
-\captionof{figure}{Rete di collaborazioni del professor Apostolico}
+\captionof{figure}{Rete di collaborazioni ottenuta aggiungendo manualmente il nome del professor
+    Apostolico}
 \label{img:apostolico}
 \end{minipage}
 }
+
+\subsection{Metodo per ampliare il set di autori}
 
 Un metodo generale proposto per identificare anche autori non presenti nella lista degli attuali
 afferenti DEI è:
@@ -789,27 +856,59 @@ Ripetere i passi 2-5 per un numero predefinito di volte o fino alla convergenza 
 momento in cui non vengono identificati ulteriori coautori
 \end{enumerate}
 
-In questo modo si estraggono tutte le comunità relative alle affiliation usate come filtro. Una
+In questo modo si estraggono tutte le comunità relative al set di affiliation usato come filtro. Una
 singola collaborazione con un dipartimento esterno comporta alle iterazioni successive l'inclusione
 di molti autori di quel dipartimento. Un metodo proposto per risolvere il problema e generare una
 rete di autori relativa solo al dipartimento di interesse è, alla fine delle iterazioni e della
 creazione dei cluster, considerare solo quelli che contengono almeno un nome presente nella lista
-originale: in questo modo dipartimenti esterni, anche se connessi al grafo, vengono filtrati.
+originale. In questo modo dipartimenti esterni, anche se connessi al grafo, vengono filtrati.
+
+\subsubsection{Implementazione del metodo}
 
 Gli step 2,3 e 4 sono stati implementati, estraendo 3.845.835 record Paper-Autore-Affiliation,
 relativi a 56.450 paper univoci, da cui si ricavano 256.917 ID autore e 193.396 nomi univoci. Questi
-valori decisamente elevati di coautori e paper è dovuto alla presenza di riviste, classificate come
+valori decisamente elevati di coautori e paper sono dovuti alla presenza di riviste, classificate come
 paper nel database, a cui hanno collaborato centinaia e anche migliaia di autori.
 
-Filtrando i paper con più di 30 collaborazioni, il set di paper si riduce a 52.001 univoci, su
-311.816 record Paper-Autore-Affiliation. Vengono identificati 148.124 ID autore per un totale di
-112.440 nomi univoci.
+Filtrando i paper con più di 30 collaborazioni, il set di paper viene ridotto a 52.001 paper
+univoci, con 311.816 record Paper-Autore-Affiliation. Vengono identificati 148.124 ID autore per un
+totale di 112.440 nomi univoci. Da questa selezione di paper ed autori è stato generato un grafo
+applicando l'algoritmo di deduplicazione per nodi adiacenti. Un dettaglio di alcune collaborazioni
+ottenute in questo modo è incluso nella Figura \ref{img:grupporicerca}.
 
-9572 paper univoci padovani
-23.417 paper padovani
-2.442 ID autori padovani
-2.094 nomi univoci
+\begin{figure}[ht]
+    \vspace*{-3cm}
+    \centering
+    \setlength{\fboxrule}{0pt} % barbatrucco per far sparire il bordo della box
+    \fbox{\includegraphics[page=1,scale=1.20]{img/GruppoRicercaCrop.pdf}}
+    \caption{Dettaglio di alcune collaborazioni di ricerca ottenute ampliando il set degli autori}
+    \label{img:grupporicerca}
+\end{figure}
 
+Il metodo per nodi adiacenti si è rivelato valido nell'aggregare i dati estratti; ad esempio, nel
+grafo è presente un nodo etichettato \textit{"Cinzia Pizzi"}, correttamente individuato e connesso
+con tutti i co-autori con cui la docente DEI ha collaborato. Sono inoltre presenti
+altri due nodi etichettati \textit{"c pizzi"}, che si riferiscono a Claudio Pizzi, affiliato alla
+facoltà di Economia a Venezia e Cristina Pizzi, docente a Modena, che l'algoritmo ha mantenuto
+correttamente separati.
+
+Tra la professoressa Cinzia Pizzi e un team di archeologi dell'Università di Milano, sono presenti
+connessioni spurie, causate da un record errato nel database, che attribuisce un paper a cui ha
+collaborato Chiara Pizzi all'ID autore della professoressa.
+
+Il set di autori può essere ridotto, mantenendo solo gli autori che hanno pubblicato almeno un paper
+con affiliation padovana. In questo modo il set si riduce a 2.442 ID autori padovani per un totale
+di 2.094 nomi univoci, che hanno pubblicato 9.572 paper a cui corrispondono 23.417 record
+paper-autore-affiliation.
+
+Per i motivi elencati nella sezione precedente, questo comporta una mancata identificazione di
+alcuni autori, i cui record paper-autore-affiliation non sono correttamente compilati. Per
+identificare anche questi autori, un possibile metodo proposto è di analizzare i vicini del nodo,
+considerandolo padovano se una certa frazione dei suoi vicini lo è.
+
+Un altro metodo, proposto ma non implementato, per affinare la rete estratta è di, una volta
+deduplicati i nodi, scegliere fra quelli con lo stesso nome solo quello che si reputa essere più
+verosimilmente afferente al DEI.
 
 
 \whitePage
@@ -1109,12 +1208,15 @@ possibili combinazioni di metodologia di estrazione paper, unione dei nodi e cre
 
 Gli stessi dati sono riportati graficamente in figura \ref{img:graficovmeasure}, utilizzando le
 seguenti etichette:\\
-\\
-Tu: Tutti; Pa: Padovani\\
-No: Nomi; Di: Distanza; Ed: Edge\\
-% - Bl: Blockmodel - Cl: Clauset Newman Moore - Gi: Girvan Newman
-Bl: Blockmodel; Cl: Clauset-Newman-Moore; Gi: Girvan-Newman\\
-GC indica l'elaborazione effettuata sulla Giant Component
+Tu: tutti gli autori estratti per collaborazione\\
+Pa: autori con almeno un paper con affiliation padovana\\
+No: Unione dei nodi in base ai nomi\\
+Di: Unione dei nodi in base alla distanza\\
+Ed: Unione dei nodi in base a nodi adiacenti\\
+Bl: comunità generate dall'algoritmo Blockmodel\\
+Cl: comunità generate dall'algoritmo Clauset-Newman-Moore\\
+Gi: comunità generate dall'algoritmo Girvan-Newman\\
+GC: indica l'elaborazione effettuata sulla Giant Component
 
 
 % figura grafico v-measure
@@ -1145,7 +1247,7 @@ dai grafi generati considerando tutti i paper estratti, pari a $0.49$.
 
 Il valore della \textit{V-measure} del grafo generato considerando tutti i paper estratti ed unendo
 i nodi per nome è fra i più alti, ma ciò non corrisponde a un grafo ben rappresentativo della rete
-di autori del DEI, per i motivi illustrati in \ref{ssc:padovani}.
+di autori del DEI, per i motivi illustrati nella sottosezione \ref{ssc:padovani}.
 
 % figura grafico v-measure aggregata per strada
 \begin{figure}[H]
@@ -1210,7 +1312,10 @@ Nelle pagine successive sono riportati i grafi che hanno ottenuto i valori migli
 In figura \ref{fig:grafipadovaniedge} sono presenti i grafi relativi ai grafi generati considerando
 solo gli autori con almeno un'affiliation padovana, unendo i nodi seguendo la strategia dei nodi
 adiacenti. In figura \ref{fig:grafipadovaniedgeaggregati} i cluster degli stessi grafi sono stati
-aggregati per evidenziare le relazioni tra le comunità del grafo.
+aggregati per evidenziare le relazioni tra le comunità del grafo. Le figure evidenziano come le
+comunità generate, in particolare quelle di minore dimensione, siano discretamente omogenee, mentre
+quelle di maggiore dimensione siano più frazionate.
+
 
 In figura \ref{fig:grafigirvanaggregati} sono riportati i cluster ottenuti applicando l'algoritmo di
 Girvan e Newman alle componenti centrali dei grafi generati in tutti i possibili modi.
@@ -1394,10 +1499,22 @@ Girvan e Newman alle componenti centrali dei grafi generati in tutti i possibili
 \whitePage
 \chapter{Conclusioni} \label{cap:conclusioni}
 
-Partendo da una lista di nomi di un dipartimento si può estrarre un grafo che lo rappresenti? Le
-comunità generate rispecchiano quelle reali?
+Alcuni metodi seguiti hanno prodotto una rete di autori soddisfacente. In particolare quando la rete
+viene filtrata considerando gli autori con almeno un paper con affiliation padovana, gli autori
+estratti sono verosimilmente afferenti al DEI.
 
-TODO se vuoi fallo su matematica e mostra un grafo con qualche valore di v-measure
+Le problematiche evidenziate non consentono un'identificazione perfetta dei gruppi di ricerca, ma la
+struttura macroscopica che si ricava dai grafi fornisce un'indicazione della composizione del
+dipartimento, in particolare quando si utilizza l'algoritmo di Girvan e Newmann.
+
+La rete ottenuta ampliando il set degli autori è molto completa ma non è limitata al dipartimento.
+Uno studio più approfondito delle strategie di rimozione dei nodi esterni può portare a una rete che
+descrive in maniera accurata il dipartimento.
+
+% Partendo da una lista di nomi di un dipartimento si può estrarre un grafo che lo rappresenti? Le
+% comunità generate rispecchiano quelle reali?
+
+% TODO se vuoi fallo su matematica e mostra un grafo con qualche valore di v-measure
 
 
 %%% OBBLIGATORIA:
